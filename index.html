@@ -422,6 +422,69 @@
             color: #888;
         }
         
+        /* Blog Post Page Styles */
+        .blog-post {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .post-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .post-title {
+            font-size: 2.5rem;
+            color: #c41e3a;
+            margin-bottom: 1rem;
+        }
+        
+        .post-meta {
+            display: flex;
+            gap: 1rem;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .post-content {
+            line-height: 1.8;
+        }
+        
+        .post-content h2 {
+            color: #c41e3a;
+            margin: 2rem 0 1rem;
+        }
+        
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .post-content ul, .post-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .post-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #c41e3a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .content-wrapper {
@@ -443,645 +506,1196 @@
             .articles-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .blog-post {
+                padding: 1rem;
+            }
+            
+            .post-title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-top">
-            🌍 Your trusted source for China travel information since 2024
-        </div>
-        <nav class="container">
-            <div class="logo">Travel-China.Help</div>
-            <ul class="nav-menu">
-                <li><a href="#guides">Travel Guides</a></li>
-                <li><a href="#blog">Travel Stories</a></li>
-                <li><a href="#visa">Visa & Entry</a></li>
-                <li><a href="#culture">Culture</a></li>
-                <li><a href="#food">Food & Dining</a></li>
-                <li><a href="#tips">Travel Tips</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="hero-banner">
-        <div class="container">
-            <h1>Your Complete Guide to Traveling in China</h1>
-            <p>Expert advice, detailed guides, and insider tips to help you navigate China like a pro</p>
-        </div>
+    <div id="app">
+        <!-- 主页内容将在这里显示 -->
     </div>
 
-    <!-- Top Banner Ad -->
-    <div class="container">
-        <div class="ad-container">
-            <div class="ad-slot">
-                Google AdSense - Leaderboard Ad (728x90)
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="content-wrapper">
-            <!-- Main Content -->
-            <div class="main-content">
-                <div class="featured-article">
-                    <div class="featured-image">🏯</div>
-                    <div class="featured-content">
-                        <span class="featured-badge">⭐ FEATURED GUIDE</span>
-                        <h2>First Time in China? Read This Complete Guide</h2>
-                        <p>Everything you need to know for your first trip to China: from getting a visa to using mobile payments, navigating the language barrier, and understanding local customs. This comprehensive guide covers all the essentials.</p>
-                        <a href="#" class="btn-primary">Read Full Guide →</a>
-                    </div>
-                </div>
-
-                <h2 class="section-title" id="guides">Latest Travel Guides</h2>
-                <div class="articles-grid">
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">VISA GUIDE</span>
-                            🛂
-                        </div>
-                        <div class="article-content">
-                            <h3>China Visa Application Guide 2024</h3>
-                            <p class="article-excerpt">Step-by-step instructions for applying for a Chinese tourist visa, including required documents, processing times, and common mistakes to avoid.</p>
-                            <div class="article-meta">
-                                <span>📅 Updated Nov 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">TRANSPORTATION</span>
-                            🚄
-                        </div>
-                        <div class="article-content">
-                            <h3>How to Use China's High-Speed Rail</h3>
-                            <p class="article-excerpt">Complete guide to booking tickets, finding your seat, and navigating train stations. Tips for first-time riders of China's incredible bullet train network.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 10, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">MOBILE APPS</span>
-                            📱
-                        </div>
-                        <div class="article-content">
-                            <h3>Essential Apps for Traveling in China</h3>
-                            <p class="article-excerpt">WeChat, Alipay, Didi, and more. Learn which apps you absolutely need and how to set them up before you arrive in China.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 8, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">INTERNET</span>
-                            🌐
-                        </div>
-                        <div class="article-content">
-                            <h3>Internet Access & VPN Guide for China</h3>
-                            <p class="article-excerpt">Understanding China's internet restrictions, choosing a reliable VPN, and staying connected during your trip. What works and what doesn't in 2024.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 5, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">FOOD GUIDE</span>
-                            🍜
-                        </div>
-                        <div class="article-content">
-                            <h3>Ordering Food in China Without Speaking Chinese</h3>
-                            <p class="article-excerpt">Practical tips for navigating restaurants, using food delivery apps, and understanding menus. Includes common dietary restrictions and how to communicate them.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 3, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">CULTURE</span>
-                            🎭
-                        </div>
-                        <div class="article-content">
-                            <h3>Cultural Do's and Don'ts in China</h3>
-                            <p class="article-excerpt">Essential etiquette tips to help you avoid embarrassing situations and show respect for Chinese culture and customs during your visit.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 1, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mid-content Ad -->
-                <div class="ad-container">
-                    <div class="ad-slot">
-                        Google AdSense - Large Rectangle Ad (336x280)
-                    </div>
-                </div>
-
-                <h2 class="section-title">Destination Guides</h2>
-                <div class="articles-grid">
-                    <div class="article-card">
-                        <div class="article-image">🏛️</div>
-                        <div class="article-content">
-                            <h3>Beijing Travel Guide: 5-Day Itinerary</h3>
-                            <p class="article-excerpt">Explore the Forbidden City, Great Wall, and hidden hutongs. A detailed day-by-day guide to Beijing's must-see attractions and local experiences.</p>
-                            <div class="article-meta">
-                                <span>📅 Oct 28, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">🌃</div>
-                        <div class="article-content">
-                            <h3>Shanghai: Old Meets New - Complete Guide</h3>
-                            <p class="article-excerpt">From the historic Bund to futuristic Pudong, discover Shanghai's contrasts. Best neighborhoods, restaurants, and things to do in China's most cosmopolitan city.</p>
-                            <div class="article-meta">
-                                <span>📅 Oct 25, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">⛰️</div>
-                        <div class="article-content">
-                            <h3>Guilin & Yangshuo: Nature Lover's Paradise</h3>
-                            <p class="article-excerpt">Stunning karst landscapes, Li River cruises, and outdoor adventures. How to experience the natural beauty that inspired Chinese paintings for centuries.</p>
-                            <div class="article-meta">
-                                <span>📅 Oct 22, 2024</span>
-                                <a href="#" class="read-more">Read More →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Travel Stories & Experiences Section -->
-                <h2 class="section-title" id="blog" style="margin-top: 4rem;">📖 Traveler Stories & Experiences</h2>
-                <p style="text-align: center; color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
-                    Real experiences from travelers exploring China. Funny moments, cultural discoveries, and unexpected adventures.
-                </p>
-
-                <div class="articles-grid">
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">TRAVEL STORY</span>
-                            😂
-                        </div>
-                        <div class="article-content">
-                            <h3>Lost in Translation: My First Day Using WeChat Pay</h3>
-                            <p class="article-excerpt">I accidentally paid for a stranger's groceries and ended up making a new friend. Here's what happened when I tried to buy dumplings with my phone...</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 12, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">CULTURAL MOMENT</span>
-                            🎭
-                        </div>
-                        <div class="article-content">
-                            <h3>Joining Aunties' Morning Dance in Shanghai Park</h3>
-                            <p class="article-excerpt">At 6 AM in People's Park, I discovered the most welcoming community activity in China. How morning square dancing became the highlight of my trip.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 11, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">ADVENTURE</span>
-                            🥾
-                        </div>
-                        <div class="article-content">
-                            <h3>Hiking the Great Wall: Wild Section vs Tourist Areas</h3>
-                            <p class="article-excerpt">I visited both the crowded Badaling and the remote Jiankou sections. The difference was shocking, and I'll never forget the sunrise at the wild wall.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 10, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">FOOD ADVENTURE</span>
-                            🌶️
-                        </div>
-                        <div class="article-content">
-                            <h3>I Ate Everything at a Sichuan Hot Pot Restaurant</h3>
-                            <p class="article-excerpt">From duck intestines to pig brain, I challenged myself to try every item on the menu. My mouth is still burning, but it was totally worth it.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 9, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">UNEXPECTED</span>
-                            🎤
-                        </div>
-                        <div class="article-content">
-                            <h3>That Time I Became Famous on Chinese TikTok</h3>
-                            <p class="article-excerpt">A street performer invited me to sing, someone filmed it, and suddenly I had 50,000 followers on Douyin. Welcome to viral fame in China!</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 8, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">HEARTWARMING</span>
-                            ❤️
-                        </div>
-                        <div class="article-content">
-                            <h3>Chinese Grandma Adopted Me for a Week in Chengdu</h3>
-                            <p class="article-excerpt">After getting lost in a residential area, a grandmother insisted on feeding me, teaching me mahjong, and introducing me to her entire neighborhood.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 7, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">TRAIN STORY</span>
-                            🚄
-                        </div>
-                        <div class="article-content">
-                            <h3>12 Hours on a Sleeper Train: Unexpected Friendships</h3>
-                            <p class="article-excerpt">Sharing instant noodles, playing cards, and laughing despite the language barrier. Why overnight trains are the best way to meet real China.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 6, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">FUNNY MOMENT</span>
-                            🤦
-                        </div>
-                        <div class="article-content">
-                            <h3>I Accidentally Ordered 20 Kilos of Oranges on Taobao</h3>
-                            <p class="article-excerpt">A typo while ordering fruit online led to my hostel room being filled with oranges. Here's how I became the orange distribution center of Beijing.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 5, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="article-card">
-                        <div class="article-image">
-                            <span class="article-tag">LOCAL LIFE</span>
-                            🏘️
-                        </div>
-                        <div class="article-content">
-                            <h3>Living Like a Local in a Shanghai Lanehouse</h3>
-                            <p class="article-excerpt">I spent two weeks in a traditional shikumen, sharing bathrooms and learning the art of negotiating with vegetable vendors in broken Mandarin.</p>
-                            <div class="article-meta">
-                                <span>📅 Nov 4, 2024</span>
-                                <a href="#" class="read-more">Read Story →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Call to Action for Story Submissions -->
-                <div style="background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 3rem 2rem; border-radius: 15px; text-align: center; margin: 3rem 0;">
-                    <h3 style="color: #333; font-size: 1.8rem; margin-bottom: 1rem;">📝 Have a China Travel Story to Share?</h3>
-                    <p style="color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-                        Whether it's funny, inspiring, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!
-                    </p>
-                    <button class="btn-primary" style="background: linear-gradient(135deg, #c41e3a, #8b1538);">Submit Your Story</button>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <!-- Sidebar Ad -->
-                <div class="ad-container">
-                    <div class="ad-slot">
-                        Google AdSense<br>Rectangle Ad<br>(300x250)
-                    </div>
-                </div>
-
-                <div class="widget">
-                    <h3>📚 Popular Categories</h3>
-                    <ul class="widget-list">
-                        <li><a href="#"><span>Travel Stories</span> <span class="post-count">28</span></a></li>
-                        <li><a href="#"><span>Visa & Entry Requirements</span> <span class="post-count">12</span></a></li>
-                        <li><a href="#"><span>Transportation Guides</span> <span class="post-count">18</span></a></li>
-                        <li><a href="#"><span>City Guides</span> <span class="post-count">25</span></a></li>
-                        <li><a href="#"><span>Food & Dining</span> <span class="post-count">15</span></a></li>
-                        <li><a href="#"><span>Cultural Experiences</span> <span class="post-count">20</span></a></li>
-                        <li><a href="#"><span>Language & Communication</span> <span class="post-count">10</span></a></li>
+    <script>
+        // 文章数据
+        const articles = {
+            'china-visa-application-guide-2024': {
+                title: "China Visa Application Guide 2024",
+                excerpt: "Step-by-step instructions for applying for a Chinese tourist visa, including required documents, processing times, and common mistakes to avoid.",
+                tag: "VISA GUIDE",
+                icon: "🛂",
+                date: "Updated Nov 2024",
+                category: "Visa Guide",
+                content: `
+                    <p>Getting a visa to travel to China can seem daunting, but with the right preparation, it's straightforward. This comprehensive guide will walk you through every step of the process.</p>
+                    
+                    <h2>Required Documents</h2>
+                    <p>Before you begin the application process, make sure you have all the necessary documents:</p>
+                    <ul>
+                        <li>A valid passport with at least six months of remaining validity and blank visa pages</li>
+                        <li>Completed visa application form (Form V.2013)</li>
+                        <li>One recent passport-sized color photo</li>
+                        <li>Proof of travel arrangements (flight itinerary)</li>
+                        <li>Proof of accommodation (hotel bookings or invitation letter)</li>
+                        <li>Financial proof (bank statements showing sufficient funds)</li>
                     </ul>
-                </div>
-
-                <div class="widget">
-                    <h3>🔥 Most Read This Week</h3>
-                    <ul class="widget-list">
-                        <li><a href="#">How to Get a Chinese Tourist Visa</a></li>
-                        <li><a href="#">WeChat Setup Guide for Foreigners</a></li>
-                        <li><a href="#">Is China Safe for Solo Travelers?</a></li>
-                        <li><a href="#">Best Time to Visit the Great Wall</a></li>
-                        <li><a href="#">Understanding Chinese Train Tickets</a></li>
+                    
+                    <h2>Application Process</h2>
+                    <p>The process involves several steps:</p>
+                    <ol>
+                        <li><strong>Fill out the application form:</strong> Complete Form V.2013 online or download and fill it manually. Ensure all information matches your passport.</li>
+                        <li><strong>Gather supporting documents:</strong> Collect all required documents listed above.</li>
+                        <li><strong>Submit your application:</strong> Visit a Chinese embassy or consulate in person. Some locations offer drop-off services for an additional fee.</li>
+                        <li><strong>Pay the visa fee:</strong> Fees vary by nationality and visa type. Payment is typically made at the time of submission.</li>
+                        <li><strong>Wait for processing:</strong> Standard processing takes 4 business days, but expedited service may be available for an extra fee.</li>
+                    </ol>
+                    
+                    <h2>Common Mistakes to Avoid</h2>
+                    <p>To ensure your application is processed smoothly:</p>
+                    <ul>
+                        <li>Double-check that all names match exactly between your passport and application</li>
+                        <li>Ensure your photo meets all specifications (recent, front-facing, white background)</li>
+                        <li>Don't book non-refundable flights until after you receive your visa</li>
+                        <li>Apply well in advance of your planned travel dates</li>
+                        <li>Keep copies of all submitted documents for your records</li>
                     </ul>
-                </div>
-
-                <!-- Another Sidebar Ad -->
-                <div class="ad-container">
-                    <div class="ad-slot">
-                        Google AdSense<br>Rectangle Ad<br>(300x250)
-                    </div>
-                </div>
-
-                <div class="widget">
-                    <h3>💡 Quick Tips</h3>
-                    <ul class="widget-list">
-                        <li><a href="#">Download VPN before arriving</a></li>
-                        <li><a href="#">Set up WeChat Pay in advance</a></li>
-                        <li><a href="#">Learn basic Mandarin phrases</a></li>
-                        <li><a href="#">Register at local police station</a></li>
-                        <li><a href="#">Save offline maps before traveling</a></li>
+                    
+                    <h2>Tips for Success</h2>
+                    <p>Follow these tips to increase your chances of approval:</p>
+                    <ul>
+                        <li>Apply during off-peak times to avoid long queues</li>
+                        <li>Bring original documents and clear photocopies</li>
+                        <li>If you've been to China before, mention this in your application</li>
+                        <li>Be honest and consistent in all your answers</li>
+                        <li>Consider using a visa service if you're short on time or unsure about the process</li>
                     </ul>
-                </div>
-            </aside>
-        </div>
-    </div>
+                    
+                    <p>With proper preparation, obtaining a Chinese visa should be a smooth process. Remember to check the latest requirements on the official website of the Chinese embassy or consulate in your country before applying.</p>
+                `
+            },
+            'how-to-use-china-high-speed-rail': {
+                title: "How to Use China's High-Speed Rail",
+                excerpt: "Complete guide to booking tickets, finding your seat, and navigating train stations. Tips for first-time riders of China's incredible bullet train network.",
+                tag: "TRANSPORTATION",
+                icon: "🚄",
+                date: "Nov 10, 2024",
+                category: "Transportation",
+                content: `
+                    <p>China's high-speed rail network is one of the most impressive in the world, covering over 38,000 kilometers and connecting most major cities. For travelers, it's often the best way to get around the country quickly and comfortably.</p>
+                    
+                    <h2>Understanding the Train System</h2>
+                    <p>China's trains are categorized by speed and destination:</p>
+                    <ul>
+                        <li><strong>G-trains:</strong> The fastest trains, reaching speeds up to 350 km/h</li>
+                        <li><strong>D-trains:</strong> Second-tier high-speed trains, reaching speeds up to 250 km/h</li>
+                        <li><strong>C-trains:</strong> Intercity trains, connecting nearby cities</li>
+                        <li><strong>Z-trains:</strong> Direct express trains (not high-speed)</li>
+                        <li><strong>T-trains:</strong> Express trains making limited stops</li>
+                        <li><strong>K-trains:</strong> Fast trains making more stops</li>
+                    </ul>
+                    
+                    <h2>Booking Tickets</h2>
+                    <p>You can book tickets in several ways:</p>
+                    <ol>
+                        <li><strong>Official Website/App:</strong> Visit www.12306.cn (Chinese only) or download the 12306 app</li>
+                        <li><strong>Train Stations:</strong> Purchase at ticket offices or automated kiosks</li>
+                        <li><strong>Third-party Services:</strong> Websites like Ctrip or Trip.com offer English interfaces</li>
+                        <li><strong>Travel Agencies:</strong> Many hotels can assist with booking</li>
+                    </ol>
+                    
+                    <h2>Navigating Train Stations</h2>
+                    <p>China's train stations are massive and can be intimidating at first:</p>
+                    <ul>
+                        <li>Arrive at least 30 minutes before departure (1 hour for G/D trains)</li>
+                        <li>Have your passport and ticket ready for security checks</li>
+                        <li>Look for electronic displays showing train numbers and platforms</li>
+                        <li>Follow the crowd - signs are mostly in Chinese</li>
+                        <li>Use translation apps to ask for help if needed</li>
+                    </ul>
+                    
+                    <h2>On Board the Train</h2>
+                    <p>Once aboard, familiarize yourself with these basics:</p>
+                    <ul>
+                        <li>Find your car number (车厢) and seat number on your ticket</li>
+                        <li>Seats are clearly marked above each row</li>
+                        <li>Food carts pass through periodically offering snacks and drinks</li>
+                        <li>Restrooms are at the end of each car</li>
+                        <li>Keep your ticket handy for random inspections</li>
+                    </ul>
+                    
+                    <h2>Tips for First-Time Riders</h2>
+                    <ul>
+                        <li>Book tickets as early as possible, especially during holidays</li>
+                        <li>Consider taking a slower train for scenic routes</li>
+                        <li>Download translation apps to communicate with staff</li>
+                        <li>Bring your own food and water, though options are available onboard</li>
+                        <li>Charge your devices using the outlets at your seat</li>
+                    </ul>
+                    
+                    <p>China's high-speed rail system is efficient, comfortable, and a highlight of many travelers' experiences. With a little preparation, you'll find it easy to navigate and enjoy.</p>
+                `
+            },
+            'essential-apps-for-traveling-in-china': {
+                title: "Essential Apps for Traveling in China",
+                excerpt: "WeChat, Alipay, Didi, and more. Learn which apps you absolutely need and how to set them up before you arrive in China.",
+                tag: "MOBILE APPS",
+                icon: "📱",
+                date: "Nov 8, 2024",
+                category: "Technology",
+                content: `
+                    <p>In China, mobile apps are essential for daily life. From paying for meals to hailing taxis, most services are accessed through smartphone applications. As a traveler, setting up the right apps before arrival will make your trip significantly smoother.</p>
+                    
+                    <h2>WeChat (微信)</h2>
+                    <p>WeChat is China's all-in-one super app, combining messaging, social media, mobile payments, and countless other functions.</p>
+                    <p><strong>Setup before arrival:</strong></p>
+                    <ul>
+                        <li>Download the app and create an account outside China</li>
+                        <li>Add friends who are already in China to help verify your account</li>
+                        <li>Note that many features require a Chinese phone number</li>
+                    </ul>
+                    <p><strong>Uses for travelers:</strong></p>
+                    <ul>
+                        <li>Messaging and calling contacts</li>
+                        <li>Mobile payments (WeChat Pay)</li>
+                        <li>Accessing mini-programs for various services</li>
+                        <li>Translation features</li>
+                    </ul>
+                    
+                    <h2>Alipay (支付宝)</h2>
+                    <p>Alipay is another major mobile payment platform, owned by Alibaba.</p>
+                    <p><strong>Setup:</strong></p>
+                    <ul>
+                        <li>Download the app and register with your foreign credit card</li>
+                        <li>Link to your bank account for seamless transactions</li>
+                        <li>Foreign tourists can now use Alipay without a Chinese bank account</li>
+                    </ul>
+                    <p><strong>Features:</strong></p>
+                    <ul>
+                        <li>Payments at millions of merchants</li>
+                        <li>Money transfers between users</li>
+                        <li>Bill payments and utility services</li>
+                        <li>Investment and financial services</li>
+                    </ul>
+                    
+                    <h2>Didi (滴滴出行)</h2>
+                    <p>Didi is China's equivalent to Uber and the primary way to book rides.</p>
+                    <p><strong>Usage:</strong></p>
+                    <ul>
+                        <li>Download the app and register with your phone number</li>
+                        <li>Add payment methods (credit card or Alipay/WeChat Pay)</li>
+                        <li>Set pickup location and destination</li>
+                        <li>Communicate with drivers through the app</li>
+                    </ul>
+                    
+                    <h2>Other Essential Apps</h2>
+                    <ul>
+                        <li><strong>Baidu Maps (百度地图):</strong> Better than Google Maps in China with accurate public transit info</li>
+                        <li><strong>Dianping (大众点评):</strong> Restaurant reviews and recommendations (like Yelp)</li>
+                        <li><strong>Meituan (美团):</strong> Food delivery and local services</li>
+                        <li><strong>12306:</strong> Official train ticket booking app</li>
+                        <li><strong>Flyby (飞常准):</strong> Flight tracking and airport information</li>
+                        <li><strong>Pleco:</strong> Chinese-English dictionary for language learners</li>
+                    </ul>
+                    
+                    <h2>Important Notes</h2>
+                    <ul>
+                        <li>Most apps require a Chinese phone number for full functionality</li>
+                        <li>Consider purchasing a Chinese SIM card upon arrival</li>
+                        <li>Some apps may not work with VPNs due to government restrictions</li>
+                        <li>Always keep backup payment methods (cash and credit cards)</li>
+                    </ul>
+                    
+                    <p>Taking time to set up these apps before your trip will save you significant hassle once you arrive in China. They're integral to modern Chinese life and will help you navigate the country like a local.</p>
+                `
+            },
+            'internet-access-vpn-guide-for-china': {
+                title: "Internet Access & VPN Guide for China",
+                excerpt: "Understanding China's internet restrictions, choosing a reliable VPN, and staying connected during your trip. What works and what doesn't in 2024.",
+                tag: "INTERNET",
+                icon: "🌐",
+                date: "Nov 5, 2024",
+                category: "Technology",
+                content: `
+                    <p>China has strict internet regulations known as the "Great Firewall," which blocks access to many popular Western websites and services. Understanding these restrictions and preparing accordingly is crucial for staying connected during your trip.</p>
+                    
+                    <h2>What's Blocked in China?</h2>
+                    <p>The Great Firewall blocks numerous international services including:</p>
+                    <ul>
+                        <li>Social Media: Facebook, Instagram, Twitter, YouTube, TikTok</li>
+                        <li>Communication: Gmail, WhatsApp, Telegram</li>
+                        <li>News and Information: BBC, CNN, NYT, Wikipedia (some entries)</li>
+                        <li>Cloud Services: Dropbox, Google Drive</li>
+                        <li>Entertainment: Netflix, Spotify (partially)</li>
+                    </ul>
+                    
+                    <h2>Setting Up a VPN</h2>
+                    <p>A Virtual Private Network (VPN) can bypass these restrictions:</p>
+                    <p><strong>Before You Arrive:</strong></p>
+                    <ul>
+                        <li>Research and purchase a reliable VPN service</li>
+                        <li>Download and install the software while still outside China</li>
+                        <li>Create an account and test the connection</li>
+                        <li>Popular options include ExpressVPN, NordVPN, and Astrill</li>
+                    </ul>
+                    <p><strong>Important Notes:</strong></p>
+                    <ul>
+                        <li>Free VPNs are generally unreliable and unsafe</li>
+                        <li>VPNs may become unstable or blocked during sensitive periods</li>
+                        <li>Using a VPN is technically against Chinese law, though enforcement varies</li>
+                        <li>Always comply with local laws and regulations</li>
+                    </ul>
+                    
+                    <h2>Local Internet Options</h2>
+                    <p>China has its own thriving internet ecosystem:</p>
+                    <ul>
+                        <li><strong>WeChat:</strong> Messaging, social media, and payments</li>
+                        <li><strong>Weibo:</strong> Microblogging platform similar to Twitter</li>
+                        <li><strong>Baidu:</strong> Search engine (alternative to Google)</li>
+                        <li><strong>Youku/Tencent Video:</strong> Video streaming platforms</li>
+                        <li><strong>Xiaohongshu (RED):</strong> Lifestyle sharing platform</li>
+                    </ul>
+                    
+                    <h2>Staying Connected</h2>
+                    <p>Options for mobile internet in China:</p>
+                    <ol>
+                        <li><strong>International Roaming:</strong> Convenient but expensive</li>
+                        <li><strong>Chinese SIM Card:</strong> Affordable option available at airports</li>
+                        <li><strong>Portable WiFi:</strong> Rent or buy a pocket WiFi device</li>
+                        <li><strong>Hotel WiFi:</strong> Available at most accommodations but may be slow</li>
+                    </ol>
+                    
+                    <h2>Chinese SIM Cards</h2>
+                    <p>Major carriers include China Mobile, China Unicom, and China Telecom:</p>
+                    <ul>
+                        <li>Available at airports, convenience stores, and carrier shops</li>
+                        <li>Require your passport for registration</li>
+                        <li>Prepaid plans start around ¥30-50 per week</li>
+                        <li>Provide fast local data speeds</li>
+                    </ul>
+                    
+                    <h2>Alternatives to Stay Connected</h2>
+                    <ul>
+                        <li>Download offline maps before arrival</li>
+                        <li>Save important contacts and information locally</li>
+                        <li>Use translation apps that work offline</li>
+                        <li>Keep a physical guidebook as backup</li>
+                    </ul>
+                    
+                    <p>While internet restrictions in China may seem challenging, proper preparation with a reliable VPN and local connectivity options will keep you connected throughout your journey.</p>
+                `
+            },
+            'ordering-food-in-china-without-speaking-chinese': {
+                title: "Ordering Food in China Without Speaking Chinese",
+                excerpt: "Practical tips for navigating restaurants, using food delivery apps, and understanding menus. Includes common dietary restrictions and how to communicate them.",
+                tag: "FOOD GUIDE",
+                icon: "🍜",
+                date: "Nov 3, 2024",
+                category: "Food & Dining",
+                content: `
+                    <p>Food is one of the highlights of any trip to China, but ordering when you don't speak Chinese can be intimidating. With some preparation and key strategies, you'll be able to enjoy the incredible culinary diversity China offers.</p>
+                    
+                    <h2>Understanding Chinese Menus</h2>
+                    <p>Chinese menus differ significantly from Western ones:</p>
+                    <ul>
+                        <li>Photos are your best friend - look for illustrated menus</li>
+                        <li>Dishes are often numbered rather than named in English</li>
+                        <li>Point to items and use gestures to indicate quantity</li>
+                        <li>Popular dishes may have English translations</li>
+                        <li>Ask for recommendations from other diners or staff</li>
+                    </ul>
+                    
+                    <h2>Essential Phrases for Ordering</h2>
+                    <p>Learn these key phrases to make ordering easier:</p>
+                    <ul>
+                        <li>"Yi fen ______ qing" (一份______请) - One ______ please</li>
+                        <li>"You meiyou _______" (有没有_______) - Do you have _______?</li>
+                        <li>"Bu yao 辣" (不要辣) - No spicy</li>
+                        <li>"Wo bu chi rou" (我不吃肉) - I don't eat meat</li>
+                        <li>"Qing na zhang dan" (请那张单) - Check please</li>
+                    </ul>
+                    
+                    <h2>Handling Dietary Restrictions</h2>
+                    <p>Communicating special dietary needs:</p>
+                    <ul>
+                        <li><strong>Vegetarian:</strong> "Wo shi su shi zhe" (我是素食者)</li>
+                        <li><strong>Vegan:</strong> "Wo bu chi rou, bu chi dan, bu chi nai" (我不吃肉，不吃蛋，不吃奶)</li>
+                        <li><strong>No pork:</strong> "Bu yao zhu rou" (不要猪肉)</li>
+                        <li><strong>No beef:</strong> "Bu yao niu rou" (不要牛肉)</li>
+                        <li><strong>Allergies:</strong> Point to the allergen and shake your head</li>
+                    </ul>
+                    
+                    <h2>Using Food Delivery Apps</h2>
+                    <p>Popular delivery apps include Meituan and Ele.me:</p>
+                    <ul>
+                        <li>Both have English versions available</li>
+                        <li>Photos and ratings help identify good options</li>
+                        <li>Payment is integrated into the apps</li>
+                        <li>Delivery addresses can be saved for easy reordering</li>
+                    </ul>
+                    
+                    <h2>Restaurant Strategies</h2>
+                    <ul>
+                        <li>Visit during busy times when there are other customers to follow</li>
+                        <li>Look for restaurants with picture menus or English translations</li>
+                        <li>Observe how others order and follow their lead</li>
+                        <li>Start with familiar dishes and gradually try new ones</li>
+                        <li>Carry a translation card with your dietary restrictions</li>
+                    </ul>
+                    
+                    <h2>Street Food and Markets</h2>
+                    <p>Navigating street food with limited language:</p>
+                    <ul>
+                        <li>Watch how others order and copy their gestures</li>
+                        <li>Point to what you want and use fingers to indicate quantity</li>
+                        <li>Learn to say "yidianr" (一点儿) for a small portion</li>
+                        <li>Carry small bills for easier transactions</li>
+                        <li>Don't be afraid to point and smile - most vendors are friendly</li>
+                    </ul>
+                    
+                    <h2>Helpful Tools</h2>
+                    <ul>
+                        <li>Translation apps like Google Translate with camera feature</li>
+                        <li>Food allergy translation cards</li>
+                        <li>Dianping app for restaurant reviews and photos</li>
+                        <li>Xiaohongshu (Little Red Book) for food recommendations</li>
+                    </ul>
+                    
+                    <p>Chinese people are generally patient and helpful when it comes to ordering food. Don't hesitate to point, gesture, and use your phone translator. The culinary rewards are well worth the effort!</p>
+                `
+            }
+        };
 
-    <!-- Quick Tips Section -->
-    <section class="tips-section">
-        <div class="container">
-            <h2 style="color: white; text-align: center;">Essential Tips for China Travelers</h2>
-            <div class="tips-grid">
-                <div class="tip-box">
-                    <div class="tip-icon">💳</div>
-                    <h4>Mobile Payments</h4>
-                    <p>China is nearly cashless. Learn how to use WeChat Pay and Alipay for everything from taxis to street food.</p>
-                </div>
-                <div class="tip-box">
-                    <div class="tip-icon">🌐</div>
-                    <h4>Internet Access</h4>
-                    <p>Many Western websites are blocked. Set up a VPN before your trip to access Google, Facebook, and more.</p>
-                </div>
-                <div class="tip-box">
-                    <div class="tip-icon">🗣️</div>
-                    <h4>Language Barrier</h4>
-                    <p>English isn't widely spoken. Translation apps and learning basic phrases will make your trip much easier.</p>
-                </div>
-                <div class="tip-box">
-                    <div class="tip-icon">🚇</div>
-                    <h4>Transportation</h4>
-                    <p>Download Didi (Chinese Uber) and learn how to navigate the metro systems in major cities.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        // 外部文章映射
+        const externalArticles = {
+            'first-blog-post': 'blog/WeChat_Pay.html',
+            'second-blog-post': 'blog/sichuan_hotpot.html'
+        };
 
-    <!-- Community Feedback Section -->
-    <section class="section-white" style="padding: 4rem 0; background: linear-gradient(180deg, #f8f9fa 0%, white 100%);">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback & Experiences</h2>
-                <p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
-                    Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
-                </p>
-            </div>
+        // 路由处理
+        function route() {
+            const path = window.location.hash.slice(1) || '/';
+            
+            if (path.startsWith('/post/')) {
+                const postId = path.split('/')[2];
+                // 检查是否为外部文章
+                if (externalArticles[postId]) {
+                    showExternalArticle(externalArticles[postId]);
+                } else {
+                    showBlogPost(postId);
+                }
+            } else {
+                showHomePage();
+            }
+        }
 
-            <div style="max-width: 800px; margin: 0 auto;">
-                <!-- Feedback Form -->
-                <div style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-bottom: 3rem;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <input type="text" placeholder="Your Name *" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
-                        <input type="email" placeholder="Your Email * (private)" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+        // 显示主页
+        function showHomePage() {
+            document.getElementById('app').innerHTML = `
+                <header>
+                    <div class="header-top">
+                        🌍 Your trusted source for China travel information since 2024
                     </div>
-                    
-                    <select style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
-                        <option>💭 General Feedback</option>
-                        <option>❓ Question About China Travel</option>
-                        <option>📖 Share My Travel Story</option>
-                        <option>💡 Suggestion for New Content</option>
-                        <option>🐛 Report a Problem</option>
-                        <option>❤️ Just Want to Say Thanks!</option>
-                    </select>
-                    
-                    <textarea placeholder="Your message... What would you like to share or ask? *" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                        <label style="color: #666; font-size: 0.95rem;">
-                            <input type="checkbox" style="margin-right: 8px;">
-                            I'd like to receive helpful China travel tips via email
-                        </label>
-                        <button style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Submit Feedback 🚀</button>
+                    <nav class="container">
+                        <div class="logo">Travel-China.Help</div>
+                        <ul class="nav-menu">
+                            <li><a href="#guides">Travel Guides</a></li>
+                            <li><a href="#blog">Travel Stories</a></li>
+                            <li><a href="#visa">Visa & Entry</a></li>
+                            <li><a href="#culture">Culture</a></li>
+                            <li><a href="#food">Food & Dining</a></li>
+                            <li><a href="#tips">Travel Tips</a></li>
+                        </ul>
+                    </nav>
+                </header>
+
+                <div class="hero-banner">
+                    <div class="container">
+                        <h1>Your Complete Guide to Traveling in China</h1>
+                        <p>Expert advice, detailed guides, and insider tips to help you navigate China like a pro</p>
                     </div>
                 </div>
 
-                <!-- Recent Feedback/Comments -->
-                <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
-                    <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <span>🌟</span> Recent Community Feedback
-                    </h3>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <!-- Comment 1 -->
-                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ffd700;">
-                            <div style="display: flex; gap: 1rem;">
-                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #c41e3a, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
-                                        <strong style="color: #333;">James Wilson</strong>
-                                        <span style="color: #999; font-size: 0.85rem;">Yesterday</span>
-                                    </div>
-                                    <div style="background: #e3f2fd; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
-                                        <span style="font-size: 0.85rem; color: #1976d2; font-weight: 600;">❤️ Just Want to Say Thanks!</span>
-                                    </div>
-                                    <p style="color: #555; line-height: 1.7; margin: 0;">Just wanted to say this website is AMAZING! I used your guides for my 2-week China trip and everything went smoothly. The visa guide saved me so much time and stress. Thank you! 🙏</p>
+                <!-- Top Banner Ad -->
+                <div class="container">
+                    <div class="ad-container">
+                        <div class="ad-slot">
+                            Google AdSense - Leaderboard Ad (728x90)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="content-wrapper">
+                        <!-- Main Content -->
+                        <div class="main-content">
+                            <div class="featured-article">
+                                <div class="featured-image">🏯</div>
+                                <div class="featured-content">
+                                    <span class="featured-badge">⭐ FEATURED GUIDE</span>
+                                    <h2>First Time in China? Read This Complete Guide</h2>
+                                    <p>Everything you need to know for your first trip to China: from getting a visa to using mobile payments, navigating the language barrier, and understanding local customs. This comprehensive guide covers all the essentials.</p>
+                                    <a href="#" class="btn-primary">Read Full Guide →</a>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Comment 2 -->
-                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4caf50;">
-                            <div style="display: flex; gap: 1rem;">
-                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #8bc34a); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
-                                        <strong style="color: #333;">Maria Garcia</strong>
-                                        <span style="color: #999; font-size: 0.85rem;">2 days ago</span>
+                            <h2 class="section-title" id="guides">Latest Travel Guides</h2>
+                            <div class="articles-grid">
+                                <div class="article-card" data-post-id="china-visa-application-guide-2024">
+                                    <div class="article-image">
+                                        <span class="article-tag">VISA GUIDE</span>
+                                        🛂
                                     </div>
-                                    <div style="background: #fff3e0; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
-                                        <span style="font-size: 0.85rem; color: #f57c00; font-weight: 600;">❓ Question About China Travel</span>
+                                    <div class="article-content">
+                                        <h3>China Visa Application Guide 2024</h3>
+                                        <p class="article-excerpt">Step-by-step instructions for applying for a Chinese tourist visa, including required documents, processing times, and common mistakes to avoid.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Updated Nov 2024</span>
+                                            <a href="#/post/china-visa-application-guide-2024" class="read-more">Read More →</a>
+                                        </div>
                                     </div>
-                                    <p style="color: #555; line-height: 1.7; margin: 0;">Quick question: Is it safe for solo female travelers in China? I'm planning a month-long trip and would love to hear from other women who've traveled there alone.</p>
-                                    <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #c41e3a;">
-                                        <div style="display: flex; gap: 0.8rem;">
-                                            <span style="color: #c41e3a; font-size: 1.2rem;">✍️</span>
-                                            <div>
-                                                <strong style="color: #c41e3a; font-size: 0.9rem;">Admin Reply:</strong>
-                                                <p style="color: #666; margin: 0.3rem 0 0 0; font-size: 0.95rem; line-height: 1.6;">Great question! China is generally very safe for solo female travelers. We'll be publishing a detailed guide on this topic next week. In the meantime, check out our "Safety Tips for Travelers" article in the practical info section!</p>
-                                            </div>
+                                </div>
+
+                                <div class="article-card" data-post-id="how-to-use-china-high-speed-rail">
+                                    <div class="article-image">
+                                        <span class="article-tag">TRANSPORTATION</span>
+                                        🚄
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>How to Use China's High-Speed Rail</h3>
+                                        <p class="article-excerpt">Complete guide to booking tickets, finding your seat, and navigating train stations. Tips for first-time riders of China's incredible bullet train network.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 10, 2024</span>
+                                            <a href="#/post/how-to-use-china-high-speed-rail" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card" data-post-id="essential-apps-for-traveling-in-china">
+                                    <div class="article-image">
+                                        <span class="article-tag">MOBILE APPS</span>
+                                        📱
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Essential Apps for Traveling in China</h3>
+                                        <p class="article-excerpt">WeChat, Alipay, Didi, and more. Learn which apps you absolutely need and how to set them up before you arrive in China.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 8, 2024</span>
+                                            <a href="#/post/essential-apps-for-traveling-in-china" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card" data-post-id="internet-access-vpn-guide-for-china">
+                                    <div class="article-image">
+                                        <span class="article-tag">INTERNET</span>
+                                        🌐
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Internet Access & VPN Guide for China</h3>
+                                        <p class="article-excerpt">Understanding China's internet restrictions, choosing a reliable VPN, and staying connected during your trip. What works and what doesn't in 2024.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 5, 2024</span>
+                                            <a href="#/post/internet-access-vpn-guide-for-china" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card" data-post-id="ordering-food-in-china-without-speaking-chinese">
+                                    <div class="article-image">
+                                        <span class="article-tag">FOOD GUIDE</span>
+                                        🍜
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Ordering Food in China Without Speaking Chinese</h3>
+                                        <p class="article-excerpt">Practical tips for navigating restaurants, using food delivery apps, and understanding menus. Includes common dietary restrictions and how to communicate them.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 3, 2024</span>
+                                            <a href="#/post/ordering-food-in-china-without-speaking-chinese" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">CULTURE</span>
+                                        🎭
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Cultural Do's and Don'ts in China</h3>
+                                        <p class="article-excerpt">Essential etiquette tips to help you avoid embarrassing situations and show respect for Chinese culture and customs during your visit.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 1, 2024</span>
+                                            <a href="#" class="read-more">Read More →</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Comment 3 -->
-                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9c27b0;">
-                            <div style="display: flex; gap: 1rem;">
-                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #9c27b0, #e91e63); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
-                                        <strong style="color: #333;">Alex Thompson</strong>
-                                        <span style="color: #999; font-size: 0.85rem;">3 days ago</span>
-                                    </div>
-                                    <div style="background: #f3e5f5; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
-                                        <span style="font-size: 0.85rem; color: #7b1fa2; font-weight: 600;">💡 Suggestion for New Content</span>
-                                    </div>
-                                    <p style="color: #555; line-height: 1.7; margin: 0;">Would love to see more content about traveling China on a budget! Maybe guides for backpackers, cheap eats, affordable accommodation, etc. The current content is great but seems geared toward mid-range travelers.</p>
+                            <!-- Mid-content Ad -->
+                            <div class="ad-container">
+                                <div class="ad-slot">
+                                    Google AdSense - Large Rectangle Ad (336x280)
                                 </div>
+                            </div>
+
+                            <h2 class="section-title">Destination Guides</h2>
+                            <div class="articles-grid">
+                                <div class="article-card">
+                                    <div class="article-image">🏛️</div>
+                                    <div class="article-content">
+                                        <h3>Beijing Travel Guide: 5-Day Itinerary</h3>
+                                        <p class="article-excerpt">Explore the Forbidden City, Great Wall, and hidden hutongs. A detailed day-by-day guide to Beijing's must-see attractions and local experiences.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Oct 28, 2024</span>
+                                            <a href="#" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">🌃</div>
+                                    <div class="article-content">
+                                        <h3>Shanghai: Old Meets New - Complete Guide</h3>
+                                        <p class="article-excerpt">From the historic Bund to futuristic Pudong, discover Shanghai's contrasts. Best neighborhoods, restaurants, and things to do in China's most cosmopolitan city.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Oct 25, 2024</span>
+                                            <a href="#" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">⛰️</div>
+                                    <div class="article-content">
+                                        <h3>Guilin & Yangshuo: Nature Lover's Paradise</h3>
+                                        <p class="article-excerpt">Stunning karst landscapes, Li River cruises, and outdoor adventures. How to experience the natural beauty that inspired Chinese paintings for centuries.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Oct 22, 2024</span>
+                                            <a href="#" class="read-more">Read More →</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Travel Stories & Experiences Section -->
+                            <h2 class="section-title" id="blog" style="margin-top: 4rem;">📖 Traveler Stories & Experiences</h2>
+                            <p style="text-align: center; color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
+                                Real experiences from travelers exploring China. Funny moments, cultural discoveries, and unexpected adventures.
+                            </p>
+
+                            <div class="articles-grid">
+                                <div class="article-card" data-post-id="first-blog-post">
+                                    <div class="article-image">
+                                        <span class="article-tag">TRAVEL STORY</span>
+                                        😂
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Lost in Translation: My First Day Using WeChat Pay</h3>
+                                        <p class="article-excerpt">It was my second day in Beijing, and I was feeling pretty confident. I'd successfully navigated the subway, found my hostel, and even ordered breakfast using only hand gestures and a translation app. "I've got this," I thought to myself.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 12, 2024</span>
+                                            <a href="#/post/first-blog-post" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card" data-post-id="second-blog-post">
+                                    <div class="article-image">
+                                        <span class="article-tag">CULTURAL MOMENT</span>
+                                        🎭
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>I Ate Everything at a Sichuan Hot Pot Restaurant</h3>
+                                        <p class="article-excerpt">From duck intestines to pig brain, I challenged myself to try every item on the menu. My mouth is still burning.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 11, 2024</span>
+                                            <a href="#/post/second-blog-post" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">ADVENTURE</span>
+                                        🥾
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Hiking the Great Wall: Wild Section vs Tourist Areas</h3>
+                                        <p class="article-excerpt">I visited both the crowded Badaling and the remote Jiankou sections. The difference was shocking, and I'll never forget the sunrise at the wild wall.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 10, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">UNEXPECTED</span>
+                                        🎤
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>That Time I Became Famous on Chinese TikTok</h3>
+                                        <p class="article-excerpt">A street performer invited me to sing, someone filmed it, and suddenly I had 50,000 followers on Douyin. Welcome to viral fame in China!</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 8, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">HEARTWARMING</span>
+                                        ❤️
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Chinese Grandma Adopted Me for a Week in Chengdu</h3>
+                                        <p class="article-excerpt">After getting lost in a residential area, a grandmother insisted on feeding me, teaching me mahjong, and introducing me to her entire neighborhood.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 7, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">TRAIN STORY</span>
+                                        🚄
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>12 Hours on a Sleeper Train: Unexpected Friendships</h3>
+                                        <p class="article-excerpt">Sharing instant noodles, playing cards, and laughing despite the language barrier. Why overnight trains are the best way to meet real China.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 6, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">FUNNY MOMENT</span>
+                                        🤦
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>I Accidentally Ordered 20 Kilos of Oranges on Taobao</h3>
+                                        <p class="article-excerpt">A typo while ordering fruit online led to my hostel room being filled with oranges. Here's how I became the orange distribution center of Beijing.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 5, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div class="article-image">
+                                        <span class="article-tag">LOCAL LIFE</span>
+                                        🏘️
+                                    </div>
+                                    <div class="article-content">
+                                        <h3>Living Like a Local in a Shanghai Lanehouse</h3>
+                                        <p class="article-excerpt">I spent two weeks in a traditional shikumen, sharing bathrooms and learning the art of negotiating with vegetable vendors in broken Mandarin.</p>
+                                        <div class="article-meta">
+                                            <span>📅 Nov 4, 2024</span>
+                                            <a href="#" class="read-more">Read Story →</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Call to Action for Story Submissions -->
+                            <div style="background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 3rem 2rem; border-radius: 15px; text-align: center; margin: 3rem 0;">
+                                <h3 style="color: #333; font-size: 1.8rem; margin-bottom: 1rem;">📝 Have a China Travel Story to Share?</h3>
+                                <p style="color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                    Whether it's funny, inspiring, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!
+                                </p>
+                                <button class="btn-primary" style="background: linear-gradient(135deg, #c41e3a, #8b1538);">Submit Your Story</button>
                             </div>
                         </div>
 
-                        <!-- Comment 4 -->
-                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff9800;">
-                            <div style="display: flex; gap: 1rem;">
-                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #ff9800, #ffc107); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
-                                <div style="flex: 1;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
-                                        <strong style="color: #333;">Sophie Chen</strong>
-                                        <span style="color: #999; font-size: 0.85rem;">5 days ago</span>
+                        <!-- Sidebar -->
+                        <aside class="sidebar">
+                            <!-- Sidebar Ad -->
+                            <div class="ad-container">
+                                <div class="ad-slot">
+                                    Google AdSense<br>Rectangle Ad<br>(300x250)
+                                </div>
+                            </div>
+
+                            <div class="widget">
+                                <h3>📚 Popular Categories</h3>
+                                <ul class="widget-list">
+                                    <li><a href="#"><span>Travel Stories</span> <span class="post-count">28</span></a></li>
+                                    <li><a href="#"><span>Visa & Entry Requirements</span> <span class="post-count">12</span></a></li>
+                                    <li><a href="#"><span>Transportation Guides</span> <span class="post-count">18</span></a></li>
+                                    <li><a href="#"><span>City Guides</span> <span class="post-count">25</span></a></li>
+                                    <li><a href="#"><span>Food & Dining</span> <span class="post-count">15</span></a></li>
+                                    <li><a href="#"><span>Cultural Experiences</span> <span class="post-count">20</span></a></li>
+                                    <li><a href="#"><span>Language & Communication</span> <span class="post-count">10</span></a></li>
+                                </ul>
+                            </div>
+
+                            <div class="widget">
+                                <h3>🔥 Most Read This Week</h3>
+                                <ul class="widget-list">
+                                    <li><a href="#">How to Get a Chinese Tourist Visa</a></li>
+                                    <li><a href="#">WeChat Setup Guide for Foreigners</a></li>
+                                    <li><a href="#">Is China Safe for Solo Travelers?</a></li>
+                                    <li><a href="#">Best Time to Visit the Great Wall</a></li>
+                                    <li><a href="#">Understanding Chinese Train Tickets</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Another Sidebar Ad -->
+                            <div class="ad-container">
+                                <div class="ad-slot">
+                                    Google AdSense<br>Rectangle Ad<br>(300x250)
+                                </div>
+                            </div>
+
+                            <div class="widget">
+                                <h3>💡 Quick Tips</h3>
+                                <ul class="widget-list">
+                                    <li><a href="#">Download VPN before arriving</a></li>
+                                    <li><a href="#">Set up WeChat Pay in advance</a></li>
+                                    <li><a href="#">Learn basic Mandarin phrases</a></li>
+                                    <li><a href="#">Register at local police station</a></li>
+                                    <li><a href="#">Save offline maps before traveling</a></li>
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+
+                <!-- Quick Tips Section -->
+                <section class="tips-section">
+                    <div class="container">
+                        <h2 style="color: white; text-align: center;">Essential Tips for China Travelers</h2>
+                        <div class="tips-grid">
+                            <div class="tip-box">
+                                <div class="tip-icon">💳</div>
+                                <h4>Mobile Payments</h4>
+                                <p>China is nearly cashless. Learn how to use WeChat Pay and Alipay for everything from taxis to street food.</p>
+                            </div>
+                            <div class="tip-box">
+                                <div class="tip-icon">🌐</div>
+                                <h4>Internet Access</h4>
+                                <p>Many Western websites are blocked. Set up a VPN before your trip to access Google, Facebook, and more.</p>
+                            </div>
+                            <div class="tip-box">
+                                <div class="tip-icon">🗣️</div>
+                                <h4>Language Barrier</h4>
+                                <p>English isn't widely spoken. Translation apps and learning basic phrases will make your trip much easier.</p>
+                            </div>
+                            <div class="tip-box">
+                                <div class="tip-icon">🚇</div>
+                                <h4>Transportation</h4>
+                                <p>Download Didi (Chinese Uber) and learn how to navigate the metro systems in major cities.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Community Feedback Section -->
+                <section class="section-white" style="padding: 4rem 0; background: linear-gradient(180deg, #f8f9fa 0%, white 100%);">
+                    <div class="container">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                            <h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback & Experiences</h2>
+                            <p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+                                Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
+                            </p>
+                        </div>
+
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <!-- Feedback Form -->
+                            <div style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-bottom: 3rem;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                    <input type="text" placeholder="Your Name *" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                                    <input type="email" placeholder="Your Email * (private)" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                                
+                                <select style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                                    <option>💭 General Feedback</option>
+                                    <option>❓ Question About China Travel</option>
+                                    <option>📖 Share My Travel Story</option>
+                                    <option>💡 Suggestion for New Content</option>
+                                    <option>🐛 Report a Problem</option>
+                                    <option>❤️ Just Want to Say Thanks!</option>
+                                </select>
+                                
+                                <textarea placeholder="Your message... What would you like to share or ask? *" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                    <label style="color: #666; font-size: 0.95rem;">
+                                        <input type="checkbox" style="margin-right: 8px;">
+                                        I'd like to receive helpful China travel tips via email
+                                    </label>
+                                    <button style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Submit Feedback 🚀</button>
+                                </div>
+                            </div>
+
+                            <!-- Recent Feedback/Comments -->
+                            <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                                <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🌟</span> Recent Community Feedback
+                                </h3>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                    <!-- Comment 1 -->
+                                    <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ffd700;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #c41e3a, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
+                                            <div style="flex: 1;">
+                                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                                    <strong style="color: #333;">James Wilson</strong>
+                                                    <span style="color: #999; font-size: 0.85rem;">Yesterday</span>
+                                                </div>
+                                                <div style="background: #e3f2fd; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                                    <span style="font-size: 0.85rem; color: #1976d2; font-weight: 600;">❤️ Just Want to Say Thanks!</span>
+                                                </div>
+                                                <p style="color: #555; line-height: 1.7; margin: 0;">Just wanted to say this website is AMAZING! I used your guides for my 2-week China trip and everything went smoothly. The visa guide saved me so much time and stress. Thank you! 🙏</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div style="background: #fff8e1; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
-                                        <span style="font-size: 0.85rem; color: #f57f17; font-weight: 600;">📖 Share My Travel Story</span>
+
+                                    <!-- Comment 2 -->
+                                    <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4caf50;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #8bc34a); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
+                                            <div style="flex: 1;">
+                                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                                    <strong style="color: #333;">Maria Garcia</strong>
+                                                    <span style="color: #999; font-size: 0.85rem;">2 days ago</span>
+                                                </div>
+                                                <div style="background: #fff3e0; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                                    <span style="font-size: 0.85rem; color: #f57c00; font-weight: 600;">❓ Question About China Travel</span>
+                                                </div>
+                                                <p style="color: #555; line-height: 1.7; margin: 0;">Quick question: Is it safe for solo female travelers in China? I'm planning a month-long trip and would love to hear from other women who've traveled there alone.</p>
+                                                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #c41e3a;">
+                                                    <div style="display: flex; gap: 0.8rem;">
+                                                        <span style="color: #c41e3a; font-size: 1.2rem;">✍️</span>
+                                                        <div>
+                                                            <strong style="color: #c41e3a; font-size: 0.9rem;">Admin Reply:</strong>
+                                                            <p style="color: #666; margin: 0.3rem 0 0 0; font-size: 0.95rem; line-height: 1.6;">Great question! China is generally very safe for solo female travelers. We'll be publishing a detailed guide on this topic next week. In the meantime, check out our "Safety Tips for Travelers" article in the practical info section!</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p style="color: #555; line-height: 1.7; margin: 0;">I have a hilarious story about accidentally ordering 30 plates of dumplings because I couldn't read the menu 😂 How can I submit it as a guest post? Would love to share it with your community!</p>
+
+                                    <!-- Comment 3 -->
+                                    <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9c27b0;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #9c27b0, #e91e63); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
+                                            <div style="flex: 1;">
+                                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                                    <strong style="color: #333;">Alex Thompson</strong>
+                                                    <span style="color: #999; font-size: 0.85rem;">3 days ago</span>
+                                                </div>
+                                                <div style="background: #f3e5f5; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                                    <span style="font-size: 0.85rem; color: #7b1fa2; font-weight: 600;">💡 Suggestion for New Content</span>
+                                                </div>
+                                                <p style="color: #555; line-height: 1.7; margin: 0;">Would love to see more content about traveling China on a budget! Maybe guides for backpackers, cheap eats, affordable accommodation, etc. The current content is great but seems geared toward mid-range travelers.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Comment 4 -->
+                                    <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff9800;">
+                                        <div style="display: flex; gap: 1rem;">
+                                            <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #ff9800, #ffc107); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
+                                            <div style="flex: 1;">
+                                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                                    <strong style="color: #333;">Sophie Chen</strong>
+                                                    <span style="color: #999; font-size: 0.85rem;">5 days ago</span>
+                                                </div>
+                                                <div style="background: #fff8e1; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                                    <span style="font-size: 0.85rem; color: #f57f17; font-weight: 600;">📖 Share My Travel Story</span>
+                                                </div>
+                                                <p style="color: #555; line-height: 1.7; margin: 0;">I have a hilarious story about accidentally ordering 30 plates of dumplings because I couldn't read the menu 😂 How can I submit it as a guest post? Would love to share it with your community!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 2rem;">
+                                    <button style="background: transparent; color: #c41e3a; border: 2px solid #c41e3a; padding: 10px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#c41e3a'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#c41e3a'">Load More Comments</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button style="background: transparent; color: #c41e3a; border: 2px solid #c41e3a; padding: 10px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#c41e3a'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#c41e3a'">Load More Comments</button>
+                <!-- Bottom Ad -->
+                <div class="container">
+                    <div class="ad-container">
+                        <div class="ad-slot">
+                            Google AdSense - Leaderboard Ad (728x90)
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Bottom Ad -->
-    <div class="container">
-        <div class="ad-container">
-            <div class="ad-slot">
-                Google AdSense - Leaderboard Ad (728x90)
-            </div>
-        </div>
-    </div>
+                <footer>
+                    <div class="container">
+                        <div class="footer-grid">
+                            <div class="footer-section">
+                                <h4>Travel Guides</h4>
+                                <a href="#">Beijing Guide</a>
+                                <a href="#">Shanghai Guide</a>
+                                <a href="#">Chengdu & Pandas</a>
+                                <a href="#">Guilin & Yangshuo</a>
+                                <a href="#">Xi'an & Terracotta Army</a>
+                                <a href="#">Tibet Travel Tips</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Essential Info</h4>
+                                <a href="#">Visa Requirements</a>
+                                <a href="#">Transportation Guide</a>
+                                <a href="#">Money & Banking</a>
+                                <a href="#">Health & Safety</a>
+                                <a href="#">Internet & VPN</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Culture & Tips</h4>
+                                <a href="#">Cultural Etiquette</a>
+                                <a href="#">Chinese Holidays</a>
+                                <a href="#">Food & Dining Guide</a>
+                                <a href="#">Language Tips</a>
+                                <a href="#">Shopping Guide</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Resources</h4>
+                                <a href="#">First Timer's Guide</a>
+                                <a href="#">Packing List</a>
+                                <a href="#">Useful Apps</a>
+                                <a href="#">Emergency Contacts</a>
+                                <a href="#">About Us</a>
+                            </div>
+                        </div>
+                        <div class="footer-bottom">
+                            <p>&copy; 2024 Travel-China.Help - Your trusted guide to exploring China</p>
+                            <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+                        </div>
+                    </div>
+                </footer>
+            `;
+            
+            // 重新绑定事件监听器
+            bindEventListeners();
+        }
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h4>Travel Guides</h4>
-                    <a href="#">Beijing Guide</a>
-                    <a href="#">Shanghai Guide</a>
-                    <a href="#">Chengdu & Pandas</a>
-                    <a href="#">Guilin & Yangshuo</a>
-                    <a href="#">Xi'an & Terracotta Army</a>
-                    <a href="#">Tibet Travel Tips</a>
+        // 显示博客文章
+        function showBlogPost(postId) {
+            const post = articles[postId];
+            
+            if (!post) {
+                document.getElementById('app').innerHTML = `
+                    <div class="container" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center;">
+                            <h2>Article Not Found</h2>
+                            <p>The article you're looking for doesn't exist or has been moved.</p>
+                            <a href="#" onclick="showHomePage(); return false;" class="btn-primary">Back to Home</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            document.getElementById('app').innerHTML = `
+                <header>
+                    <div class="header-top">
+                        🌍 Your trusted source for China travel information since 2024
+                    </div>
+                    <nav class="container">
+                        <div class="logo">Travel-China.Help</div>
+                        <ul class="nav-menu">
+                            <li><a href="#">Travel Guides</a></li>
+                            <li><a href="#">Travel Stories</a></li>
+                            <li><a href="#">Visa & Entry</a></li>
+                            <li><a href="#">Culture</a></li>
+                            <li><a href="#">Food & Dining</a></li>
+                            <li><a href="#">Travel Tips</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                
+                <div class="container">
+                    <article class="blog-post">
+                        <a href="#" onclick="showHomePage(); return false;" class="back-link">← Back to all articles</a>
+                        
+                        <div class="post-header">
+                            <h1 class="post-title">${post.title}</h1>
+                            <div class="post-meta">
+                                <span>📅 ${post.date}</span>
+                                <span>📁 ${post.category}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">
+                            ${post.content}
+                        </div>
+                    </article>
                 </div>
-                <div class="footer-section">
-                    <h4>Essential Info</h4>
-                    <a href="#">Visa Requirements</a>
-                    <a href="#">Transportation Guide</a>
-                    <a href="#">Money & Banking</a>
-                    <a href="#">Health & Safety</a>
-                    <a href="#">Internet & VPN</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Culture & Tips</h4>
-                    <a href="#">Cultural Etiquette</a>
-                    <a href="#">Chinese Holidays</a>
-                    <a href="#">Food & Dining Guide</a>
-                    <a href="#">Language Tips</a>
-                    <a href="#">Shopping Guide</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <a href="#">First Timer's Guide</a>
-                    <a href="#">Packing List</a>
-                    <a href="#">Useful Apps</a>
-                    <a href="#">Emergency Contacts</a>
-                    <a href="#">About Us</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Travel-China.Help - Your trusted guide to exploring China</p>
-                <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
-            </div>
-        </div>
-    </footer>
+                
+                <footer>
+                    <div class="container">
+                        <div class="footer-grid">
+                            <div class="footer-section">
+                                <h4>Travel Guides</h4>
+                                <a href="#">Beijing Guide</a>
+                                <a href="#">Shanghai Guide</a>
+                                <a href="#">Chengdu & Pandas</a>
+                                <a href="#">Guilin & Yangshuo</a>
+                                <a href="#">Xi'an & Terracotta Army</a>
+                                <a href="#">Tibet Travel Tips</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Essential Info</h4>
+                                <a href="#">Visa Requirements</a>
+                                <a href="#">Transportation Guide</a>
+                                <a href="#">Money & Banking</a>
+                                <a href="#">Health & Safety</a>
+                                <a href="#">Internet & VPN</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Culture & Tips</h4>
+                                <a href="#">Cultural Etiquette</a>
+                                <a href="#">Chinese Holidays</a>
+                                <a href="#">Food & Dining Guide</a>
+                                <a href="#">Language Tips</a>
+                                <a href="#">Shopping Guide</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Resources</h4>
+                                <a href="#">First Timer's Guide</a>
+                                <a href="#">Packing List</a>
+                                <a href="#">Useful Apps</a>
+                                <a href="#">Emergency Contacts</a>
+                                <a href="#">About Us</a>
+                            </div>
+                        </div>
+                        <div class="footer-bottom">
+                            <p>&copy; 2024 Travel-China.Help - Your trusted guide to exploring China</p>
+                            <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+                        </div>
+                    </div>
+                </footer>
+            `;
+        }
 
-    <script>
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 显示外部文章
+        function showExternalArticle(url) {
+            // 创建 iframe 来加载外部文章
+            document.getElementById('app').innerHTML = `
+                <header>
+                    <div class="header-top">
+                        🌍 Your trusted source for China travel information since 2024
+                    </div>
+                    <nav class="container">
+                        <div class="logo">Travel-China.Help</div>
+                        <ul class="nav-menu">
+                            <li><a href="#">Travel Guides</a></li>
+                            <li><a href="#">Travel Stories</a></li>
+                            <li><a href="#">Visa & Entry</a></li>
+                            <li><a href="#">Culture</a></li>
+                            <li><a href="#">Food & Dining</a></li>
+                            <li><a href="#">Travel Tips</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                
+                <div class="container">
+                    <div style="margin: 2rem 0;">
+                        <a href="#" onclick="showHomePage(); return false;" class="back-link">← Back to all articles</a>
+                    </div>
+                    <iframe src="${url}" style="width: 100%; height: 80vh; border: none; border-radius: 10px;"></iframe>
+                </div>
+                
+                <footer>
+                    <div class="container">
+                        <div class="footer-grid">
+                            <div class="footer-section">
+                                <h4>Travel Guides</h4>
+                                <a href="#">Beijing Guide</a>
+                                <a href="#">Shanghai Guide</a>
+                                <a href="#">Chengdu & Pandas</a>
+                                <a href="#">Guilin & Yangshuo</a>
+                                <a href="#">Xi'an & Terracotta Army</a>
+                                <a href="#">Tibet Travel Tips</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Essential Info</h4>
+                                <a href="#">Visa Requirements</a>
+                                <a href="#">Transportation Guide</a>
+                                <a href="#">Money & Banking</a>
+                                <a href="#">Health & Safety</a>
+                                <a href="#">Internet & VPN</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Culture & Tips</h4>
+                                <a href="#">Cultural Etiquette</a>
+                                <a href="#">Chinese Holidays</a>
+                                <a href="#">Food & Dining Guide</a>
+                                <a href="#">Language Tips</a>
+                                <a href="#">Shopping Guide</a>
+                            </div>
+                            <div class="footer-section">
+                                <h4>Resources</h4>
+                                <a href="#">First Timer's Guide</a>
+                                <a href="#">Packing List</a>
+                                <a href="#">Useful Apps</a>
+                                <a href="#">Emergency Contacts</a>
+                                <a href="#">About Us</a>
+                            </div>
+                        </div>
+                        <div class="footer-bottom">
+                            <p>&copy; 2024 Travel-China.Help - Your trusted guide to exploring China</p>
+                            <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+                        </div>
+                    </div>
+                </footer>
+            `;
+        }
+
+        // 绑定事件监听器
+        function bindEventListeners() {
+            // Smooth scroll for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                if (!anchor.onclick) {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
                 }
             });
-        });
 
-        // Article card click handling
-        document.querySelectorAll('.article-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.classList.contains('read-more')) {
-                    const title = this.querySelector('h3').textContent;
-                    alert('This would open the full article: "' + title + '"');
-                }
+            // Article card click handling
+            document.querySelectorAll('.article-card[data-post-id]').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('read-more')) {
+                        const postId = this.dataset.postId;
+                        window.location.hash = `/post/${postId}`;
+                    }
+                });
             });
-        });
+        }
 
-        // Read more button handling
-        document.querySelectorAll('.read-more').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                alert('Opening full article...');
-            });
+        // 初始化应用
+        window.addEventListener('load', () => {
+            route();
+            window.addEventListener('hashchange', route);
         });
     </script>
 </body>
