@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>China Travel Guide - Your Ultimate Guide to China</title>
-    <meta name="description" content="Complete travel guide for visiting China. Discover destinations, visa requirements, cultural tips, and practical information for international tourists.">
+    <title>Travel China Help - Complete Travel Guides & Tips for China</title>
+    <meta name="description" content="Comprehensive travel guides, cultural tips, and insider advice for visiting China. Learn about visas, transportation, food, attractions, and local customs.">
     <style>
         * {
             margin: 0;
@@ -14,9 +14,9 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #333;
-            background: #f8f9fa;
+            background: #f5f5f5;
         }
         
         .container {
@@ -27,244 +27,373 @@
         
         /* Header */
         header {
-            background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%);
-            color: white;
-            padding: 1rem 0;
+            background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
         
+        .header-top {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%);
+            color: white;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 0;
         }
         
         .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo::before {
-            content: "🏮";
-            margin-right: 10px;
             font-size: 1.5rem;
+            font-weight: bold;
+            color: #c41e3a;
         }
         
-        .nav-links {
+        .nav-menu {
             display: flex;
             list-style: none;
             gap: 2rem;
         }
         
-        .nav-links a {
-            color: white;
+        .nav-menu a {
+            color: #333;
             text-decoration: none;
             font-weight: 500;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
         
-        .nav-links a:hover {
-            opacity: 0.8;
+        .nav-menu a:hover {
+            color: #c41e3a;
         }
         
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23ffd700" width="1200" height="600"/><path fill="%23c41e3a" d="M0 400 Q300 200 600 400 T1200 400 V600 H0 Z"/></svg>');
-            background-size: cover;
-            background-position: center;
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        linear-gradient(135deg, #c41e3a 0%, #ffd700 100%);
             color: white;
+            padding: 4rem 0;
             text-align: center;
         }
         
-        .hero-content h1 {
-            font-size: 3.5rem;
+        .hero-banner h1 {
+            font-size: 3rem;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .hero-content p {
+        .hero-banner p {
             font-size: 1.3rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.95;
         }
         
-        .cta-button {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #333;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        /* Ad Slots */
+        .ad-container {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-        }
-        
-        /* Ad Slot */
         .ad-slot {
-            background: #fff;
             border: 2px dashed #ddd;
             padding: 20px;
-            margin: 20px 0;
-            text-align: center;
             color: #888;
-            border-radius: 8px;
             min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 4px;
         }
         
-        /* Sections */
-        section {
-            padding: 4rem 0;
-        }
-        
-        .section-white {
-            background: white;
-        }
-        
-        .section-gray {
-            background: #f8f9fa;
-        }
-        
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #c41e3a;
-        }
-        
-        .grid {
+        /* Main Content Area */
+        .content-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 300px;
             gap: 2rem;
-            margin-top: 3rem;
+            margin: 2rem 0;
         }
         
-        .card {
+        .main-content {
             background: white;
             padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-left: 4px solid #ffd700;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
         
-        .card h3 {
+        /* Article Grid */
+        .section-title {
+            font-size: 2rem;
             color: #c41e3a;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #ffd700;
         }
         
-        .card p {
-            color: #666;
-            margin-bottom: 1rem;
-        }
-        
-        .card ul {
-            color: #666;
-            padding-left: 1.2rem;
-        }
-        
-        /* Destinations Grid */
-        .destinations-grid {
+        .articles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-bottom: 3rem;
         }
         
-        .destination-card {
+        .article-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
         }
         
-        .destination-card:hover {
-            transform: scale(1.02);
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.12);
         }
         
-        .destination-image {
-            height: 200px;
-            background: linear-gradient(45deg, #c41e3a, #ffd700);
+        .article-image {
+            height: 180px;
+            background: linear-gradient(135deg, #c41e3a, #ffd700);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3rem;
+            position: relative;
         }
         
-        .destination-info {
+        .article-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 215, 0, 0.95);
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .article-content {
             padding: 1.5rem;
         }
         
-        .destination-info h3 {
-            color: #c41e3a;
-            margin-bottom: 0.5rem;
+        .article-content h3 {
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            line-height: 1.4;
         }
         
-        /* Quick Tips */
-        .tips-container {
+        .article-excerpt {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #999;
+            font-size: 0.85rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .read-more {
+            color: #c41e3a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        /* Featured Article */
+        .featured-article {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .featured-image {
+            background: linear-gradient(135deg, #c41e3a, #ffd700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            min-height: 350px;
+        }
+        
+        .featured-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+            width: fit-content;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-content h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-content p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #c41e3a, #8b1538);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            width: fit-content;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196, 30, 58, 0.3);
+        }
+        
+        /* Sidebar Widgets */
+        .widget {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .widget h3 {
+            color: #c41e3a;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .widget-list {
+            list-style: none;
+        }
+        
+        .widget-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .widget-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .widget-list a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .widget-list a:hover {
+            color: #c41e3a;
+        }
+        
+        .post-count {
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        /* Quick Tips Section */
+        .tips-section {
             background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%);
             color: white;
-            padding: 3rem 2rem;
-            border-radius: 20px;
-            margin: 2rem 0;
+            padding: 3rem 0;
+            margin: 3rem 0;
         }
         
         .tips-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            margin-top: 2rem;
         }
         
-        .tip {
+        .tip-box {
             background: rgba(255,255,255,0.1);
             padding: 1.5rem;
             border-radius: 10px;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .tip h4 {
+        .tip-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tip-box h4 {
             color: #ffd700;
             margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .tip-box p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.95;
         }
         
         /* Footer */
         footer {
-            background: #333;
-            color: white;
+            background: #2c2c2c;
+            color: #ccc;
             padding: 3rem 0 1rem;
-            text-align: center;
+            margin-top: 3rem;
         }
         
-        .footer-content {
+        .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
@@ -279,379 +408,679 @@
             text-decoration: none;
             display: block;
             margin-bottom: 0.5rem;
+            transition: color 0.3s;
         }
         
         .footer-section a:hover {
             color: #ffd700;
         }
         
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1rem 0;
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #888;
         }
         
-        .social-link {
-            background: #c41e3a;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-        
-        .social-link:hover {
-            background: #ffd700;
-            color: #333;
-        }
-        
-        /* Mobile Responsive */
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-article {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-banner h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-menu {
                 display: none;
             }
             
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            
-            .grid {
+            .articles-grid {
                 grid-template-columns: 1fr;
             }
-        }
-        
-        .search-bar {
-            max-width: 600px;
-            margin: 2rem auto;
-            position: relative;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .search-bar button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #c41e3a;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <header>
+        <div class="header-top">
+            🌍 Your trusted source for China travel information since 2024
+        </div>
         <nav class="container">
-            <div class="logo">China Travel Guide</div>
-            <ul class="nav-links">
-                <li><a href="#destinations">Destinations</a></li>
-                <li><a href="#planning">Planning</a></li>
+            <div class="logo">Travel-China.Help</div>
+            <ul class="nav-menu">
+                <li><a href="#guides">Travel Guides</a></li>
+                <li><a href="#blog">Travel Stories</a></li>
+                <li><a href="#visa">Visa & Entry</a></li>
                 <li><a href="#culture">Culture</a></li>
-                <li><a href="#practical">Practical Info</a></li>
-                <li><a href="#blog">Blog</a></li>
+                <li><a href="#food">Food & Dining</a></li>
+                <li><a href="#tips">Travel Tips</a></li>
             </ul>
         </nav>
     </header>
 
-    <section class="hero">
+    <div class="hero-banner">
         <div class="container">
-            <div class="hero-content">
-                <h1>Discover the Magic of China</h1>
-                <p>Your complete guide to exploring the Middle Kingdom. From ancient wonders to modern marvels, plan your perfect Chinese adventure.</p>
-                <a href="#planning" class="cta-button">Start Planning Your Trip</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Google AdSense Banner Ad -->
-    <div class="container">
-        <div class="ad-slot">
-            <p>Google AdSense Banner Ad (728x90)</p>
+            <h1>Your Complete Guide to Traveling in China</h1>
+            <p>Expert advice, detailed guides, and insider tips to help you navigate China like a pro</p>
         </div>
     </div>
 
-    <section id="destinations" class="section-white">
-        <div class="container">
-            <h2>Popular Destinations</h2>
-            <div class="search-bar">
-                <input type="text" placeholder="Search destinations, cities, or attractions...">
-                <button>🔍</button>
-            </div>
-            <div class="destinations-grid">
-                <div class="destination-card">
-                    <div class="destination-image">🏯</div>
-                    <div class="destination-info">
-                        <h3>Beijing</h3>
-                        <p>Explore the Forbidden City, Great Wall, and Temple of Heaven in China's historic capital.</p>
-                    </div>
-                </div>
-                <div class="destination-card">
-                    <div class="destination-image">🌃</div>
-                    <div class="destination-info">
-                        <h3>Shanghai</h3>
-                        <p>Experience the modern skyline, the Bund, and vibrant nightlife in China's financial hub.</p>
-                    </div>
-                </div>
-                <div class="destination-card">
-                    <div class="destination-image">🐼</div>
-                    <div class="destination-info">
-                        <h3>Chengdu</h3>
-                        <p>Meet giant pandas and enjoy Sichuan cuisine in this laid-back southwestern city.</p>
-                    </div>
-                </div>
-                <div class="destination-card">
-                    <div class="destination-image">⛰️</div>
-                    <div class="destination-info">
-                        <h3>Guilin</h3>
-                        <p>Cruise through stunning karst landscapes and traditional Li River scenery.</p>
-                    </div>
-                </div>
-                <div class="destination-card">
-                    <div class="destination-image">🏛️</div>
-                    <div class="destination-info">
-                        <h3>Xi'an</h3>
-                        <p>Witness the Terracotta Army and walk along the ancient city walls.</p>
-                    </div>
-                </div>
-                <div class="destination-card">
-                    <div class="destination-image">🏔️</div>
-                    <div class="destination-info">
-                        <h3>Zhangjiajie</h3>
-                        <p>Discover the Avatar mountains and breathtaking natural pillars.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Google AdSense Rectangle Ad -->
+    <!-- Top Banner Ad -->
     <div class="container">
-        <div class="ad-slot">
-            <p>Google AdSense Rectangle Ad (300x250)</p>
+        <div class="ad-container">
+            <div class="ad-slot">
+                Google AdSense - Leaderboard Ad (728x90)
+            </div>
         </div>
     </div>
 
-    <section id="planning" class="section-gray">
-        <div class="container">
-            <h2>Essential Travel Planning</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>🛂 Visa & Entry Requirements</h3>
-                    <p>Navigate China's visa system with confidence:</p>
-                    <ul>
-                        <li>Tourist visa (L visa) requirements</li>
-                        <li>Visa-free transit options (24/72/144 hours)</li>
-                        <li>Required documents and processing times</li>
-                        <li>Entry restrictions and health requirements</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>✈️ Best Time to Visit</h3>
-                    <p>Plan your trip for optimal weather and experiences:</p>
-                    <ul>
-                        <li>Spring (March-May): Perfect weather, fewer crowds</li>
-                        <li>Summer (June-August): Hot but vibrant festival season</li>
-                        <li>Autumn (September-November): Comfortable temperatures</li>
-                        <li>Winter (December-February): Cold but beautiful landscapes</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>💰 Budget Planning</h3>
-                    <p>Understand costs and save money:</p>
-                    <ul>
-                        <li>Daily budget ranges: Budget ($30-50), Mid-range ($50-100), Luxury ($100+)</li>
-                        <li>Transportation costs and money-saving tips</li>
-                        <li>Food expenses from street food to fine dining</li>
-                        <li>Accommodation options and booking strategies</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>🚄 Transportation</h3>
-                    <p>Master China's transportation network:</p>
-                    <ul>
-                        <li>High-speed rail system and booking</li>
-                        <li>Domestic flights and budget airlines</li>
-                        <li>City transportation: Metro, buses, taxis</li>
-                        <li>Mobile apps: Didi, Alipay, WeChat Pay</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="culture" class="section-white">
-        <div class="container">
-            <h2>Cultural Insights</h2>
-            <div class="tips-container">
-                <div class="tips-grid">
-                    <div class="tip">
-                        <h4>🤝 Etiquette & Manners</h4>
-                        <p>Business cards with both hands, respect for elders, and proper table manners will earn you respect.</p>
-                    </div>
-                    <div class="tip">
-                        <h4>🗣️ Language Basics</h4>
-                        <p>Learn essential Mandarin phrases. Download translation apps and have key phrases written in Chinese characters.</p>
-                    </div>
-                    <div class="tip">
-                        <h4>🎎 Festivals & Holidays</h4>
-                        <p>Experience Chinese New Year, Mid-Autumn Festival, and National Day Golden Week celebrations.</p>
-                    </div>
-                    <div class="tip">
-                        <h4>🍜 Food Culture</h4>
-                        <p>Dining etiquette, chopstick usage, and regional cuisine differences from Cantonese to Sichuan.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Google AdSense Leaderboard Ad -->
     <div class="container">
-        <div class="ad-slot">
-            <p>Google AdSense Leaderboard Ad (728x90)</p>
+        <div class="content-wrapper">
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="featured-article">
+                    <div class="featured-image">🏯</div>
+                    <div class="featured-content">
+                        <span class="featured-badge">⭐ FEATURED GUIDE</span>
+                        <h2>First Time in China? Read This Complete Guide</h2>
+                        <p>Everything you need to know for your first trip to China: from getting a visa to using mobile payments, navigating the language barrier, and understanding local customs. This comprehensive guide covers all the essentials.</p>
+                        <a href="#" class="btn-primary">Read Full Guide →</a>
+                    </div>
+                </div>
+
+                <h2 class="section-title" id="guides">Latest Travel Guides</h2>
+                <div class="articles-grid">
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">VISA GUIDE</span>
+                            🛂
+                        </div>
+                        <div class="article-content">
+                            <h3>China Visa Application Guide 2024</h3>
+                            <p class="article-excerpt">Step-by-step instructions for applying for a Chinese tourist visa, including required documents, processing times, and common mistakes to avoid.</p>
+                            <div class="article-meta">
+                                <span>📅 Updated Nov 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">TRANSPORTATION</span>
+                            🚄
+                        </div>
+                        <div class="article-content">
+                            <h3>How to Use China's High-Speed Rail</h3>
+                            <p class="article-excerpt">Complete guide to booking tickets, finding your seat, and navigating train stations. Tips for first-time riders of China's incredible bullet train network.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 10, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">MOBILE APPS</span>
+                            📱
+                        </div>
+                        <div class="article-content">
+                            <h3>Essential Apps for Traveling in China</h3>
+                            <p class="article-excerpt">WeChat, Alipay, Didi, and more. Learn which apps you absolutely need and how to set them up before you arrive in China.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 8, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">INTERNET</span>
+                            🌐
+                        </div>
+                        <div class="article-content">
+                            <h3>Internet Access & VPN Guide for China</h3>
+                            <p class="article-excerpt">Understanding China's internet restrictions, choosing a reliable VPN, and staying connected during your trip. What works and what doesn't in 2024.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 5, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">FOOD GUIDE</span>
+                            🍜
+                        </div>
+                        <div class="article-content">
+                            <h3>Ordering Food in China Without Speaking Chinese</h3>
+                            <p class="article-excerpt">Practical tips for navigating restaurants, using food delivery apps, and understanding menus. Includes common dietary restrictions and how to communicate them.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 3, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">CULTURE</span>
+                            🎭
+                        </div>
+                        <div class="article-content">
+                            <h3>Cultural Do's and Don'ts in China</h3>
+                            <p class="article-excerpt">Essential etiquette tips to help you avoid embarrassing situations and show respect for Chinese culture and customs during your visit.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 1, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mid-content Ad -->
+                <div class="ad-container">
+                    <div class="ad-slot">
+                        Google AdSense - Large Rectangle Ad (336x280)
+                    </div>
+                </div>
+
+                <h2 class="section-title">Destination Guides</h2>
+                <div class="articles-grid">
+                    <div class="article-card">
+                        <div class="article-image">🏛️</div>
+                        <div class="article-content">
+                            <h3>Beijing Travel Guide: 5-Day Itinerary</h3>
+                            <p class="article-excerpt">Explore the Forbidden City, Great Wall, and hidden hutongs. A detailed day-by-day guide to Beijing's must-see attractions and local experiences.</p>
+                            <div class="article-meta">
+                                <span>📅 Oct 28, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">🌃</div>
+                        <div class="article-content">
+                            <h3>Shanghai: Old Meets New - Complete Guide</h3>
+                            <p class="article-excerpt">From the historic Bund to futuristic Pudong, discover Shanghai's contrasts. Best neighborhoods, restaurants, and things to do in China's most cosmopolitan city.</p>
+                            <div class="article-meta">
+                                <span>📅 Oct 25, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">⛰️</div>
+                        <div class="article-content">
+                            <h3>Guilin & Yangshuo: Nature Lover's Paradise</h3>
+                            <p class="article-excerpt">Stunning karst landscapes, Li River cruises, and outdoor adventures. How to experience the natural beauty that inspired Chinese paintings for centuries.</p>
+                            <div class="article-meta">
+                                <span>📅 Oct 22, 2024</span>
+                                <a href="#" class="read-more">Read More →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Travel Stories & Experiences Section -->
+                <h2 class="section-title" id="blog" style="margin-top: 4rem;">📖 Traveler Stories & Experiences</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
+                    Real experiences from travelers exploring China. Funny moments, cultural discoveries, and unexpected adventures.
+                </p>
+
+                <div class="articles-grid">
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">TRAVEL STORY</span>
+                            😂
+                        </div>
+                        <div class="article-content">
+                            <h3>Lost in Translation: My First Day Using WeChat Pay</h3>
+                            <p class="article-excerpt">I accidentally paid for a stranger's groceries and ended up making a new friend. Here's what happened when I tried to buy dumplings with my phone...</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 12, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">CULTURAL MOMENT</span>
+                            🎭
+                        </div>
+                        <div class="article-content">
+                            <h3>Joining Aunties' Morning Dance in Shanghai Park</h3>
+                            <p class="article-excerpt">At 6 AM in People's Park, I discovered the most welcoming community activity in China. How morning square dancing became the highlight of my trip.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 11, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">ADVENTURE</span>
+                            🥾
+                        </div>
+                        <div class="article-content">
+                            <h3>Hiking the Great Wall: Wild Section vs Tourist Areas</h3>
+                            <p class="article-excerpt">I visited both the crowded Badaling and the remote Jiankou sections. The difference was shocking, and I'll never forget the sunrise at the wild wall.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 10, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">FOOD ADVENTURE</span>
+                            🌶️
+                        </div>
+                        <div class="article-content">
+                            <h3>I Ate Everything at a Sichuan Hot Pot Restaurant</h3>
+                            <p class="article-excerpt">From duck intestines to pig brain, I challenged myself to try every item on the menu. My mouth is still burning, but it was totally worth it.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 9, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">UNEXPECTED</span>
+                            🎤
+                        </div>
+                        <div class="article-content">
+                            <h3>That Time I Became Famous on Chinese TikTok</h3>
+                            <p class="article-excerpt">A street performer invited me to sing, someone filmed it, and suddenly I had 50,000 followers on Douyin. Welcome to viral fame in China!</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 8, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">HEARTWARMING</span>
+                            ❤️
+                        </div>
+                        <div class="article-content">
+                            <h3>Chinese Grandma Adopted Me for a Week in Chengdu</h3>
+                            <p class="article-excerpt">After getting lost in a residential area, a grandmother insisted on feeding me, teaching me mahjong, and introducing me to her entire neighborhood.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 7, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">TRAIN STORY</span>
+                            🚄
+                        </div>
+                        <div class="article-content">
+                            <h3>12 Hours on a Sleeper Train: Unexpected Friendships</h3>
+                            <p class="article-excerpt">Sharing instant noodles, playing cards, and laughing despite the language barrier. Why overnight trains are the best way to meet real China.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 6, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">FUNNY MOMENT</span>
+                            🤦
+                        </div>
+                        <div class="article-content">
+                            <h3>I Accidentally Ordered 20 Kilos of Oranges on Taobao</h3>
+                            <p class="article-excerpt">A typo while ordering fruit online led to my hostel room being filled with oranges. Here's how I became the orange distribution center of Beijing.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 5, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="article-card">
+                        <div class="article-image">
+                            <span class="article-tag">LOCAL LIFE</span>
+                            🏘️
+                        </div>
+                        <div class="article-content">
+                            <h3>Living Like a Local in a Shanghai Lanehouse</h3>
+                            <p class="article-excerpt">I spent two weeks in a traditional shikumen, sharing bathrooms and learning the art of negotiating with vegetable vendors in broken Mandarin.</p>
+                            <div class="article-meta">
+                                <span>📅 Nov 4, 2024</span>
+                                <a href="#" class="read-more">Read Story →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action for Story Submissions -->
+                <div style="background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 3rem 2rem; border-radius: 15px; text-align: center; margin: 3rem 0;">
+                    <h3 style="color: #333; font-size: 1.8rem; margin-bottom: 1rem;">📝 Have a China Travel Story to Share?</h3>
+                    <p style="color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        Whether it's funny, inspiring, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!
+                    </p>
+                    <button class="btn-primary" style="background: linear-gradient(135deg, #c41e3a, #8b1538);">Submit Your Story</button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Sidebar Ad -->
+                <div class="ad-container">
+                    <div class="ad-slot">
+                        Google AdSense<br>Rectangle Ad<br>(300x250)
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3>📚 Popular Categories</h3>
+                    <ul class="widget-list">
+                        <li><a href="#"><span>Travel Stories</span> <span class="post-count">28</span></a></li>
+                        <li><a href="#"><span>Visa & Entry Requirements</span> <span class="post-count">12</span></a></li>
+                        <li><a href="#"><span>Transportation Guides</span> <span class="post-count">18</span></a></li>
+                        <li><a href="#"><span>City Guides</span> <span class="post-count">25</span></a></li>
+                        <li><a href="#"><span>Food & Dining</span> <span class="post-count">15</span></a></li>
+                        <li><a href="#"><span>Cultural Experiences</span> <span class="post-count">20</span></a></li>
+                        <li><a href="#"><span>Language & Communication</span> <span class="post-count">10</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="widget">
+                    <h3>🔥 Most Read This Week</h3>
+                    <ul class="widget-list">
+                        <li><a href="#">How to Get a Chinese Tourist Visa</a></li>
+                        <li><a href="#">WeChat Setup Guide for Foreigners</a></li>
+                        <li><a href="#">Is China Safe for Solo Travelers?</a></li>
+                        <li><a href="#">Best Time to Visit the Great Wall</a></li>
+                        <li><a href="#">Understanding Chinese Train Tickets</a></li>
+                    </ul>
+                </div>
+
+                <!-- Another Sidebar Ad -->
+                <div class="ad-container">
+                    <div class="ad-slot">
+                        Google AdSense<br>Rectangle Ad<br>(300x250)
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h3>💡 Quick Tips</h3>
+                    <ul class="widget-list">
+                        <li><a href="#">Download VPN before arriving</a></li>
+                        <li><a href="#">Set up WeChat Pay in advance</a></li>
+                        <li><a href="#">Learn basic Mandarin phrases</a></li>
+                        <li><a href="#">Register at local police station</a></li>
+                        <li><a href="#">Save offline maps before traveling</a></li>
+                    </ul>
+                </div>
+            </aside>
         </div>
     </div>
 
-    <section id="practical" class="section-gray">
+    <!-- Quick Tips Section -->
+    <section class="tips-section">
         <div class="container">
-            <h2>Practical Information</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>📱 Digital Life in China</h3>
-                    <p>Stay connected and navigate digital China:</p>
-                    <ul>
-                        <li>VPN requirements and recommendations</li>
-                        <li>WeChat setup for payments and communication</li>
-                        <li>Alipay for cashless transactions</li>
-                        <li>WiFi availability and mobile data plans</li>
-                    </ul>
+            <h2 style="color: white; text-align: center;">Essential Tips for China Travelers</h2>
+            <div class="tips-grid">
+                <div class="tip-box">
+                    <div class="tip-icon">💳</div>
+                    <h4>Mobile Payments</h4>
+                    <p>China is nearly cashless. Learn how to use WeChat Pay and Alipay for everything from taxis to street food.</p>
                 </div>
-                <div class="card">
-                    <h3>🏥 Health & Safety</h3>
-                    <p>Stay safe and healthy during your visit:</p>
-                    <ul>
-                        <li>Recommended vaccinations and health precautions</li>
-                        <li>Travel insurance and medical facilities</li>
-                        <li>Food safety tips and water quality</li>
-                        <li>Emergency contacts and hospital locations</li>
-                    </ul>
+                <div class="tip-box">
+                    <div class="tip-icon">🌐</div>
+                    <h4>Internet Access</h4>
+                    <p>Many Western websites are blocked. Set up a VPN before your trip to access Google, Facebook, and more.</p>
                 </div>
-                <div class="card">
-                    <h3>🛍️ Shopping Guide</h3>
-                    <p>Navigate Chinese markets and malls:</p>
-                    <ul>
-                        <li>Bargaining strategies for markets</li>
-                        <li>Authentic souvenirs vs. tourist traps</li>
-                        <li>Tax-free shopping and customs regulations</li>
-                        <li>Traditional crafts and modern brands</li>
-                    </ul>
+                <div class="tip-box">
+                    <div class="tip-icon">🗣️</div>
+                    <h4>Language Barrier</h4>
+                    <p>English isn't widely spoken. Translation apps and learning basic phrases will make your trip much easier.</p>
                 </div>
-                <div class="card">
-                    <h3>📞 Communication</h3>
-                    <p>Bridge the language gap:</p>
-                    <ul>
-                        <li>Translation apps: Google Translate, Pleco</li>
-                        <li>English-speaking services and areas</li>
-                        <li>International roaming vs. local SIM cards</li>
-                        <li>Emergency phrases and contact information</li>
-                    </ul>
+                <div class="tip-box">
+                    <div class="tip-icon">🚇</div>
+                    <h4>Transportation</h4>
+                    <p>Download Didi (Chinese Uber) and learn how to navigate the metro systems in major cities.</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Community Feedback Section -->
+    <section class="section-white" style="padding: 4rem 0; background: linear-gradient(180deg, #f8f9fa 0%, white 100%);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback & Experiences</h2>
+                <p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+                    Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
+                </p>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <!-- Feedback Form -->
+                <div style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-bottom: 3rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <input type="text" placeholder="Your Name *" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                        <input type="email" placeholder="Your Email * (private)" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                    </div>
+                    
+                    <select style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'">
+                        <option>💭 General Feedback</option>
+                        <option>❓ Question About China Travel</option>
+                        <option>📖 Share My Travel Story</option>
+                        <option>💡 Suggestion for New Content</option>
+                        <option>🐛 Report a Problem</option>
+                        <option>❤️ Just Want to Say Thanks!</option>
+                    </select>
+                    
+                    <textarea placeholder="Your message... What would you like to share or ask? *" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;" onfocus="this.style.borderColor='#c41e3a'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <label style="color: #666; font-size: 0.95rem;">
+                            <input type="checkbox" style="margin-right: 8px;">
+                            I'd like to receive helpful China travel tips via email
+                        </label>
+                        <button style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">Submit Feedback 🚀</button>
+                    </div>
+                </div>
+
+                <!-- Recent Feedback/Comments -->
+                <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                    <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🌟</span> Recent Community Feedback
+                    </h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <!-- Comment 1 -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ffd700;">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #c41e3a, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                        <strong style="color: #333;">James Wilson</strong>
+                                        <span style="color: #999; font-size: 0.85rem;">Yesterday</span>
+                                    </div>
+                                    <div style="background: #e3f2fd; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                        <span style="font-size: 0.85rem; color: #1976d2; font-weight: 600;">❤️ Just Want to Say Thanks!</span>
+                                    </div>
+                                    <p style="color: #555; line-height: 1.7; margin: 0;">Just wanted to say this website is AMAZING! I used your guides for my 2-week China trip and everything went smoothly. The visa guide saved me so much time and stress. Thank you! 🙏</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comment 2 -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4caf50;">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #4caf50, #8bc34a); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                        <strong style="color: #333;">Maria Garcia</strong>
+                                        <span style="color: #999; font-size: 0.85rem;">2 days ago</span>
+                                    </div>
+                                    <div style="background: #fff3e0; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                        <span style="font-size: 0.85rem; color: #f57c00; font-weight: 600;">❓ Question About China Travel</span>
+                                    </div>
+                                    <p style="color: #555; line-height: 1.7; margin: 0;">Quick question: Is it safe for solo female travelers in China? I'm planning a month-long trip and would love to hear from other women who've traveled there alone.</p>
+                                    <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 3px solid #c41e3a;">
+                                        <div style="display: flex; gap: 0.8rem;">
+                                            <span style="color: #c41e3a; font-size: 1.2rem;">✍️</span>
+                                            <div>
+                                                <strong style="color: #c41e3a; font-size: 0.9rem;">Admin Reply:</strong>
+                                                <p style="color: #666; margin: 0.3rem 0 0 0; font-size: 0.95rem; line-height: 1.6;">Great question! China is generally very safe for solo female travelers. We'll be publishing a detailed guide on this topic next week. In the meantime, check out our "Safety Tips for Travelers" article in the practical info section!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comment 3 -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9c27b0;">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #9c27b0, #e91e63); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👨</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                        <strong style="color: #333;">Alex Thompson</strong>
+                                        <span style="color: #999; font-size: 0.85rem;">3 days ago</span>
+                                    </div>
+                                    <div style="background: #f3e5f5; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                        <span style="font-size: 0.85rem; color: #7b1fa2; font-weight: 600;">💡 Suggestion for New Content</span>
+                                    </div>
+                                    <p style="color: #555; line-height: 1.7; margin: 0;">Would love to see more content about traveling China on a budget! Maybe guides for backpackers, cheap eats, affordable accommodation, etc. The current content is great but seems geared toward mid-range travelers.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comment 4 -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff9800;">
+                            <div style="display: flex; gap: 1rem;">
+                                <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #ff9800, #ffc107); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">👩</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                        <strong style="color: #333;">Sophie Chen</strong>
+                                        <span style="color: #999; font-size: 0.85rem;">5 days ago</span>
+                                    </div>
+                                    <div style="background: #fff8e1; padding: 6px 12px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem;">
+                                        <span style="font-size: 0.85rem; color: #f57f17; font-weight: 600;">📖 Share My Travel Story</span>
+                                    </div>
+                                    <p style="color: #555; line-height: 1.7; margin: 0;">I have a hilarious story about accidentally ordering 30 plates of dumplings because I couldn't read the menu 😂 How can I submit it as a guest post? Would love to share it with your community!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button style="background: transparent; color: #c41e3a; border: 2px solid #c41e3a; padding: 10px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.background='#c41e3a'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#c41e3a'">Load More Comments</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Ad -->
+    <div class="container">
+        <div class="ad-container">
+            <div class="ad-slot">
+                Google AdSense - Leaderboard Ad (728x90)
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-grid">
                 <div class="footer-section">
-                    <h4>Popular Destinations</h4>
-                    <a href="#">Beijing Travel Guide</a>
-                    <a href="#">Shanghai Attractions</a>
-                    <a href="#">Great Wall Tours</a>
+                    <h4>Travel Guides</h4>
+                    <a href="#">Beijing Guide</a>
+                    <a href="#">Shanghai Guide</a>
+                    <a href="#">Chengdu & Pandas</a>
                     <a href="#">Guilin & Yangshuo</a>
-                    <a href="#">Chengdu Pandas</a>
+                    <a href="#">Xi'an & Terracotta Army</a>
+                    <a href="#">Tibet Travel Tips</a>
                 </div>
                 <div class="footer-section">
-                    <h4>Travel Planning</h4>
-                    <a href="#">Visa Information</a>
-                    <a href="#">Best Time to Visit</a>
-                    <a href="#">Budget Calculator</a>
-                    <a href="#">Itinerary Planner</a>
-                    <a href="#">Travel Insurance</a>
+                    <h4>Essential Info</h4>
+                    <a href="#">Visa Requirements</a>
+                    <a href="#">Transportation Guide</a>
+                    <a href="#">Money & Banking</a>
+                    <a href="#">Health & Safety</a>
+                    <a href="#">Internet & VPN</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Culture & Tips</h4>
+                    <a href="#">Cultural Etiquette</a>
+                    <a href="#">Chinese Holidays</a>
+                    <a href="#">Food & Dining Guide</a>
+                    <a href="#">Language Tips</a>
+                    <a href="#">Shopping Guide</a>
                 </div>
                 <div class="footer-section">
                     <h4>Resources</h4>
-                    <a href="#">Chinese Culture Guide</a>
-                    <a href="#">Language Basics</a>
-                    <a href="#">Currency & Money</a>
-                    <a href="#">Safety Tips</a>
-                    <a href="#">FAQ</a>
-                </div>
-                <div class="footer-section">
-                    <h4>About Us</h4>
-                    <a href="#">Our Story</a>
-                    <a href="#">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Advertise With Us</a>
+                    <a href="#">First Timer's Guide</a>
+                    <a href="#">Packing List</a>
+                    <a href="#">Useful Apps</a>
+                    <a href="#">Emergency Contacts</a>
+                    <a href="#">About Us</a>
                 </div>
             </div>
-            
-            <div class="social-links">
-                <a href="#" class="social-link">f</a>
-                <a href="#" class="social-link">t</a>
-                <a href="#" class="social-link">i</a>
-                <a href="#" class="social-link">y</a>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Travel-China.Help - Your trusted guide to exploring China</p>
+                <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
             </div>
-            
-            <p>&copy; 2024 China Travel Guide. All rights reserved. | Helping international travelers discover China since 2024</p>
         </div>
     </footer>
 
     <script>
-        // Simple search functionality
-        document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                alert('Search functionality would be implemented here. Searching for: ' + this.value);
-            }
-        });
-
-        document.querySelector('.search-bar button').addEventListener('click', function() {
-            const searchTerm = document.querySelector('.search-bar input').value;
-            alert('Search functionality would be implemented here. Searching for: ' + searchTerm);
-        });
-
-        // Smooth scrolling for navigation links
+        // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
 
-        // Add some interactivity to destination cards
-        document.querySelectorAll('.destination-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const destination = this.querySelector('h3').textContent;
-                alert(`Learn more about ${destination}! This would navigate to a detailed destination page.`);
+        // Article card click handling
+        document.querySelectorAll('.article-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('read-more')) {
+                    const title = this.querySelector('h3').textContent;
+                    alert('This would open the full article: "' + title + '"');
+                }
+            });
+        });
+
+        // Read more button handling
+        document.querySelectorAll('.read-more').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert('Opening full article...');
             });
         });
     </script>
