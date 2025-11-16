@@ -819,5 +819,14 @@
             });
         });
     </script>
+    <div id="article-comments">
+        <!-- 评论表单和列表 -->
+    </div>
+
+    <script src="/js/comments.js"></script>
+    <script>
+        // 为这篇文章初始化评论系统
+        const articleComments = new CommentSystem('article-comments', 'wechat-pay-story');
+    </script>
 </body>
 </html>

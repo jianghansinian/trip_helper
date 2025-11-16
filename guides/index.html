@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Guides - Complete China Travel Information | Travel-China.Help</title>
+    <meta name="description" content="Comprehensive travel guides for visiting China. Visa information, transportation tips, city guides, and practical advice for international travelers.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; cursor: pointer; text-decoration: none; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-menu a:hover { color: #c41e3a; }
+        
+        .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
+        .breadcrumb a { color: #666; text-decoration: none; }
+        .breadcrumb a:hover { color: #c41e3a; }
+        .breadcrumb span { color: #999; margin: 0 0.5rem; }
+        
+        .page-header { background: linear-gradient(135deg, #c41e3a, #ffd700); color: white; padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        .page-header p { font-size: 1.2rem; opacity: 0.95; }
+        
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 3rem 0 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid #ffd700; }
+        .section-title { font-size: 1.8rem; color: #c41e3a; display: flex; align-items: center; gap: 0.5rem; }
+        
+        .article-list { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .article-list-item { display: flex; gap: 1.5rem; padding: 1.5rem; border-bottom: 1px solid #f0f0f0; transition: background 0.3s; cursor: pointer; }
+        .article-list-item:last-child { border-bottom: none; }
+        .article-list-item:hover { background: #f8f9fa; }
+        
+        .article-icon { font-size: 2.5rem; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #c41e3a, #ffd700); border-radius: 12px; flex-shrink: 0; }
+        .article-info { flex: 1; }
+        .article-tag { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .article-list-item h3 { color: #333; font-size: 1.2rem; margin-bottom: 0.5rem; line-height: 1.4; }
+        .article-list-item p { color: #666; font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.5rem; }
+        .article-meta-compact { display: flex; gap: 1.5rem; color: #999; font-size: 0.85rem; }
+        .article-meta-compact span { display: flex; align-items: center; gap: 0.3rem; }
+        
+        .ad-container { background: white; padding: 20px; margin: 20px 0; text-align: center; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .ad-slot { border: 2px dashed #ddd; padding: 20px; color: #888; min-height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        
+        footer { background: #2c2c2c; color: #ccc; padding: 3rem 0 1rem; margin-top: 3rem; }
+        .footer-bottom { text-align: center; padding-top: 2rem; color: #888; }
+        footer a { color: #ffd700; text-decoration: none; }
+        
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .article-list-item { flex-direction: column; gap: 1rem; }
+            .article-icon { width: 100%; height: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">🌍 Your trusted companion for exploring China</div>
+        <nav class="container">
+            <a href="../index.html" class="logo">Travel-China.Help</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html#guides">Travel Guides</a></li>
+                <li><a href="../blog/index.html">Travel Stories</a></li>
+                <li><a href="#visa">Visa & Entry</a></li>
+                <li><a href="#practical">Practical Info</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>›</span>
+            <span style="color: #333;">Travel Guides</span>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>📚 Complete Travel Guides for China</h1>
+            <p>Everything you need to know for an amazing trip to China</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Ad -->
+        <div class="ad-container">
+            <div class="ad-slot">Google AdSense - Leaderboard Ad (728x90)</div>
+        </div>
+
+        <!-- Visa & Entry Section -->
+        <section id="visa">
+            <div class="section-header">
+                <h2 class="section-title">🛂 Visa & Entry Requirements</h2>
+            </div>
+            
+            <div class="article-list">
+                <div class="article-list-item" onclick="window.location.href='visa-guide.html'">
+                    <div class="article-icon">🛂</div>
+                    <div class="article-info">
+                        <span class="article-tag">VISA GUIDE</span>
+                        <h3>China Tourist Visa Application Guide 2025</h3>
+                        <p>Complete step-by-step instructions for applying for a Chinese tourist visa (L visa). Required documents, processing times, costs, and expert tips to ensure approval.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 Updated: January 2025</span>
+                            <span>⏱️ 15 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">✈️</div>
+                    <div class="article-info">
+                        <span class="article-tag">VISA FREE</span>
+                        <h3>144-Hour Visa-Free Transit Guide</h3>
+                        <p>How to take advantage of China's visa-free transit policy in major cities. Requirements, eligible countries, and tips for maximizing your short visit.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 15, 2025</span>
+                            <span>⏱️ 10 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">📝</div>
+                    <div class="article-info">
+                        <span class="article-tag">VISA GUIDE</span>
+                        <h3>Extending Your Visa While in China</h3>
+                        <p>Need more time? Learn how to apply for a visa extension at local PSB offices. Requirements, success rates, and what to expect during the process.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 13, 2025</span>
+                            <span>⏱️ 8 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transportation Section -->
+        <section id="transport">
+            <div class="section-header">
+                <h2 class="section-title">🚄 Transportation Guides</h2>
+            </div>
+            
+            <div class="article-list">
+                <div class="article-list-item">
+                    <div class="article-icon">🚄</div>
+                    <div class="article-info">
+                        <span class="article-tag">TRANSPORTATION</span>
+                        <h3>Complete Guide to China's High-Speed Rail</h3>
+                        <p>Everything about booking tickets, navigating stations, finding your seat, and making the most of China's incredible bullet train network.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 10, 2025</span>
+                            <span>⏱️ 12 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🚇</div>
+                    <div class="article-info">
+                        <span class="article-tag">TRANSPORTATION</span>
+                        <h3>Navigating Beijing's Metro System</h3>
+                        <p>Master Beijing's extensive subway network. Line information, payment methods, etiquette, and tips for avoiding rush hour chaos.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 14, 2025</span>
+                            <span>⏱️ 9 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🚕</div>
+                    <div class="article-info">
+                        <span class="article-tag">TRANSPORTATION</span>
+                        <h3>Using Didi: China's Ride-Hailing App</h3>
+                        <p>Complete guide to downloading, setting up, and using Didi for taxis and rides. English interface, payment options, and safety tips.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 11, 2025</span>
+                            <span>⏱️ 7 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ad -->
+        <div class="ad-container">
+            <div class="ad-slot">Google AdSense - Large Rectangle Ad (336x280)</div>
+        </div>
+
+        <!-- Technology & Apps Section -->
+        <section id="tech">
+            <div class="section-header">
+                <h2 class="section-title">📱 Technology & Essential Apps</h2>
+            </div>
+            
+            <div class="article-list">
+                <div class="article-list-item">
+                    <div class="article-icon">📱</div>
+                    <div class="article-info">
+                        <span class="article-tag">MOBILE APPS</span>
+                        <h3>Essential Apps for Traveling in China</h3>
+                        <p>WeChat, Alipay, Didi, and more. Which apps you absolutely need, how to set them up, and tips for using them without Chinese phone number.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 8, 2025</span>
+                            <span>⏱️ 10 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🌐</div>
+                    <div class="article-info">
+                        <span class="article-tag">INTERNET</span>
+                        <h3>Internet Access & VPN Guide for China 2025</h3>
+                        <p>Understanding the Great Firewall, choosing a reliable VPN, setting up before arrival, and staying connected throughout your trip.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 5, 2025</span>
+                            <span>⏱️ 11 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">💳</div>
+                    <div class="article-info">
+                        <span class="article-tag">PAYMENTS</span>
+                        <h3>Setting Up WeChat Pay & Alipay as a Foreigner</h3>
+                        <p>Step-by-step guide to setting up mobile payments in China. Linking credit cards, verification process, and troubleshooting common issues.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 12, 2025</span>
+                            <span>⏱️ 9 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food & Dining Section -->
+        <section id="food">
+            <div class="section-header">
+                <h2 class="section-title">🍜 Food & Dining Guides</h2>
+            </div>
+            
+            <div class="article-list">
+                <div class="article-list-item">
+                    <div class="article-icon">🍜</div>
+                    <div class="article-info">
+                        <span class="article-tag">FOOD GUIDE</span>
+                        <h3>Ordering Food in China Without Speaking Chinese</h3>
+                        <p>Practical tips for navigating restaurants, using picture menus, food delivery apps, and communicating dietary restrictions effectively.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 3, 2025</span>
+                            <span>⏱️ 8 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🥟</div>
+                    <div class="article-info">
+                        <span class="article-tag">FOOD GUIDE</span>
+                        <h3>Regional Chinese Cuisines: What to Try Where</h3>
+                        <p>From Sichuan spice to Cantonese dim sum. A guide to China's diverse regional cuisines and must-try dishes in each province.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 6, 2025</span>
+                            <span>⏱️ 13 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🌱</div>
+                    <div class="article-info">
+                        <span class="article-tag">FOOD GUIDE</span>
+                        <h3>Vegetarian & Vegan Travel Guide to China</h3>
+                        <p>How to find plant-based food, communicate dietary needs, navigate Buddhist restaurants, and stay healthy as a vegetarian traveler.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 9, 2025</span>
+                            <span>⏱️ 10 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- City Guides Section -->
+        <section id="cities">
+            <div class="section-header">
+                <h2 class="section-title">🏛️ City Guides</h2>
+            </div>
+            
+            <div class="article-list">
+                <div class="article-list-item">
+                    <div class="article-icon">🏛️</div>
+                    <div class="article-info">
+                        <span class="article-tag">CITY GUIDE</span>
+                        <h3>Beijing: Complete 5-Day Itinerary</h3>
+                        <p>Explore the Forbidden City, Great Wall, Temple of Heaven, and hidden hutongs. Day-by-day guide with transportation and dining recommendations.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 16, 2025</span>
+                            <span>⏱️ 18 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🌃</div>
+                    <div class="article-info">
+                        <span class="article-tag">CITY GUIDE</span>
+                        <h3>Shanghai: Where Old Meets New</h3>
+                        <p>From the historic Bund to futuristic Pudong. Best neighborhoods, museums, nightlife, and things to do in China's most cosmopolitan city.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 14, 2025</span>
+                            <span>⏱️ 16 min read</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="article-list-item">
+                    <div class="article-icon">🐼</div>
+                    <div class="article-info">
+                        <span class="article-tag">CITY GUIDE</span>
+                        <h3>Chengdu: Pandas, Spice, and Laid-Back Living</h3>
+                        <p>Meet giant pandas, explore teahouses, brave Sichuan cuisine, and experience the relaxed lifestyle of southwestern China's cultural capital.</p>
+                        <div class="article-meta-compact">
+                            <span>📅 January 11, 2025</span>
+                            <span>⏱️ 14 min read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ad -->
+        <div class="ad-container">
+            <div class="ad-slot">Google AdSense - Leaderboard Ad (728x90)</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Travel-China.Help - <a href="../index.html">Back to Home</a></p>
+                <p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

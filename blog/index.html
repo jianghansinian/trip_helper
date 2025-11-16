@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Stories - Real Experiences from China Travelers | Travel-China.Help</title>
+    <meta name="description" content="Read real travel stories, funny moments, cultural discoveries, and unexpected adventures from travelers exploring China.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; cursor: pointer; text-decoration: none; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-menu a:hover { color: #c41e3a; }
+        
+        .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
+        .breadcrumb a { color: #666; text-decoration: none; }
+        .breadcrumb a:hover { color: #c41e3a; }
+        .breadcrumb span { color: #999; margin: 0 0.5rem; }
+        
+        .page-header { background: linear-gradient(135deg, #e91e63, #ffd700); color: white; padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2.5rem; margin-bottom: 0.8rem; }
+        .page-header p { font-size: 1.2rem; opacity: 0.95; }
+        
+        .filter-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .filter-tab { background: white; color: #666; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; font-weight: 500; }
+        .filter-tab:hover { border-color: #c41e3a; color: #c41e3a; }
+        .filter-tab.active { background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; border-color: #c41e3a; }
+        
+        .article-list { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .article-list-item { display: flex; gap: 1.5rem; padding: 1.5rem; border-bottom: 1px solid #f0f0f0; transition: background 0.3s; cursor: pointer; }
+        .article-list-item:last-child { border-bottom: none; }
+        .article-list-item:hover { background: #f8f9fa; }
+        
+        .article-icon { font-size: 2.5rem; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e91e63, #ffd700); border-radius: 12px; flex-shrink: 0; }
+        .article-info { flex: 1; }
+        .article-tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .tag-story { background: #e3f2fd; color: #1976d2; }
+        .tag-food { background: #fff3e0; color: #e65100; }
+        .tag-cultural { background: #f3e5f5; color: #7b1fa2; }
+        .tag-adventure { background: #e8f5e9; color: #2e7d32; }
+        .tag-heartwarming { background: #fce4ec; color: #c2185b; }
+        .tag-funny { background: #fff9c4; color: #f57f17; }
+        
+        .article-list-item h3 { color: #333; font-size: 1.2rem; margin-bottom: 0.5rem; line-height: 1.4; }
+        .article-list-item p { color: #666; font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.5rem; }
+        .article-meta-compact { display: flex; gap: 1.5rem; color: #999; font-size: 0.85rem; }
+        .article-meta-compact span { display: flex; align-items: center; gap: 0.3rem; }
+        
+        .ad-container { background: white; padding: 20px; margin: 20px 0; text-align: center; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .ad-slot { border: 2px dashed #ddd; padding: 20px; color: #888; min-height: 100px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        
+        .submit-cta { background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 3rem 2rem; border-radius: 15px; text-align: center; margin: 3rem 0; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3); }
+        .submit-cta h2 { color: #333; font-size: 1.8rem; margin-bottom: 1rem; }
+        .submit-cta p { color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .submit-cta button { background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 40px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s; }
+        .submit-cta button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(196,30,58,0.3); }
+        
+        footer { background: #2c2c2c; color: #ccc; padding: 3rem 0 1rem; margin-top: 3rem; }
+        .footer-bottom { text-align: center; padding-top: 2rem; color: #888; }
+        footer a { color: #ffd700; text-decoration: none; }
+        
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .article-list-item { flex-direction: column; gap: 1rem; }
+            .article-icon { width: 100%; height: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">🌍 Your trusted companion for exploring China</div>
+        <nav class="container">
+            <a href="../index.html" class="logo">Travel-China.Help</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html#guides">Travel Guides</a></li>
+                <li><a href="index.html">Travel Stories</a></li>
+                <li><a href="../guides/index.html#visa">Visa & Entry</a></li>
+                <li><a href="../guides/index.html">Practical Info</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a><span>›</span>
+            <span style="color: #333;">Travel Stories</span>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>📖 Real Travel Stories from China</h1>
+            <p>Funny moments, cultural discoveries, and unexpected adventures</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-category="all">All Stories</div>
+            <div class="filter-tab" data-category="funny">😂 Funny Moments</div>
+            <div class="filter-tab" data-category="food">🌶️ Food Adventures</div>
+            <div class="filter-tab" data-category="cultural">🎭 Cultural Experiences</div>
+            <div class="filter-tab" data-category="heartwarming">❤️ Heartwarming</div>
+            <div class="filter-tab" data-category="adventure">🥾 Adventures</div>
+        </div>
+
+        <!-- Ad -->
+        <div class="ad-container">
+            <div class="ad-slot">Google AdSense - Leaderboard Ad (728x90)</div>
+        </div>
+
+        <!-- Stories List -->
+        <div class="article-list">
+            <div class="article-list-item" data-category="funny" onclick="window.location.href='WeChat_Pay.html'">
+                <div class="article-icon">😂</div>
+                <div class="article-info">
+                    <span class="article-tag tag-story">TRAVEL STORY</span>
+                    <h3>Lost in Translation: My First Day Using WeChat Pay</h3>
+                    <p>I accidentally paid for a stranger's groceries and ended up making a lifelong friend. Here's what happened when I tried to buy dumplings with my phone...</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 12, 2025</span>
+                        <span>⏱️ 8 min read</span>
+                        <span>📍 Beijing</span>
+                        <span>✍️ Sarah Martinez</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="food" onclick="window.location.href='sichuan_hotpot.html'">
+                <div class="article-icon">🌶️</div>
+                <div class="article-info">
+                    <span class="article-tag tag-food">FOOD ADVENTURE</span>
+                    <h3>I Ate Everything at a Sichuan Hot Pot Restaurant</h3>
+                    <p>From duck intestines to pig brain, I challenged myself to try every item on the menu. My mouth is still burning, but it was totally worth it.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 9, 2025</span>
+                        <span>⏱️ 10 min read</span>
+                        <span>📍 Chengdu</span>
+                        <span>✍️ Mike Anderson</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="heartwarming">
+                <div class="article-icon">❤️</div>
+                <div class="article-info">
+                    <span class="article-tag tag-heartwarming">HEARTWARMING</span>
+                    <h3>Chinese Grandma Adopted Me for a Week in Chengdu</h3>
+                    <p>After getting lost in a residential area, a grandmother insisted on feeding me, teaching me mahjong, and introducing me to her entire neighborhood.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 7, 2025</span>
+                        <span>⏱️ 12 min read</span>
+                        <span>📍 Chengdu</span>
+                        <span>✍️ Lisa Chen</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="adventure">
+                <div class="article-icon">🚄</div>
+                <div class="article-info">
+                    <span class="article-tag tag-adventure">TRAIN STORY</span>
+                    <h3>12 Hours on a Sleeper Train: Unexpected Friendships</h3>
+                    <p>Sharing instant noodles, playing cards, and laughing despite the language barrier. Why overnight trains are the best way to meet real China.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 6, 2025</span>
+                        <span>⏱️ 7 min read</span>
+                        <span>📍 Beijing → Xi'an</span>
+                        <span>✍️ James Wilson</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="adventure">
+                <div class="article-icon">🥾</div>
+                <div class="article-info">
+                    <span class="article-tag tag-adventure">ADVENTURE</span>
+                    <h3>Hiking the Great Wall: Wild Section vs Tourist Areas</h3>
+                    <p>I visited both the crowded Badaling and the remote Jiankou sections. The difference was shocking, and I'll never forget the sunrise at the wild wall.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 4, 2025</span>
+                        <span>⏱️ 9 min read</span>
+                        <span>📍 Beijing</span>
+                        <span>✍️ Alex Turner</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="funny">
+                <div class="article-icon">🎤</div>
+                <div class="article-info">
+                    <span class="article-tag tag-funny">UNEXPECTED</span>
+                    <h3>That Time I Became Famous on Chinese TikTok</h3>
+                    <p>A street performer invited me to sing, someone filmed it, and suddenly I had 50,000 followers on Douyin. Welcome to viral fame in China!</p>
+                    <div class="article-meta-compact">
+                        <span>📅 January 2, 2025</span>
+                        <span>⏱️ 6 min read</span>
+                        <span>📍 Shanghai</span>
+                        <span>✍️ Emma Rodriguez</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="funny">
+                <div class="article-icon">🤦</div>
+                <div class="article-info">
+                    <span class="article-tag tag-funny">FUNNY MOMENT</span>
+                    <h3>I Accidentally Ordered 20 Kilos of Oranges on Taobao</h3>
+                    <p>A typo while ordering fruit online led to my hostel room being filled with oranges. Here's how I became the orange distribution center of Beijing.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 December 30, 2024</span>
+                        <span>⏱️ 5 min read</span>
+                        <span>📍 Beijing</span>
+                        <span>✍️ David Kim</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="cultural">
+                <div class="article-icon">🎭</div>
+                <div class="article-info">
+                    <span class="article-tag tag-cultural">CULTURAL MOMENT</span>
+                    <h3>Joining Aunties' Morning Dance in Shanghai Park</h3>
+                    <p>At 6 AM in People's Park, I discovered the most welcoming community activity in China. How morning square dancing became the highlight of my trip.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 December 28, 2024</span>
+                        <span>⏱️ 6 min read</span>
+                        <span>📍 Shanghai</span>
+                        <span>✍️ Maria Garcia</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="article-list-item" data-category="cultural">
+                <div class="article-icon">🏘️</div>
+                <div class="article-info">
+                    <span class="article-tag tag-cultural">LOCAL LIFE</span>
+                    <h3>Living Like a Local in a Shanghai Lanehouse</h3>
+                    <p>I spent two weeks in a traditional shikumen, sharing bathrooms and learning the art of negotiating with vegetable vendors in broken Mandarin.</p>
+                    <div class="article-meta-compact">
+                        <span>📅 December 26, 2024</span>
+                        <span>⏱️ 11 min read</span>
+                        <span>📍 Shanghai</span>
+                        <span>✍️ Sophie Taylor</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad -->
+        <div class="ad-container">
+            <div class="ad-slot">Google AdSense - Large Rectangle Ad (336x280)</div>
+        </div>
+
+        <!-- Submit Story CTA -->
+        <div class="submit-cta">
+            <h2>📝 Have a China Travel Story to Share?</h2>
+            <p>Whether it's funny, inspiring, heartwarming, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!</p>
+            <button onclick="window.location.href='../index.html#feedback'">Submit Your Story</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Travel-China.Help - <a href="../index.html">Back to Home</a></p>
+                <p>Sharing real experiences from travelers exploring China</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const articles = document.querySelectorAll('.article-list-item');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const category = tab.dataset.category;
+
+                // Filter articles
+                articles.forEach(article => {
+                    if (category === 'all' || article.dataset.category === category) {
+                        article.style.display = 'flex';
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
