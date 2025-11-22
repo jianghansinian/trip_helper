@@ -662,6 +662,83 @@
             </div>
         </div>
 
+        <!-- ========== 🎯 评论/反馈区域 - 在这里添加 ========== -->
+        <section id="feedback" style="padding: 4rem 0; background: linear-gradient(180deg, #f8f9fa 0%, white 100%);">
+            <div class="container">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback & Experiences</h2>
+                    <p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+                        Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
+                    </p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <!-- 评论容器 -->
+                    <div id="comments-container">
+                        <!-- 评论表单 -->
+                        <div style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-bottom: 3rem;">
+                            <form id="comment-form">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                    <input type="text" name="name" placeholder="Your Name *" required 
+                                           style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" 
+                                           onfocus="this.style.borderColor='#c41e3a'" 
+                                           onblur="this.style.borderColor='#e0e0e0'">
+                                    <input type="email" name="email" placeholder="Your Email * (private)" required 
+                                           style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" 
+                                           onfocus="this.style.borderColor='#c41e3a'" 
+                                           onblur="this.style.borderColor='#e0e0e0'">
+                                </div>
+                                
+                                <select name="category" required 
+                                        style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;" 
+                                        onfocus="this.style.borderColor='#c41e3a'" 
+                                        onblur="this.style.borderColor='#e0e0e0'">
+                                    <option value="General Feedback">💭 General Feedback</option>
+                                    <option value="Question About China Travel">❓ Question About China Travel</option>
+                                    <option value="Share My Travel Story">📖 Share My Travel Story</option>
+                                    <option value="Suggestion for New Content">💡 Suggestion for New Content</option>
+                                    <option value="Report a Problem">🐛 Report a Problem</option>
+                                    <option value="Just Want to Say Thanks!">❤️ Just Want to Say Thanks!</option>
+                                </select>
+                                
+                                <textarea name="message" placeholder="Your message... What would you like to share or ask? *" required 
+                                          style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;" 
+                                          onfocus="this.style.borderColor='#c41e3a'" 
+                                          onblur="this.style.borderColor='#e0e0e0'"></textarea>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                    <label style="color: #666; font-size: 0.95rem;">
+                                        <input type="checkbox" name="notify" style="margin-right: 8px;">
+                                        I'd like to receive helpful China travel tips via email
+                                    </label>
+                                    <button type="submit" 
+                                            style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" 
+                                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" 
+                                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                        Submit Feedback 🚀
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 评论列表显示区域 -->
+                        <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
+                            <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>🌟</span> Recent Community Feedback
+                            </h3>
+                            <div class="comments-list">
+                                <!-- 评论会动态加载到这里 -->
+                                <div style="text-align: center; padding: 2rem; color: #999;">
+                                    <p>Loading comments...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ========== 评论区域结束 ========== -->
+
         <footer>
             <div class="container">
                 <div class="footer-grid">
@@ -701,58 +778,15 @@
             </div>
         </footer>
     </div>
-    <div id="feedback-section">
-        <!-- 评论表单 -->
-        <div id="comments-container">
-            <div class="comment-form-wrapper">
-                <form id="comment-form">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <input type="text" name="name" placeholder="Your Name *" required 
-                            style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                        <input type="email" name="email" placeholder="Your Email * (won't be published)" required 
-                            style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
-                    </div>
-                    
-                    <select name="category" required 
-                            style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white;">
-                        <option value="General Feedback">💭 General Feedback</option>
-                        <option value="Question About China Travel">❓ Question About China Travel</option>
-                        <option value="Share My Travel Story">📖 Share My Travel Story</option>
-                        <option value="Suggestion for New Content">💡 Suggestion for New Content</option>
-                        <option value="Report a Problem">🐛 Report a Problem</option>
-                        <option value="Just Want to Say Thanks!">❤️ Just Want to Say Thanks!</option>
-                    </select>
-                    
-                    <textarea name="message" placeholder="Your message... *" required 
-                            style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical;"></textarea>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                        <label style="color: #666; font-size: 0.95rem;">
-                            <input type="checkbox" name="notify" style="margin-right: 8px;">
-                            Notify me of replies via email
-                        </label>
-                        <button type="submit" 
-                                style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem;">
-                            Submit Feedback 🚀
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- 评论列表将在这里显示 -->
-            <div class="comments-list-wrapper" style="margin-top: 3rem;">
-                <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem;">
-                    🌟 Recent Community Feedback
-                </h3>
-                <div class="comments-list"></div>
-            </div>
-        </div>
-    </div>
-    <!-- 在页面底部添加 -->
-    <script src="/js/comments.js"></script>
+    
+    <!-- ========== JavaScript 部分放在最后 ========== -->
+    <script src="js/comments.js"></script>
     <script>
-        // 初始化评论系统
-        const comments = new CommentSystem('comments-container', 'homepage');
+        // 等待页面加载完成后初始化评论系统
+        document.addEventListener('DOMContentLoaded', function() {
+            const comments = new CommentSystem('comments-container', 'homepage');
+        });
     </script>
+
 </body>
 </html>
