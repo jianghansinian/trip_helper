@@ -1,0 +1,9 @@
+# cat > config.yaml << EOF
+urls_file: urls.txt
+output_dir: translated_articles
+source_lang: zh      # 源语言：中文
+target_lang: en
+backend: simple #google #mymemory #simple
+max_concurrency: 2
+use_cache: false
+# EOF
