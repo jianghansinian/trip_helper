@@ -170,6 +170,8 @@ class Config:
     backend: str = 'simple'  # Changed default to simple (most reliable)
     deepl_api_key: Optional[str] = None
     openai_api_key: Optional[str] = None
+    deepseek_api_key: Optional[str] = None  # NEW: DeepSeek API key
+    proxy: Optional[str] = None  # NEW: Proxy URL (e.g., http://127.0.0.1:7890)
     max_concurrency: int = 6
     timeout: int = 30
     chunk_size: int = 2000  # Reduced for simple backend
@@ -195,6 +197,8 @@ class Config:
             backend=args.backend,
             deepl_api_key=os.environ.get('DEEPL_API_KEY'),
             openai_api_key=os.environ.get('OPENAI_API_KEY'),
+            deepseek_api_key=os.environ.get('DEEPSEEK_API_KEY'),
+            proxy=args.proxy or os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY'),
             max_concurrency=args.concurrency,
             timeout=args.timeout,
             use_cache=args.cache
@@ -691,12 +695,96 @@ class DeepLBackend(TranslatorBackend):
         return '\n\n'.join(results)
 
 
+class DeepSeekBackend(TranslatorBackend):
+    """DeepSeek API - OpenAI compatible interface"""
+    def __init__(self, config: Config):
+        super().__init__(config)
+        # if not config.deepseek_api_key:
+        #     raise RuntimeError("DEEPSEEK_API_KEY not set")
+        # self.api_key = config.deepseek_api_key
+        self.api_key = os.environ.get('DEEPSEEK_API_KEY'),
+        self.url = 'https://api.deepseek.com/v1/chat/completions'  # DeepSeek API endpoint
+        
+        # Auto-detect proxy from environment or config
+        self.proxy = config.proxy or os.environ.get('HTTPS_PROXY') or os.environ.get('HTTP_PROXY')
+        
+        # Language name mapping for better prompts
+        lang_names = {
+            'zh': 'Chinese', 'zh-CN': 'Simplified Chinese',
+            'en': 'English', 'ja': 'Japanese', 'ko': 'Korean',
+            'es': 'Spanish', 'fr': 'French', 'de': 'German'
+        }
+        self.source_name = lang_names.get(config.source_lang, config.source_lang)
+        self.target_name = lang_names.get(config.target_lang, config.target_lang)
+        
+        if self.proxy:
+            logger.info(f"✓ DeepSeek Translator ready (via proxy {self.proxy}): {self.source_name} → {self.target_name}")
+        else:
+            logger.info(f"✓ DeepSeek Translator ready: {self.source_name} → {self.target_name}")
+
+    async def translate(self, text: str) -> str:
+        if not self.api_key:
+            raise RuntimeError("DEEPSEEK_API_KEY not set")
+        
+        chunks = self._chunk_text(text)
+        out = []
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        
+        # Create connector with proxy support
+        connector = None
+        if self.proxy:
+            connector = aiohttp.TCPConnector()
+        
+        async with aiohttp.ClientSession(connector=connector) as session:
+            for chunk in chunks:
+                # Build instruction based on source language
+                if self.config.source_lang == 'auto':
+                    instruction = f"Translate the following text into {self.target_name}. Preserve formatting and meaning."
+                else:
+                    instruction = f"Translate the following {self.source_name} text into {self.target_name}. Preserve formatting and meaning."
+                
+                payload = {
+                    "model": "deepseek-chat",  # DeepSeek's main model
+                    "messages": [
+                        {"role": "system", "content": "You are a professional translator. Output ONLY the translated text, nothing else."},
+                        {"role": "user", "content": f"{instruction}\n\n{chunk}"}
+                    ],
+                    "temperature": 0.3,
+                    "max_tokens": 4000
+                }
+                
+                # Use proxy if configured
+                proxy_url = self.proxy if self.proxy else None
+                
+                try:
+                    async with session.post(
+                        self.url, 
+                        headers=headers, 
+                        json=payload, 
+                        proxy=proxy_url,
+                        timeout=aiohttp.ClientTimeout(total=60)
+                    ) as r:
+                        js = await r.json()
+                        txt = js['choices'][0]['message']['content']
+                        out.append(txt)
+                except Exception as e:
+                    logger.error(f"DeepSeek API error: {e}")
+                    if "Cannot connect" in str(e) or "ClientConnectorError" in str(e):
+                        raise RuntimeError(
+                            f"Cannot connect to DeepSeek API. "
+                            f"Check your network connection or set proxy: proxy: http://127.0.0.1:7890"
+                        )
+                    raise RuntimeError(f"DeepSeek translate error: {js if 'js' in locals() else str(e)}")
+        
+        return '\n\n'.join(out)
+
+
 class OpenAIBackend(TranslatorBackend):
     def __init__(self, config: Config):
         super().__init__(config)
-        # if not config.openai_api_key:
-        #     raise RuntimeError("OPENAI_API_KEY not set")
-        self.api_key = os.environ.get('OPENAI_API_KEY')
+        if not config.openai_api_key:
+            raise RuntimeError("OPENAI_API_KEY not set")
+        self.api_key = config.openai_api_key
         self.url = 'https://api.openai.com/v1/chat/completions'
 
     async def translate(self, text: str) -> str:
@@ -747,12 +835,14 @@ def create_translator(config: Config) -> TranslatorBackend:
         return GoogletransBackend(config)
     elif backend == 'deepl':
         return DeepLBackend(config)
+    elif backend == 'deepseek':
+        return DeepSeekBackend(config)
     elif backend == 'openai':
         return OpenAIBackend(config)
     else:
         raise ValueError(
             f"Unknown backend: {backend}. "
-            f"Choose from: simple, mymemory, google, argos, googletrans, deepl, openai"
+            f"Choose from: simple, mymemory, google, argos, googletrans, deepl, deepseek, openai"
         )
 
 
@@ -1068,8 +1158,9 @@ if __name__ == '__main__':
     parser.add_argument('--source', '-s', default='auto', help='Source language (auto for auto-detection)')
     parser.add_argument('--lang', '-l', default='zh', help='Target language')
     parser.add_argument('--backend', '-b', default='simple', 
-                       choices=['simple', 'mymemory', 'google', 'argos', 'googletrans', 'deepl', 'openai'],
+                       choices=['simple', 'mymemory', 'google', 'argos', 'googletrans', 'deepl', 'deepseek', 'openai'],
                        help='Translation backend')
+    parser.add_argument('--proxy', '-p', help='Proxy URL (e.g., http://127.0.0.1:7890 or socks5://127.0.0.1:1080)')
     parser.add_argument('--concurrency', type=int, default=6, help='Max concurrent requests')
     parser.add_argument('--timeout', type=int, default=30, help='Request timeout (seconds)')
     parser.add_argument('--no-cache', dest='cache', action='store_false', help='Disable caching')
