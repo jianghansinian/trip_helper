@@ -172,6 +172,7 @@ class Config:
     openai_api_key: Optional[str] = None
     deepseek_api_key: Optional[str] = None  # NEW: DeepSeek API key
     proxy: Optional[str] = None  # NEW: Proxy URL (e.g., http://127.0.0.1:7890)
+    rewrite_mode: bool = False  # NEW: Enable content rewriting and optimization
     max_concurrency: int = 6
     timeout: int = 30
     chunk_size: int = 2000  # Reduced for simple backend
@@ -185,20 +186,43 @@ class Config:
             raise RuntimeError("PyYAML not installed")
         with open(path) as f:
             data = yaml.safe_load(f)
+        
+        # Ensure API keys are strings, not tuples or None
+        if 'deepseek_api_key' in data and data['deepseek_api_key']:
+            data['deepseek_api_key'] = str(data['deepseek_api_key']).strip()
+        if 'openai_api_key' in data and data['openai_api_key']:
+            data['openai_api_key'] = str(data['openai_api_key']).strip()
+        if 'deepl_api_key' in data and data['deepl_api_key']:
+            data['deepl_api_key'] = str(data['deepl_api_key']).strip()
+            
         return cls(**data)
 
     @classmethod
     def from_args(cls, args):
+        # Safely get API keys from environment
+        deepseek_key = os.environ.get('DEEPSEEK_API_KEY')
+        openai_key = os.environ.get('OPENAI_API_KEY')
+        deepl_key = os.environ.get('DEEPL_API_KEY')
+        
+        # Ensure they are strings if they exist
+        if deepseek_key:
+            deepseek_key = str(deepseek_key).strip()
+        if openai_key:
+            openai_key = str(openai_key).strip()
+        if deepl_key:
+            deepl_key = str(deepl_key).strip()
+        
         return cls(
             urls_file=args.input,
             output_dir=args.outdir,
             source_lang=args.source,
             target_lang=args.lang,
             backend=args.backend,
-            deepl_api_key=os.environ.get('DEEPL_API_KEY'),
-            openai_api_key=os.environ.get('OPENAI_API_KEY'),
-            deepseek_api_key=os.environ.get('DEEPSEEK_API_KEY'),
+            deepl_api_key=deepl_key,
+            openai_api_key=openai_key,
+            deepseek_api_key=deepseek_key,
             proxy=args.proxy or os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY'),
+            rewrite_mode=args.rewrite,
             max_concurrency=args.concurrency,
             timeout=args.timeout,
             use_cache=args.cache
@@ -699,10 +723,9 @@ class DeepSeekBackend(TranslatorBackend):
     """DeepSeek API - OpenAI compatible interface"""
     def __init__(self, config: Config):
         super().__init__(config)
-        # if not config.deepseek_api_key:
-        #     raise RuntimeError("DEEPSEEK_API_KEY not set")
-        # self.api_key = config.deepseek_api_key
-        self.api_key = os.environ.get('DEEPSEEK_API_KEY'),
+        if not config.deepseek_api_key:
+            raise RuntimeError("DEEPSEEK_API_KEY not set")
+        self.api_key = config.deepseek_api_key
         self.url = 'https://api.deepseek.com/v1/chat/completions'  # DeepSeek API endpoint
         
         # Auto-detect proxy from environment or config
@@ -1160,6 +1183,8 @@ if __name__ == '__main__':
     parser.add_argument('--backend', '-b', default='simple', 
                        choices=['simple', 'mymemory', 'google', 'argos', 'googletrans', 'deepl', 'deepseek', 'openai'],
                        help='Translation backend')
+    parser.add_argument('--rewrite', '-r', action='store_true', 
+                       help='Enable content rewriting and optimization (only works with deepseek/openai)')
     parser.add_argument('--proxy', '-p', help='Proxy URL (e.g., http://127.0.0.1:7890 or socks5://127.0.0.1:1080)')
     parser.add_argument('--concurrency', type=int, default=6, help='Max concurrent requests')
     parser.add_argument('--timeout', type=int, default=30, help='Request timeout (seconds)')
