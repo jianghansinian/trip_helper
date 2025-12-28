@@ -194,6 +194,10 @@ class Config:
             data['openai_api_key'] = str(data['openai_api_key']).strip()
         if 'deepl_api_key' in data and data['deepl_api_key']:
             data['deepl_api_key'] = str(data['deepl_api_key']).strip()
+        
+        # Set default for rewrite_mode if not present
+        if 'rewrite_mode' not in data:
+            data['rewrite_mode'] = False
             
         return cls(**data)
 
@@ -809,6 +813,22 @@ class OpenAIBackend(TranslatorBackend):
             raise RuntimeError("OPENAI_API_KEY not set")
         self.api_key = config.openai_api_key
         self.url = 'https://api.openai.com/v1/chat/completions'
+        self.rewrite_mode = config.rewrite_mode
+        
+        # Auto-detect proxy
+        self.proxy = config.proxy or os.environ.get('HTTPS_PROXY') or os.environ.get('HTTP_PROXY')
+        
+        # Language names
+        lang_names = {
+            'zh': 'Chinese', 'zh-CN': 'Simplified Chinese',
+            'en': 'English', 'ja': 'Japanese', 'ko': 'Korean',
+            'es': 'Spanish', 'fr': 'French', 'de': 'German'
+        }
+        self.source_name = lang_names.get(config.source_lang, config.source_lang)
+        self.target_name = lang_names.get(config.target_lang, config.target_lang)
+        
+        mode_desc = "Rewrite & Optimize" if self.rewrite_mode else "Translate"
+        logger.info(f"✓ OpenAI {mode_desc} ready: {self.source_name} → {self.target_name}")
 
     async def translate(self, text: str) -> str:
         chunks = self._chunk_text(text)
@@ -818,24 +838,58 @@ class OpenAIBackend(TranslatorBackend):
             "Content-Type": "application/json"
         }
         
-        async with aiohttp.ClientSession() as session:
+        connector = None
+        if self.proxy:
+            connector = aiohttp.TCPConnector()
+        
+        async with aiohttp.ClientSession(connector=connector) as session:
             for chunk in chunks:
+                # Build instruction based on mode
+                if self.rewrite_mode:
+                    if self.config.source_lang == 'auto':
+                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+
+Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
+                    else:
+                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the {self.source_name} content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+
+Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
+                    
+                    user_prompt = f"Please rewrite and optimize the following content:\n\n{chunk}"
+                else:
+                    system_prompt = "You are a professional translator. Translate the text accurately while preserving the original meaning and tone. Output ONLY the translated text."
+                    user_prompt = f"Translate to {self.target_name}:\n\n{chunk}"
+                
                 payload = {
                     "model": "gpt-4o-mini",
                     "messages": [
-                        {
-                            "role": "system",
-                            "content": "You are a professional translator. Translate the text accurately while preserving the original meaning and tone. Output ONLY the translated text."
-                        },
-                        {
-                            "role": "user",
-                            "content": f"Translate to {self.config.target_lang}:\n\n{chunk}"
-                        }
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
                     ],
-                    "temperature": 0.3
+                    "temperature": 0.7 if self.rewrite_mode else 0.3
                 }
                 
-                async with session.post(self.url, headers=headers, json=payload, timeout=60) as resp:
+                proxy_url = self.proxy if self.proxy else None
+                
+                async with session.post(
+                    self.url, 
+                    headers=headers, 
+                    json=payload, 
+                    proxy=proxy_url,
+                    timeout=60
+                ) as resp:
                     resp.raise_for_status()
                     js = await resp.json()
                     translated = js['choices'][0]['message']['content'].strip()
@@ -929,11 +983,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .article-featured-image {{ width: 100%; height: 400px; object-fit: cover; }}
         .article-featured-placeholder {{ width: 100%; height: 400px; background: linear-gradient(135deg, #c41e3a, #ff9800); display: flex; align-items: center; justify-content: center; font-size: 6rem; }}
         .article-content {{ padding: 3rem; font-size: 1.1rem; line-height: 1.9; }}
-        .article-content h2 {{ color: #ff5722; font-size: 1.8rem; margin: 2.5rem 0 1rem; padding-top: 1.5rem; }}
+        .article-content h2 {{ color: #ff5722; font-size: 1.8rem; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0; }}
+        .article-content h2:first-of-type {{ border-top: none; padding-top: 0; }}
         .article-content h3 {{ color: #333; font-size: 1.4rem; margin: 2rem 0 1rem; }}
-        .article-content p {{ margin-bottom: 1.5rem; color: #444; }}
+        .article-content p {{ margin-bottom: 1.5rem; color: #444; text-align: justify; }}
         .article-content ul, .article-content ol {{ margin: 1.5rem 0; padding-left: 2rem; }}
-        .article-content li {{ margin-bottom: 0.8rem; color: #444; }}
+        .article-content li {{ margin-bottom: 0.8rem; color: #444; line-height: 1.7; }}
+        .article-content ul {{ list-style-type: disc; }}
+        .article-content ol {{ list-style-type: decimal; }}
         .article-content blockquote {{ border-left: 4px solid #ff9800; padding: 1.5rem 2rem; margin: 2rem 0; background: #fff3e0; border-radius: 0 8px 8px 0; font-style: italic; color: #555; }}
         .article-content img {{ max-width: 100%; height: auto; border-radius: 8px; margin: 2rem 0; }}
         .source-info {{ background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; border-left: 4px solid #c41e3a; }}
@@ -1055,8 +1112,42 @@ def build_html(article: Dict, translated_title: str, translated_text: str, confi
     # No featured image - always use placeholder
     featured_image = '<div class="article-featured-placeholder">📰</div>'
     
-    # Convert plain text to HTML paragraphs
-    content_html = ''.join(f'<p>{para}</p>' for para in translated_text.split('\n\n') if para.strip())
+    # Convert plain text to HTML with proper paragraph handling
+    # Split by double newlines (paragraph breaks)
+    paragraphs = translated_text.split('\n\n')
+    content_parts = []
+    
+    for para in paragraphs:
+        para = para.strip()
+        if not para:
+            continue
+        
+        # Check if it's a heading (starts with # or is all caps)
+        if para.startswith('#'):
+            # Markdown-style heading
+            heading_text = para.lstrip('#').strip()
+            level = len(para) - len(para.lstrip('#'))
+            if level <= 1:
+                content_parts.append(f'<h2>{heading_text}</h2>')
+            else:
+                content_parts.append(f'<h3>{heading_text}</h3>')
+        elif para.isupper() and len(para) < 100:
+            # All caps short text = heading
+            content_parts.append(f'<h3>{para}</h3>')
+        elif para.startswith('- ') or para.startswith('* '):
+            # List item - collect consecutive list items
+            list_items = [para.lstrip('- ').lstrip('* ').strip()]
+            content_parts.append(f'<ul><li>{list_items[0]}</li></ul>')
+        elif para.startswith(tuple(f'{i}.' for i in range(1, 10))):
+            # Numbered list
+            list_item = para.split('.', 1)[1].strip()
+            content_parts.append(f'<ol><li>{list_item}</li></ol>')
+        else:
+            # Regular paragraph - handle single line breaks within paragraph
+            para_html = para.replace('\n', '<br>')
+            content_parts.append(f'<p>{para_html}</p>')
+    
+    content_html = '\n'.join(content_parts)
     
     # Get language display names
     source_lang_display = LANG_NAMES.get(config.source_lang, config.source_lang)
@@ -1106,12 +1197,13 @@ async def process_url(
         
         logger.info(f"📝 Extracted {len(article['text'])} chars from {url}")
         
-        # Translate title
-        logger.info(f"🔤 Translating title: {article['title']}")
+        # Translate/rewrite title
+        mode_text = "Rewriting" if config.rewrite_mode else "Translating"
+        logger.info(f"🔤 {mode_text} title: {article['title']}")
         translated_title = await translator.translate(article['title'])
         
-        # Translate content
-        logger.info(f"🌐 Translating content: {url}")
+        # Translate/rewrite content
+        logger.info(f"🌐 {mode_text} content: {url}")
         translated_content = await translator.translate(article['text'])
         
         # Build HTML with translated title
@@ -1144,6 +1236,10 @@ async def main(config: Config):
     
     urls = [line.strip() for line in urls_file.read_text().splitlines() if line.strip()]
     logger.info(f"Found {len(urls)} URLs to process")
+    
+    # Display configuration
+    mode_text = "🎨 Rewrite & Optimize Mode" if config.rewrite_mode else "📝 Translation Mode"
+    logger.info(f"{mode_text}: {config.source_lang} → {config.target_lang}")
     
     # Setup
     cache = Cache(Path(config.output_dir) / '.cache') if config.use_cache else None
