@@ -38,12 +38,19 @@ import argparse
 import time
 import json
 import logging
+import random
+import warnings
 from urllib.parse import urljoin, urlparse
 from pathlib import Path
 from bs4 import BeautifulSoup
 from typing import Optional, Dict, List
 from dataclasses import dataclass
 from urllib.robotparser import RobotFileParser
+
+# Suppress SSL warnings (common with self-signed certificates in corporate environments)
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 
 # Optional imports
 try:
@@ -160,6 +167,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+]
+
 # ----------------------------- Config -----------------------------
 @dataclass
 class Config:
@@ -175,7 +189,7 @@ class Config:
     rewrite_mode: bool = False  # NEW: Enable content rewriting and optimization
     max_concurrency: int = 6
     timeout: int = 30
-    chunk_size: int = 2000  # Reduced for simple backend
+    chunk_size: int = 3000  # Chunk size for splitting long text
     use_cache: bool = True
     max_retries: int = 3
     user_agent: str = "ArticleTranslator/2.0 (+https://github.com/yourrepo)"
@@ -269,6 +283,107 @@ class RetrySession:
                 logger.warning(f"Retry {attempt + 1}/{self.config.max_retries} for {url} after {wait}s")
                 await asyncio.sleep(wait)
 
+class EnhancedRetrySession:
+    """Enhanced session with anti-scraping features"""
+    def __init__(self, session: aiohttp.ClientSession, config: Config):
+        self.session = session
+        self.config = config
+        self.sem = asyncio.Semaphore(config.max_concurrency)
+
+    def _get_headers(self, url: str) -> Dict[str, str]:
+        """Generate headers with anti-scraping features"""
+        parsed = urlparse(url)
+        domain = parsed.netloc
+        
+        headers = {
+            'User-Agent': self.config.user_agent or random.choice(USER_AGENTS),
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0',
+        }
+        
+        # Add Referer for better success rate
+        if parsed.path and parsed.path != '/':
+            headers['Referer'] = f"{parsed.scheme}://{domain}/"
+        
+        # Site-specific headers
+        if 'mafengwo.cn' in domain:
+            headers['Referer'] = 'https://www.mafengwo.cn/'
+            headers['X-Requested-With'] = 'XMLHttpRequest'
+        elif '8264.com' in domain:
+            headers['Referer'] = 'https://www.8264.com/'
+        
+        return headers
+
+    async def get(self, url: str, **kwargs) -> str:
+        """Enhanced get with retry and anti-scraping"""
+        headers = self._get_headers(url)
+        headers.update(kwargs.pop('headers', {}))
+        
+        cookies = getattr(self.config, 'cookies', None) or {}
+        
+        for attempt in range(self.config.max_retries):
+            try:
+                async with self.sem:
+                    # Add random delay to avoid rate limiting
+                    if attempt > 0:
+                        await asyncio.sleep(random.uniform(2, 5))
+                    
+                    async with self.session.get(
+                        url,
+                        headers=headers,
+                        cookies=cookies,
+                        timeout=aiohttp.ClientTimeout(total=self.config.timeout),
+                        allow_redirects=True,
+                        ssl=False,  # Some sites have SSL issues
+                        **kwargs
+                    ) as resp:
+                        # Handle different status codes
+                        if resp.status == 403:
+                            logger.warning(f"403 Forbidden for {url}, rotating User-Agent...")
+                            headers['User-Agent'] = random.choice(USER_AGENTS)
+                            continue
+                        elif resp.status == 429:
+                            wait = 2 ** (attempt + 2)
+                            logger.warning(f"429 Rate limited, waiting {wait}s...")
+                            await asyncio.sleep(wait)
+                            continue
+                        
+                        resp.raise_for_status()
+                        content = await resp.text()
+                        
+                        # Check if content is valid (not blocked page)
+                        if len(content) < 500 or '验证' in content or 'blocked' in content.lower():
+                            logger.warning(f"Suspicious content detected for {url}, retrying...")
+                            await asyncio.sleep(3)
+                            continue
+                        
+                        return content
+                        
+            except asyncio.TimeoutError:
+                logger.warning(f"Timeout for {url} (attempt {attempt + 1}/{self.config.max_retries})")
+                if attempt == self.config.max_retries - 1:
+                    raise
+            except aiohttp.ClientError as e:
+                logger.warning(f"Client error for {url}: {e} (attempt {attempt + 1}/{self.config.max_retries})")
+                if attempt == self.config.max_retries - 1:
+                    raise
+            except Exception as e:
+                logger.error(f"Unexpected error for {url}: {e}")
+                if attempt == self.config.max_retries - 1:
+                    raise
+            
+            wait = 2 ** attempt
+            logger.warning(f"Retry {attempt + 1}/{self.config.max_retries} for {url} after {wait}s")
+            await asyncio.sleep(wait)
+
 
 # ----------------------------- Article Extraction -----------------------------
 class ArticleExtractor:
@@ -342,19 +457,28 @@ class ArticleExtractor:
         soup = BeautifulSoup(html, 'html.parser')
         title = self._get_title(soup, url)
         
-        # Remove unwanted elements including images
-        for tag in soup(['script', 'style', 'noscript', 'iframe', 'nav', 'footer', 'header', 'img']):
+        for tag in soup(['script', 'style', 'noscript', 'iframe', 'nav', 'footer', 'header', 'img', 'aside']):
             tag.decompose()
         
-        # Try common selectors
+        # Try site-specific selectors
+        domain = urlparse(url).netloc
         content = None
-        for selector in ['article', 'main', '.article-content', '.post-content', '.entry-content']:
-            content = soup.select_one(selector)
-            if content:
-                break
+        
+        if 'mafengwo.cn' in domain:
+            content = soup.select_one('.poi-detail') or soup.select_one('.article') or soup.select_one('._j_content_box')
+        elif '8264.com' in domain:
+            content = soup.select_one('.detail-con') or soup.select_one('.article-content')
+        elif 'ctnews.com.cn' in domain:
+            content = soup.select_one('.content') or soup.select_one('.article')
+        
+        # Fallback to common selectors
+        if not content:
+            for selector in ['article', 'main', '.article-content', '.post-content', '.entry-content', '.content']:
+                content = soup.select_one(selector)
+                if content:
+                    break
         
         if not content:
-            # Find largest text block
             candidates = soup.find_all(['div', 'section'], recursive=True)
             if candidates:
                 content = max(candidates, key=lambda x: len(x.get_text()))
@@ -363,15 +487,13 @@ class ArticleExtractor:
         
         text = content.get_text(separator='\n', strip=True)
         html_fragment = str(content)
-        # lead_image removed
         
         return {
             'title': title,
             'text': text,
             'html': html_fragment,
-            'lead_image': None  # Disabled
+            'lead_image': None
         }
-
     def _get_title(self, soup: BeautifulSoup, url: str) -> str:
         # Try og:title, twitter:title, then <title>
         for meta in soup.find_all('meta'):
@@ -435,30 +557,6 @@ class TranslatorBackend:
         return chunks
 
 
-class GoogletransBackend(TranslatorBackend):
-    def __init__(self, config: Config):
-        super().__init__(config)
-        if not GoogleTranslator:
-            raise RuntimeError("googletrans not installed: pip install googletrans==3.1.0a0")
-        logger.warning("⚠️  googletrans is deprecated and may not work. Consider using 'mymemory' or 'openai' backend instead.")
-        self.trans = GoogleTranslator()
-
-    async def translate(self, text: str) -> str:
-        loop = asyncio.get_running_loop()
-        chunks = self._chunk_text(text)
-        
-        async def _translate_chunk(chunk: str) -> str:
-            try:
-                return await loop.run_in_executor(
-                    None, 
-                    lambda: self.trans.translate(chunk, dest=self.config.target_lang).text
-                )
-            except Exception as e:
-                logger.error(f"googletrans failed: {e}. Try setting backend to 'mymemory' or 'openai'")
-                raise
-        
-        results = await asyncio.gather(*[_translate_chunk(c) for c in chunks])
-        return '\n\n'.join(results)
 
 
 class SimpleBackend(TranslatorBackend):
@@ -518,211 +616,6 @@ class SimpleBackend(TranslatorBackend):
         return '\n\n'.join(translated_parts)
 
 
-class GoogletransBackend(TranslatorBackend):
-    """DEPRECATED: Old googletrans library - unreliable"""
-    def __init__(self, config: Config):
-        super().__init__(config)
-        if not GoogleTranslator:
-            raise RuntimeError("googletrans not installed: pip install googletrans==3.1.0a0")
-        logger.warning("⚠️  googletrans is deprecated and may not work. Consider using 'simple' or 'openai' backend instead.")
-        self.trans = GoogleTranslator()
-
-    async def translate(self, text: str) -> str:
-        loop = asyncio.get_running_loop()
-        chunks = self._chunk_text(text)
-        
-        async def _translate_chunk(chunk: str) -> str:
-            try:
-                return await loop.run_in_executor(
-                    None, 
-                    lambda: self.trans.translate(chunk, dest=self.config.target_lang).text
-                )
-            except Exception as e:
-                logger.error(f"googletrans failed: {e}. Try setting backend to 'simple' or 'openai'")
-                raise
-        
-        results = await asyncio.gather(*[_translate_chunk(c) for c in chunks])
-        return '\n\n'.join(results)
-
-
-class DeepTranslatorBackend(TranslatorBackend):
-    """Using deep-translator library - more reliable than googletrans"""
-    def __init__(self, config: Config, service='google'):
-        super().__init__(config)
-        if not HAS_DEEP_TRANSLATOR:
-            raise RuntimeError("deep-translator not installed: pip install deep-translator")
-        
-        # Map language codes
-        lang_map = {
-            'zh': 'zh-CN',
-            'zh-CN': 'zh-CN',
-            'zh-TW': 'zh-TW',
-            'en': 'en',
-            'ja': 'ja',
-            'ko': 'ko',
-            'es': 'es',
-            'fr': 'fr',
-            'de': 'de',
-            'auto': 'auto'
-        }
-        source = lang_map.get(config.source_lang, 'auto')
-        target = lang_map.get(config.target_lang, config.target_lang)
-        
-        if service == 'google':
-            self.translator = DeepGoogleTranslator(source=source, target=target)
-        elif service == 'mymemory':
-            self.translator = MyMemoryTranslator(source=source, target=target)
-        
-        self.service = service
-        logger.info(f"✓ Deep Translator ready ({service}): {source} → {target}")
-
-    async def translate(self, text: str) -> str:
-        loop = asyncio.get_running_loop()
-        chunks = self._chunk_text(text)
-        
-        async def _translate_chunk(chunk: str) -> str:
-            # Add small delay between requests to avoid rate limiting
-            await asyncio.sleep(0.5)
-            try:
-                return await loop.run_in_executor(
-                    None,
-                    lambda: self.translator.translate(chunk)
-                )
-            except Exception as e:
-                logger.warning(f"Translation chunk failed: {e}, retrying...")
-                await asyncio.sleep(2)
-                return await loop.run_in_executor(
-                    None,
-                    lambda: self.translator.translate(chunk)
-                )
-        
-        results = await asyncio.gather(*[_translate_chunk(c) for c in chunks], return_exceptions=True)
-        
-        # Filter out exceptions and join results
-        translated_parts = []
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                logger.error(f"Chunk {i} translation failed: {result}")
-                translated_parts.append(chunks[i])  # Use original text as fallback
-            else:
-                translated_parts.append(result)
-        
-        return '\n\n'.join(translated_parts)
-
-
-class ArgosBackend(TranslatorBackend):
-    """Local offline translation using Argos Translate"""
-    def __init__(self, config: Config):
-        super().__init__(config)
-        if not HAS_ARGOS:
-            raise RuntimeError("argostranslate not installed: pip install argostranslate")
-        
-        # Map common language codes
-        lang_map = {
-            'zh': 'zh',
-            'en': 'en',
-            'ja': 'ja',
-            'ko': 'ko',
-            'es': 'es',
-            'fr': 'fr',
-            'de': 'de',
-        }
-        
-        self.source_lang = 'en'  # Assume source is English by default
-        self.target_lang = lang_map.get(config.target_lang, config.target_lang)
-        
-        # Try to install language packages with SSL workaround
-        try:
-            # Disable SSL verification for downloading packages (only for this operation)
-            import ssl
-            ssl._create_default_https_context = ssl._create_unverified_context
-            
-            logger.info("📦 Updating Argos package index...")
-            argostranslate.package.update_package_index()
-            available_packages = argostranslate.package.get_available_packages()
-            
-            # Find and install the required package
-            package_to_install = None
-            for pkg in available_packages:
-                if pkg.from_code == self.source_lang and pkg.to_code == self.target_lang:
-                    package_to_install = pkg
-                    break
-            
-            if package_to_install:
-                installed = argostranslate.package.get_installed_packages()
-                already_installed = any(
-                    p.from_code == self.source_lang and p.to_code == self.target_lang 
-                    for p in installed
-                )
-                
-                if not already_installed:
-                    logger.info(f"📦 Downloading translation package: {self.source_lang} → {self.target_lang}")
-                    argostranslate.package.install_from_path(package_to_install.download())
-                    logger.info("✓ Package installed successfully")
-        except Exception as e:
-            logger.error(f"Failed to download Argos packages: {e}")
-            logger.info("Trying to use already installed packages...")
-        
-        self.installed_languages = argostranslate.translate.get_installed_languages()
-        self.from_lang = next((l for l in self.installed_languages if l.code == self.source_lang), None)
-        self.to_lang = next((l for l in self.installed_languages if l.code == self.target_lang), None)
-        
-        if not self.from_lang or not self.to_lang:
-            raise RuntimeError(
-                f"Translation package {self.source_lang}→{self.target_lang} not available.\n"
-                f"Manual installation:\n"
-                f"  1. Download package from: https://github.com/argosopentech/argos-translate/releases\n"
-                f"  2. Install: python3 -m argostranslate.package --install-file <package.argosmodel>\n"
-                f"Available languages: {[l.code for l in self.installed_languages]}"
-            )
-        
-        self.translation = self.from_lang.get_translation(self.to_lang)
-        logger.info(f"✓ Argos Translate ready: {self.source_lang} → {self.target_lang}")
-
-    async def translate(self, text: str) -> str:
-        loop = asyncio.get_running_loop()
-        chunks = self._chunk_text(text)
-        
-        async def _translate_chunk(chunk: str) -> str:
-            return await loop.run_in_executor(
-                None,
-                lambda: self.translation.translate(chunk)
-            )
-        
-        results = await asyncio.gather(*[_translate_chunk(c) for c in chunks])
-        return '\n\n'.join(results)
-
-
-class DeepLBackend(TranslatorBackend):
-    def __init__(self, config: Config):
-        super().__init__(config)
-        if not config.deepl_api_key:
-            raise RuntimeError("DEEPL_API_KEY not set")
-        self.api_key = config.deepl_api_key
-        self.base_url = "https://api-free.deepl.com/v2/translate"
-
-    async def translate(self, text: str) -> str:
-        chunks = self._chunk_text(text)
-        results = []
-        
-        async with aiohttp.ClientSession() as session:
-            for chunk in chunks:
-                data = {
-                    'auth_key': self.api_key,
-                    'text': chunk,
-                    'target_lang': self.config.target_lang.upper()
-                }
-                async with session.post(self.base_url, data=data) as resp:
-                    resp.raise_for_status()
-                    js = await resp.json()
-                    if 'translations' in js and js['translations']:
-                        results.append(js['translations'][0]['text'])
-                    else:
-                        raise RuntimeError(f"DeepL error: {js}")
-        
-        return '\n\n'.join(results)
-
-
 class DeepSeekBackend(TranslatorBackend):
     """DeepSeek API - OpenAI compatible interface"""
     def __init__(self, config: Config):
@@ -763,45 +656,126 @@ class DeepSeekBackend(TranslatorBackend):
             connector = aiohttp.TCPConnector()
         
         async with aiohttp.ClientSession(connector=connector) as session:
-            for chunk in chunks:
-                # Build instruction based on source language
-                if self.config.source_lang == 'auto':
-                    instruction = f"Translate the following text into {self.target_name}. Preserve formatting and meaning."
+            for idx, chunk in enumerate(chunks, 1):
+                # Build instruction based on source language and rewrite mode
+                rewrite_mode = self.config.rewrite_mode
+                if rewrite_mode:
+                    if self.config.source_lang == 'auto':
+                        instruction = f"Rewrite and optimize the following text into {self.target_name}. Make it more engaging, well-structured, and professional while preserving the core message."
+                    else:
+                        instruction = f"Rewrite and optimize the following {self.source_name} text into {self.target_name}. Make it more engaging, well-structured, and professional while preserving the core message."
+                    system_content = "You are a professional content writer and editor. Rewrite and optimize the content to make it more engaging and well-structured. Output ONLY the rewritten content."
                 else:
-                    instruction = f"Translate the following {self.source_name} text into {self.target_name}. Preserve formatting and meaning."
+                    if self.config.source_lang == 'auto':
+                        instruction = f"Translate the following text into {self.target_name}. Preserve formatting and meaning."
+                    else:
+                        instruction = f"Translate the following {self.source_name} text into {self.target_name}. Preserve formatting and meaning."
+                    system_content = "You are a professional translator. Output ONLY the translated text, nothing else."
+                
+                # Calculate dynamic timeout based on chunk size and mode
+                # Base timeout: 60s for translation, 120s for rewrite
+                # Add extra time based on chunk size (roughly 1s per 100 chars)
+                base_timeout = 180 if rewrite_mode else 90
+                size_bonus = max(len(chunk) // 100, 0)
+                chunk_timeout = min(base_timeout + size_bonus, 300)  # Cap at 5 minutes
+                
+                # Adjust max_tokens based on chunk size
+                estimated_tokens = len(chunk) // 3  # Rough estimate: 3 chars per token
+                max_tokens = min(int(estimated_tokens * 1.5), 8000)  # Allow 50% more for output, cap at 8k
                 
                 payload = {
-                    "model": "deepseek-chat",  # DeepSeek's main model
+                    "model": "deepseek-chat",
                     "messages": [
-                        {"role": "system", "content": "You are a professional translator. Output ONLY the translated text, nothing else."},
+                        {"role": "system", "content": system_content},
                         {"role": "user", "content": f"{instruction}\n\n{chunk}"}
                     ],
-                    "temperature": 0.3,
-                    "max_tokens": 4000
+                    "temperature": 0.7 if rewrite_mode else 0.3,
+                    "max_tokens": max_tokens
                 }
                 
                 # Use proxy if configured
                 proxy_url = self.proxy if self.proxy else None
                 
-                try:
-                    async with session.post(
-                        self.url, 
-                        headers=headers, 
-                        json=payload, 
-                        proxy=proxy_url,
-                        timeout=aiohttp.ClientTimeout(total=60)
-                    ) as r:
-                        js = await r.json()
-                        txt = js['choices'][0]['message']['content']
-                        out.append(txt)
-                except Exception as e:
-                    logger.error(f"DeepSeek API error: {e}")
-                    if "Cannot connect" in str(e) or "ClientConnectorError" in str(e):
-                        raise RuntimeError(
-                            f"Cannot connect to DeepSeek API. "
-                            f"Check your network connection or set proxy: proxy: http://127.0.0.1:7890"
-                        )
-                    raise RuntimeError(f"DeepSeek translate error: {js if 'js' in locals() else str(e)}")
+                # Retry logic for each chunk
+                max_retries = 2
+                last_error = None
+                
+                for retry in range(max_retries + 1):
+                    try:
+                        logger.info(f"🔄 Processing chunk {idx}/{len(chunks)} (size: {len(chunk)} chars, timeout: {chunk_timeout}s, retry: {retry})")
+                        
+                        async with session.post(
+                            self.url, 
+                            headers=headers, 
+                            json=payload, 
+                            proxy=proxy_url,
+                            timeout=aiohttp.ClientTimeout(total=chunk_timeout)
+                        ) as r:
+                            r.raise_for_status()
+                            js = await r.json()
+                            
+                            if 'choices' not in js or not js['choices']:
+                                raise RuntimeError(f"Unexpected API response: {js}")
+                            
+                            txt = js['choices'][0]['message']['content'].strip()
+                            if not txt:
+                                raise RuntimeError("Empty response from API")
+                            
+                            out.append(txt)
+                            logger.info(f"✓ Chunk {idx}/{len(chunks)} completed ({len(txt)} chars)")
+                            break  # Success, exit retry loop
+                            
+                    except asyncio.TimeoutError:
+                        last_error = f"Timeout after {chunk_timeout}s"
+                        if retry < max_retries:
+                            wait_time = (retry + 1) * 5
+                            logger.warning(f"⏱ Chunk {idx} timeout, retrying in {wait_time}s... (attempt {retry + 1}/{max_retries + 1})")
+                            await asyncio.sleep(wait_time)
+                            # Increase timeout for retry
+                            chunk_timeout = min(chunk_timeout + 60, 300)
+                        else:
+                            logger.error(f"❌ Chunk {idx} failed after {max_retries + 1} attempts: {last_error}")
+                            raise RuntimeError(
+                                f"DeepSeek API timeout after {max_retries + 1} attempts. "
+                                f"Chunk size: {len(chunk)} chars. "
+                                f"Try reducing chunk_size (current: {self.config.chunk_size}) or check your network connection."
+                            )
+                    except aiohttp.ClientResponseError as e:
+                        last_error = f"HTTP {e.status}: {e.message}"
+                        if e.status == 429:  # Rate limit
+                            wait_time = (retry + 1) * 10
+                            logger.warning(f"⚠ Rate limited, waiting {wait_time}s...")
+                            await asyncio.sleep(wait_time)
+                            continue
+                        elif e.status >= 500 and retry < max_retries:  # Server error, retry
+                            wait_time = (retry + 1) * 5
+                            logger.warning(f"⚠ Server error {e.status}, retrying in {wait_time}s...")
+                            await asyncio.sleep(wait_time)
+                            continue
+                        else:
+                            raise RuntimeError(f"DeepSeek API HTTP error: {last_error}")
+                    except Exception as e:
+                        last_error = str(e)
+                        if "Cannot connect" in str(e) or "ClientConnectorError" in str(e):
+                            if retry < max_retries:
+                                wait_time = (retry + 1) * 5
+                                logger.warning(f"⚠ Connection error, retrying in {wait_time}s...")
+                                await asyncio.sleep(wait_time)
+                                continue
+                            raise RuntimeError(
+                                f"Cannot connect to DeepSeek API after {max_retries + 1} attempts. "
+                                f"Check your network connection or set proxy: proxy: http://127.0.0.1:7890"
+                            )
+                        elif retry < max_retries:
+                            wait_time = (retry + 1) * 5
+                            logger.warning(f"⚠ Error: {e}, retrying in {wait_time}s...")
+                            await asyncio.sleep(wait_time)
+                            continue
+                        else:
+                            raise RuntimeError(f"DeepSeek translate error: {last_error}")
+                else:
+                    # All retries exhausted
+                    raise RuntimeError(f"Failed to translate chunk {idx} after {max_retries + 1} attempts: {last_error}")
         
         return '\n\n'.join(out)
 
@@ -1168,7 +1142,7 @@ def build_html(article: Dict, translated_title: str, translated_text: str, confi
 # ----------------------------- Main Pipeline -----------------------------
 async def process_url(
     url: str, 
-    session: RetrySession, 
+    session: EnhancedRetrySession, 
     extractor: ArticleExtractor,
     translator: TranslatorBackend,
     config: Config,
@@ -1248,7 +1222,7 @@ async def main(config: Config):
     
     # Process
     async with aiohttp.ClientSession() as aio_session:
-        session = RetrySession(aio_session, config)
+        session = EnhancedRetrySession(aio_session, config)
         
         if tqdm:
             tasks = [process_url(url, session, extractor, translator, config, cache) for url in urls]
