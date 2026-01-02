@@ -174,6 +174,12 @@ USER_AGENTS = [
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
 ]
 
+# ----------------------------- Custom Exceptions -----------------------------
+class VerificationPageError(RuntimeError):
+    """验证页面错误，不应该重试"""
+    pass
+
+
 # ----------------------------- Config -----------------------------
 @dataclass
 class Config:
@@ -316,7 +322,17 @@ class EnhancedRetrySession:
         # Site-specific headers
         if 'mafengwo.cn' in domain:
             headers['Referer'] = 'https://www.mafengwo.cn/'
-            headers['X-Requested-With'] = 'XMLHttpRequest'
+            headers['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+            headers['Accept-Language'] = 'zh-CN,zh;q=0.9,en;q=0.8'
+            headers['Accept-Encoding'] = 'gzip, deflate, br'
+            headers['Connection'] = 'keep-alive'
+            headers['Upgrade-Insecure-Requests'] = '1'
+            headers['Sec-Fetch-Dest'] = 'document'
+            headers['Sec-Fetch-Mode'] = 'navigate'
+            headers['Sec-Fetch-Site'] = 'same-origin'
+            headers['Sec-Fetch-User'] = '?1'
+            headers['Cache-Control'] = 'max-age=0'
+            # 移除X-Requested-With（这会让服务器认为这是AJAX请求，可能触发验证）
         elif '8264.com' in domain:
             headers['Referer'] = 'https://www.8264.com/'
         
@@ -329,12 +345,20 @@ class EnhancedRetrySession:
         
         cookies = getattr(self.config, 'cookies', None) or {}
         
+        last_error = None
+        suspicious_count = 0
+        proxy_failed = False  # 标记代理是否失败
+        
         for attempt in range(self.config.max_retries):
             try:
                 async with self.sem:
                     # Add random delay to avoid rate limiting
                     if attempt > 0:
                         await asyncio.sleep(random.uniform(2, 5))
+                    
+                    # 使用代理（如果配置了且之前没有失败）
+                    # 注意：如果代理失败，proxy_failed会被设置，后续重试将不使用代理
+                    proxy_url = None if proxy_failed else (self.config.proxy if self.config.proxy else None)
                     
                     async with self.session.get(
                         url,
@@ -343,39 +367,172 @@ class EnhancedRetrySession:
                         timeout=aiohttp.ClientTimeout(total=self.config.timeout),
                         allow_redirects=True,
                         ssl=False,  # Some sites have SSL issues
+                        proxy=proxy_url,  # 使用代理
                         **kwargs
                     ) as resp:
                         # Handle different status codes
                         if resp.status == 403:
                             logger.warning(f"403 Forbidden for {url}, rotating User-Agent...")
                             headers['User-Agent'] = random.choice(USER_AGENTS)
+                            if attempt == self.config.max_retries - 1:
+                                raise RuntimeError(f"403 Forbidden after {self.config.max_retries} attempts")
                             continue
                         elif resp.status == 429:
                             wait = 2 ** (attempt + 2)
                             logger.warning(f"429 Rate limited, waiting {wait}s...")
                             await asyncio.sleep(wait)
+                            if attempt == self.config.max_retries - 1:
+                                raise RuntimeError(f"Rate limited after {self.config.max_retries} attempts")
                             continue
                         
                         resp.raise_for_status()
                         content = await resp.text()
                         
-                        # Check if content is valid (not blocked page)
-                        if len(content) < 500 or '验证' in content or 'blocked' in content.lower():
-                            logger.warning(f"Suspicious content detected for {url}, retrying...")
-                            await asyncio.sleep(3)
+                        # 改进内容验证：对于马蜂窝等网站，需要检测验证页面
+                        # 检查是否是验证页面或空内容
+                        is_blocked = False
+                        block_keywords = ['验证', 'captcha', 'blocked', 'access denied', 'forbidden']
+                        
+                        # 对于马蜂窝，检查特定的验证页面特征
+                        if 'mafengwo.cn' in url:
+                            # 马蜂窝验证页面的特征：
+                            # 1. 内容很短（<500字符）
+                            # 2. 包含probe.js验证脚本
+                            # 3. 包含验证相关关键词
+                            content_lower = content.lower()
+                            
+                            # 检测probe.js验证脚本（马蜂窝的反爬虫机制）
+                            # 如果检测到probe.js，立即抛出异常，不继续处理
+                            if '/probe.js' in content or 'probe.js' in content_lower:
+                                # 根据代理状态提供不同的解决方案
+                                if proxy_failed:
+                                    error_msg = (
+                                        f"马蜂窝网站返回了JavaScript验证页面（probe.js）。\n"
+                                        f"这是反爬虫机制，需要JavaScript执行才能访问。\n"
+                                        f"当前状态：代理不可用，直接连接也被拦截。\n\n"
+                                        f"解决方案：\n"
+                                        f"  1. 配置可用的代理（WSL环境需要使用Windows主机IP，不是127.0.0.1）\n"
+                                        f"     获取Windows IP: ip route | grep default | awk '{{print $3}}'\n"
+                                        f"     然后在config.yaml中使用: proxy: http://<Windows_IP>:7890\n"
+                                        f"  2. 使用浏览器自动化工具（Selenium/Playwright）\n"
+                                        f"  3. 手动访问页面，保存HTML到文件，然后使用本地文件处理\n"
+                                        f"  4. 尝试其他网站（如8264.com）进行测试"
+                                    )
+                                else:
+                                    error_msg = (
+                                        f"马蜂窝网站返回了JavaScript验证页面（probe.js）。\n"
+                                        f"这是反爬虫机制，需要JavaScript执行才能访问。\n"
+                                        f"解决方案：\n"
+                                        f"  1. 在config.yaml中设置代理: proxy: http://127.0.0.1:7890\n"
+                                        f"  2. 使用浏览器自动化工具（Selenium/Playwright）\n"
+                                        f"  3. 手动访问页面并复制内容到文件"
+                                    )
+                                logger.error(f"❌ {error_msg}")
+                                raise VerificationPageError(error_msg)
+                            
+                            # 检测验证关键词
+                            elif any(keyword in content_lower for keyword in ['验证码', '人机验证', '安全验证', 'captcha']):
+                                is_blocked = True
+                            
+                            # 如果内容太短（可能是验证页面）
+                            elif len(content) < 500:
+                                # 检查是否包含body标签但内容很少（验证页面的特征）
+                                if '<body' in content and '</body>' in content:
+                                    body_content = content.split('<body')[1].split('</body>')[0] if '</body>' in content else ''
+                                    if len(body_content.strip()) < 50:  # body内容很少
+                                        is_blocked = True
+                                        logger.warning(f"⚠️  Detected suspicious short content with empty body")
+                        else:
+                            # 其他网站的检测
+                            if len(content) < 500:
+                                is_blocked = True
+                            elif any(keyword in content.lower() for keyword in block_keywords):
+                                is_blocked = True
+                        
+                        if is_blocked:
+                            # probe.js已经在上面检测并抛出异常了，这里不会执行到
+                            suspicious_count += 1
+                            logger.warning(f"Suspicious content detected for {url} (attempt {attempt + 1}, suspicious count: {suspicious_count})")
+                            
+                            # 如果多次检测到可疑内容，尝试更长的等待时间
+                            wait_time = 3 + (suspicious_count * 2)
+                            await asyncio.sleep(wait_time)
+                            
+                            # 如果是最后一次尝试，仍然返回内容（让extractor处理）
+                            if attempt == self.config.max_retries - 1:
+                                logger.warning(f"⚠️  Reached max retries, returning content anyway (may be blocked page)")
+                                if not content or len(content) < 100:
+                                    raise RuntimeError(
+                                        f"内容太短或为空（{len(content) if content else 0}字符），可能是验证页面。\n"
+                                        f"HTML预览: {content[:200] if content else 'None'}"
+                                    )
+                                return content
                             continue
+                        
+                        # 内容验证通过
+                        if not content:
+                            raise RuntimeError("Received empty content")
                         
                         return content
                         
             except asyncio.TimeoutError:
+                last_error = f"Timeout after {self.config.timeout}s"
                 logger.warning(f"Timeout for {url} (attempt {attempt + 1}/{self.config.max_retries})")
                 if attempt == self.config.max_retries - 1:
-                    raise
+                    raise RuntimeError(f"Timeout after {self.config.max_retries} attempts: {last_error}")
+            except aiohttp.ClientProxyConnectionError as e:
+                # 代理连接错误
+                last_error = str(e)
+                proxy_failed = True
+                
+                proxy_info = ""
+                if '127.0.0.1' in str(self.config.proxy) or 'localhost' in str(self.config.proxy):
+                    proxy_info = (
+                        f"\n注意：在WSL环境中，127.0.0.1可能无法访问Windows主机的代理。\n"
+                        f"可以尝试：\n"
+                        f"  1. 使用Windows主机的IP地址（运行：ip route | grep default | awk '{{print $3}}'）\n"
+                        f"  2. 或者从Windows主机获取IP：ipconfig（Windows）然后使用该IP\n"
+                        f"  3. 或者移除proxy配置，直接连接（可能遇到验证页面）"
+                    )
+                
+                if attempt == 0:
+                    # 第一次失败，尝试不使用代理
+                    logger.warning(f"⚠️  代理连接失败，尝试不使用代理继续...")
+                    logger.warning(f"   错误: {last_error}")
+                    if proxy_info:
+                        logger.warning(f"   {proxy_info}")
+                    # 标记代理失败，下次重试时不使用代理
+                    proxy_failed = True
+                    continue
+                else:
+                    # 重试后仍然失败
+                    error_msg = (
+                        f"无法连接到代理服务器 {self.config.proxy}\n"
+                        f"请检查：\n"
+                        f"  1. 代理服务器是否正在运行\n"
+                        f"  2. 代理地址和端口是否正确\n"
+                        f"  3. 防火墙是否阻止了连接{proxy_info}\n"
+                        f"  4. 如果不需要代理，可以在config.yaml中移除proxy配置"
+                    )
+                    logger.error(f"❌ 代理连接失败: {error_msg}")
+                    if attempt == self.config.max_retries - 1:
+                        raise RuntimeError(f"代理连接失败: {error_msg}\n原始错误: {last_error}")
             except aiohttp.ClientError as e:
+                last_error = str(e)
                 logger.warning(f"Client error for {url}: {e} (attempt {attempt + 1}/{self.config.max_retries})")
+                if attempt == self.config.max_retries - 1:
+                    raise RuntimeError(f"Client error after {self.config.max_retries} attempts: {last_error}")
+            except VerificationPageError as e:
+                # 验证页面错误，不应该重试，直接抛出
+                logger.error(f"❌ {e}")
+                raise  # 直接抛出，不重试
+            except RuntimeError as e:
+                last_error = str(e)
+                logger.error(f"Runtime error for {url}: {e}")
                 if attempt == self.config.max_retries - 1:
                     raise
             except Exception as e:
+                last_error = str(e)
                 logger.error(f"Unexpected error for {url}: {e}")
                 if attempt == self.config.max_retries - 1:
                     raise
@@ -383,6 +540,9 @@ class EnhancedRetrySession:
             wait = 2 ** attempt
             logger.warning(f"Retry {attempt + 1}/{self.config.max_retries} for {url} after {wait}s")
             await asyncio.sleep(wait)
+        
+        # 如果所有重试都失败，抛出异常（确保不会返回None）
+        raise RuntimeError(f"Failed to fetch {url} after {self.config.max_retries} attempts. Last error: {last_error}")
 
 
 # ----------------------------- Article Extraction -----------------------------
@@ -454,8 +614,22 @@ class ArticleExtractor:
         }
 
     def _extract_bs4(self, html: str, url: str) -> Dict:
-        soup = BeautifulSoup(html, 'html.parser')
+        # 验证HTML内容
+        if not html:
+            raise ValueError(f"HTML content is None or empty for {url}")
+        
+        if not isinstance(html, str):
+            raise TypeError(f"HTML content must be a string, got {type(html)} for {url}")
+        
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+        except Exception as e:
+            raise ValueError(f"Failed to parse HTML for {url}: {e}")
+        
         title = self._get_title(soup, url)
+        
+        # 保存原始body用于调试
+        original_body = soup.body
         
         for tag in soup(['script', 'style', 'noscript', 'iframe', 'nav', 'footer', 'header', 'img', 'aside']):
             tag.decompose()
@@ -463,30 +637,107 @@ class ArticleExtractor:
         # Try site-specific selectors
         domain = urlparse(url).netloc
         content = None
+        selector_used = None
         
         if 'mafengwo.cn' in domain:
-            content = soup.select_one('.poi-detail') or soup.select_one('.article') or soup.select_one('._j_content_box')
+            # 马蜂窝的多种可能选择器（按优先级）
+            selectors = [
+                ('._j_content_box', '马蜂窝内容框'),
+                ('.view_con', '马蜂窝视图容器'),
+                ('.post-view', '马蜂窝文章视图'),
+                ('#_j_article_content', '马蜂窝文章内容ID'),
+                ('.post-content', '马蜂窝文章内容'),
+                ('.poi-detail', '马蜂窝POI详情'),
+                ('.article', '马蜂窝文章'),
+                ('.content', '通用内容'),
+            ]
+            
+            for selector, desc in selectors:
+                try:
+                    found = soup.select_one(selector)
+                    if found:
+                        text_len = len(found.get_text(strip=True))
+                        if text_len > 100:  # 确保有足够内容
+                            content = found
+                            selector_used = f"{selector} ({desc})"
+                            logger.debug(f"✓ Found content using {selector_used}, length: {text_len}")
+                            break
+                except Exception as e:
+                    logger.debug(f"Selector {selector} failed: {e}")
+                    continue
+            
+            # 如果还是没找到，尝试查找包含"游记"、"攻略"等关键词的div
+            if not content:
+                logger.debug("Trying keyword-based search for 马蜂窝...")
+                for div in soup.find_all('div', class_=True):
+                    class_str = ' '.join(div.get('class', []))
+                    text_preview = div.get_text(strip=True)[:100]
+                    if len(div.get_text(strip=True)) > 500:  # 足够长的内容
+                        # 检查是否包含文章相关关键词
+                        if any(keyword in text_preview for keyword in ['游记', '攻略', '旅行', '景点', '酒店']):
+                            content = div
+                            selector_used = f"keyword-based: {class_str}"
+                            logger.debug(f"✓ Found content using {selector_used}")
+                            break
+                            
         elif '8264.com' in domain:
             content = soup.select_one('.detail-con') or soup.select_one('.article-content')
+            selector_used = '.detail-con or .article-content'
         elif 'ctnews.com.cn' in domain:
             content = soup.select_one('.content') or soup.select_one('.article')
+            selector_used = '.content or .article'
         
         # Fallback to common selectors
         if not content:
             for selector in ['article', 'main', '.article-content', '.post-content', '.entry-content', '.content']:
-                content = soup.select_one(selector)
-                if content:
-                    break
+                found = soup.select_one(selector)
+                if found:
+                    text_len = len(found.get_text(strip=True))
+                    if text_len > 100:
+                        content = found
+                        selector_used = selector
+                        logger.debug(f"✓ Found content using fallback selector: {selector}")
+                        break
         
+        # Last resort: find the div with most text
         if not content:
+            logger.debug("Using last resort: finding div with most text...")
             candidates = soup.find_all(['div', 'section'], recursive=True)
             if candidates:
-                content = max(candidates, key=lambda x: len(x.get_text()))
+                # 过滤掉太小的候选
+                valid_candidates = [c for c in candidates if len(c.get_text(strip=True)) > 200]
+                if valid_candidates:
+                    content = max(valid_candidates, key=lambda x: len(x.get_text(strip=True)))
+                    selector_used = "max-text-div"
+                    logger.debug(f"✓ Found content using max-text strategy, length: {len(content.get_text(strip=True))}")
+                else:
+                    content = max(candidates, key=lambda x: len(x.get_text(strip=True)))
+                    selector_used = "max-text-div (all)"
             else:
                 content = soup.body or soup
+                selector_used = "body or root"
+        
+        if not content:
+            raise ValueError(f"Could not find content in HTML for {url}")
         
         text = content.get_text(separator='\n', strip=True)
         html_fragment = str(content)
+        
+        # 记录提取信息
+        if selector_used:
+            logger.debug(f"Content extracted using: {selector_used}, text length: {len(text)}")
+        
+        # 如果提取的文本太短，记录更多调试信息
+        if len(text) < 100:
+            logger.warning(f"⚠ Extracted text is very short ({len(text)} chars) for {url}")
+            logger.warning(f"   Selector used: {selector_used}")
+            logger.warning(f"   Title: {title}")
+            logger.warning(f"   Text preview: {text[:200]}")
+            # 检查是否是验证页面
+            if original_body:
+                body_text = original_body.get_text(strip=True)
+                if '验证' in body_text or 'captcha' in body_text.lower():
+                    logger.error(f"❌ Likely verification page detected in body text")
         
         return {
             'title': title,
@@ -1161,15 +1412,50 @@ async def process_url(
         logger.info(f"⬇ Fetching: {url}")
         html = await session.get(url)
         
+        # 验证HTML内容
+        if not html:
+            logger.error(f"❌ Received empty HTML from {url}")
+            return False
+        
+        if not isinstance(html, str):
+            logger.error(f"❌ Invalid HTML type from {url}: {type(html)}")
+            return False
+        
         # Extract article
         article = extractor.extract(html, url)
         article['url'] = url
         
-        if not article['text'] or len(article['text']) < 100:
+        # 检查提取的内容
+        extracted_text = article.get('text', '')
+        extracted_title = article.get('title', '')
+        
+        logger.info(f"📝 Extracted title: {extracted_title[:100]}")
+        logger.info(f"📝 Extracted text length: {len(extracted_text)} chars")
+        
+        if not extracted_text or len(extracted_text) < 100:
             logger.warning(f"⚠ Insufficient content extracted from {url}")
+            logger.warning(f"   Title: {extracted_title}")
+            logger.warning(f"   Text preview: {extracted_text[:200]}")
+            logger.warning(f"   HTML length: {len(html)} chars")
+            
+            # 检查是否是验证页面
+            if '验证' in html or 'captcha' in html.lower() or len(html) < 5000:
+                logger.error(f"❌ Likely blocked/verification page. HTML length: {len(html)}")
+                logger.error(f"   HTML preview: {html[:500]}")
+            
+            # 保存HTML到文件以便调试
+            try:
+                debug_dir = Path(config.output_dir) / '.debug'
+                debug_dir.mkdir(parents=True, exist_ok=True)
+                debug_file = debug_dir / f"failed_extract_{safe_filename(url)}.html"
+                debug_file.write_text(html, encoding='utf-8')
+                logger.info(f"💾 Saved HTML to {debug_file} for debugging")
+            except Exception as e:
+                logger.debug(f"Failed to save debug HTML: {e}")
+            
             return False
         
-        logger.info(f"📝 Extracted {len(article['text'])} chars from {url}")
+        logger.info(f"✅ Successfully extracted {len(extracted_text)} chars from {url}")
         
         # Translate/rewrite title
         mode_text = "Rewriting" if config.rewrite_mode else "Translating"
@@ -1221,7 +1507,17 @@ async def main(config: Config):
     translator = create_translator(config)
     
     # Process
-    async with aiohttp.ClientSession() as aio_session:
+    # 创建带代理的ClientSession（如果配置了代理）
+    connector = None
+    if config.proxy:
+        # 注意：aiohttp的proxy参数在get/post时传递，不是在connector中
+        # 但我们可以创建一个connector用于其他配置
+        connector = aiohttp.TCPConnector(ssl=False)
+        logger.info(f"🌐 Using proxy for web scraping: {config.proxy}")
+    else:
+        logger.info("🌐 No proxy configured for web scraping")
+    
+    async with aiohttp.ClientSession(connector=connector) as aio_session:
         session = EnhancedRetrySession(aio_session, config)
         
         if tqdm:
