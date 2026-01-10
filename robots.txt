@@ -1,0 +1,17 @@
+# robots.txt for Travel-China.Help
+# Allow all search engine crawlers to access all content
+
+User-agent: *
+Allow: /
+
+# Disallow admin and private areas (if needed)
+Disallow: /admin.html
+Disallow: /functions/
+Disallow: /mcp/
+
+# Sitemap location
+Sitemap: https://travel-china.help/sitemap.xml
+
+# Crawl-delay (optional, can be removed if not needed)
+# Crawl-delay: 1
+
