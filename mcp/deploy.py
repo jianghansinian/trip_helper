@@ -9,6 +9,7 @@
 4. 将文件移动到对应目录
 5. 更新index.html、blog/index.html和guides/index.html中的文章列表
 6. 保持最新的文章在主页显示
+7. 删除已部署的文章并从索引页中移除
 
 用法：
     # 方式1：自动判断blog或guides（推荐）
@@ -25,6 +26,11 @@
 
     # 方式5：指定源目录
     python3 mcp/deploy.py --source-dir mcp/translated_articles --auto
+
+    # 方式6：删除文章
+    python3 mcp/deploy.py --delete blog/article.html
+    python3 mcp/deploy.py --delete guides/article.html
+    python3 mcp/deploy.py --delete article.html --target blog
 """
 
 import os
@@ -758,6 +764,239 @@ def deploy_all(source_dir: Path, target_dir: str = None, auto_detect: bool = Fal
     print(f"{'='*50}")
 
 
+def remove_article_from_index(index_file: Path, article_filename: str, article_title: str = None):
+    """从索引页中移除指定文章
+    
+    Args:
+        index_file: 索引文件路径
+        article_filename: 文章文件名（用于匹配链接）
+        article_title: 文章标题（可选，用于更精确匹配）
+    """
+    if not index_file.exists():
+        return False
+    
+    try:
+        with open(index_file, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        
+        soup = BeautifulSoup(html_content, 'html.parser')
+        removed = False
+        
+        # 查找所有文章列表（可能多个section）
+        article_lists = soup.find_all(class_='article-list')
+        
+        for article_list in article_lists:
+            items = article_list.find_all(class_='article-list-item', recursive=False)
+            for item in items:
+                # 检查onclick属性（文章项使用onclick跳转）
+                onclick = item.get('onclick', '') if hasattr(item, 'get') else ''
+                
+                # 匹配文件名（onclick格式: window.location.href='filename.html' 或 'filename.html'）
+                if article_filename in onclick:
+                    item.decompose()
+                    removed = True
+                    continue
+                
+                # 检查内部链接
+                link = item.find('a')
+                if link:
+                    href = link.get('href', '')
+                    if article_filename in href:
+                        item.decompose()
+                        removed = True
+                        continue
+                
+                # 如果提供了标题，也通过标题匹配
+                if article_title:
+                    h3 = item.find('h3')
+                    if h3:
+                        item_title = h3.get_text().strip()
+                        # 精确匹配或包含匹配
+                        if article_title == item_title or article_title in item_title:
+                            item.decompose()
+                            removed = True
+                            continue
+        
+        if removed:
+            with open(index_file, 'w', encoding='utf-8') as f:
+                f.write(str(soup))
+            return True
+        
+        return False
+    except Exception as e:
+        print(f"⚠️  从 {index_file} 移除文章时出错: {e}")
+        return False
+
+
+def remove_article_from_homepage(article_filename: str, target_dir: str, article_title: str = None):
+    """从主页中移除指定文章"""
+    if not INDEX_HTML.exists():
+        return False
+    
+    try:
+        with open(INDEX_HTML, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        
+        soup = BeautifulSoup(html_content, 'html.parser')
+        removed = False
+        
+        # 确定要检查的section
+        section_id = 'stories' if target_dir == 'blog' else 'guides'
+        section = soup.find('section', id=section_id)
+        
+        if section:
+            article_list = section.find(class_='article-list')
+            if article_list:
+                items = article_list.find_all(class_='article-list-item', recursive=False)
+                for item in items:
+                    # 检查onclick属性（主页使用完整路径 blog/filename.html 或 guides/filename.html）
+                    onclick = item.get('onclick', '') if hasattr(item, 'get') else ''
+                    
+                    # 匹配完整路径
+                    full_path = f"{target_dir}/{article_filename}"
+                    if full_path in onclick:
+                        item.decompose()
+                        removed = True
+                        continue
+                    
+                    # 检查内部链接
+                    link = item.find('a')
+                    if link:
+                        href = link.get('href', '')
+                        if full_path in href:
+                            item.decompose()
+                            removed = True
+                            continue
+                    
+                    # 如果提供了标题，也通过标题匹配
+                    if article_title:
+                        h3 = item.find('h3')
+                        if h3:
+                            item_title = h3.get_text().strip()
+                            # 精确匹配或包含匹配
+                            if article_title == item_title or article_title in item_title:
+                                item.decompose()
+                                removed = True
+                                continue
+        
+        if removed:
+            with open(INDEX_HTML, 'w', encoding='utf-8') as f:
+                f.write(str(soup))
+            return True
+        
+        return False
+    except Exception as e:
+        print(f"⚠️  从主页移除文章时出错: {e}")
+        return False
+
+
+def delete_article(article_path: str, target_dir: str = None) -> bool:
+    """删除已部署的文章
+    
+    Args:
+        article_path: 文章文件路径（可以是完整路径或文件名）
+        target_dir: 目标目录（blog/guides），如果未指定则自动检测
+    """
+    try:
+        # 解析文件路径
+        article_file = Path(article_path)
+        
+        # 如果路径是相对路径且不包含目录，尝试在blog和guides中查找
+        if not article_file.is_absolute() and '/' not in article_path and '\\' not in article_path:
+            if target_dir:
+                # 如果指定了目标目录，在该目录中查找
+                if target_dir == 'blog':
+                    article_file = BLOG_DIR / article_path
+                elif target_dir == 'guides':
+                    article_file = GUIDES_DIR / article_path
+                else:
+                    print(f"❌ 无效的目标目录: {target_dir}")
+                    return False
+            else:
+                # 自动检测：先在blog中查找，再在guides中查找
+                blog_file = BLOG_DIR / article_path
+                guides_file = GUIDES_DIR / article_path
+                
+                if blog_file.exists() and guides_file.exists():
+                    print(f"⚠️  在blog和guides目录中都找到了文件: {article_path}")
+                    print("请使用 --target 参数指定目录，或使用完整路径")
+                    return False
+                elif blog_file.exists():
+                    article_file = blog_file
+                    target_dir = 'blog'
+                elif guides_file.exists():
+                    article_file = guides_file
+                    target_dir = 'guides'
+                else:
+                    print(f"❌ 未找到文件: {article_path}")
+                    print(f"   在 {BLOG_DIR} 和 {GUIDES_DIR} 中都没有找到")
+                    return False
+        else:
+            # 完整路径，确定目标目录
+            article_file = Path(article_path)
+            if not article_file.exists():
+                print(f"❌ 文件不存在: {article_file}")
+                return False
+            
+            # 从路径判断目标目录
+            if not target_dir:
+                if 'blog' in str(article_file):
+                    target_dir = 'blog'
+                elif 'guides' in str(article_file):
+                    target_dir = 'guides'
+                else:
+                    print(f"⚠️  无法从路径判断目标目录，请使用 --target 参数")
+                    return False
+        
+        # 确认文件存在
+        if not article_file.exists():
+            print(f"❌ 文件不存在: {article_file}")
+            return False
+        
+        # 提取文章信息（用于从索引中移除）
+        article = ArticleMetadata(article_file)
+        article.extract_from_html()  # 尝试提取，失败也不影响删除
+        
+        article_filename = article_file.name
+        article_title = article.title if article.title else None
+        
+        # 确认删除
+        print(f"📄 准备删除文章: {article_file}")
+        if article_title:
+            print(f"   标题: {article_title}")
+        print(f"   目录: {target_dir}")
+        
+        response = input("确认删除? (y/n): ").strip().lower()
+        if response != 'y':
+            print("⏭️  取消删除")
+            return False
+        
+        # 从索引页中移除
+        if target_dir == 'blog':
+            if remove_article_from_index(BLOG_INDEX, article_filename, article_title):
+                print(f"✅ 已从 {BLOG_INDEX} 中移除")
+        else:
+            if remove_article_from_index(GUIDES_INDEX, article_filename, article_title):
+                print(f"✅ 已从 {GUIDES_INDEX} 中移除")
+        
+        # 从主页中移除
+        if remove_article_from_homepage(article_filename, target_dir, article_title):
+            print(f"✅ 已从主页中移除")
+        
+        # 删除文件
+        article_file.unlink()
+        print(f"✅ 已删除文件: {article_file}")
+        
+        print(f"✅ 成功删除文章: {article_title or article_filename}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ 删除失败: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(description='自动部署翻译后的文章')
     parser.add_argument('--source-dir', '-s', 
@@ -774,10 +1013,17 @@ def main():
     parser.add_argument('--rebuild', '-r',
                        choices=['blog', 'guides', 'homepage'],
                        help='从文件系统重建索引（blog、guides或homepage）')
+    parser.add_argument('--delete', '-d',
+                       help='删除已部署的文章（指定文件路径或文件名）')
     
     args = parser.parse_args()
     
     source_dir = Path(args.source_dir)
+    
+    # 如果指定了删除
+    if args.delete:
+        delete_article(args.delete, args.target)
+        return
     
     # 如果指定了重建索引
     if args.rebuild:

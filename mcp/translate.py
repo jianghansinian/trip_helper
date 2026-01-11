@@ -94,6 +94,21 @@ try:
 except:
     HAS_DEEP_TRANSLATOR = False
 
+# 浏览器自动化（可选）
+try:
+    import sys
+    browser_fetcher_path = Path(__file__).parent / 'browser_fetcher.py'
+    if browser_fetcher_path.exists():
+        sys.path.insert(0, str(Path(__file__).parent))
+        from browser_fetcher import BrowserFetcher, fetch_with_browser
+        HAS_BROWSER_FETCHER = True
+    else:
+        HAS_BROWSER_FETCHER = False
+except ImportError:
+    HAS_BROWSER_FETCHER = False
+    BrowserFetcher = None
+    fetch_with_browser = None
+
 # Simple fallback translator using basic HTTP requests
 class SimpleTranslator:
     """Simple translator using public APIs without complex dependencies"""
@@ -193,6 +208,10 @@ class Config:
     deepseek_api_key: Optional[str] = None  # NEW: DeepSeek API key
     proxy: Optional[str] = None  # NEW: Proxy URL (e.g., http://127.0.0.1:7890)
     rewrite_mode: bool = False  # NEW: Enable content rewriting and optimization
+    use_browser: bool = False  # NEW: 使用浏览器自动化（用于SPA页面）
+    browser_type: str = 'playwright'  # NEW: 浏览器类型 'playwright' 或 'selenium'
+    browser_headless: bool = True  # NEW: 浏览器无头模式
+    browser_wait_time: int = 3  # NEW: 等待JavaScript渲染的时间（秒）
     max_concurrency: int = 6
     timeout: int = 30
     chunk_size: int = 3000  # Chunk size for splitting long text
@@ -215,9 +234,17 @@ class Config:
         if 'deepl_api_key' in data and data['deepl_api_key']:
             data['deepl_api_key'] = str(data['deepl_api_key']).strip()
         
-        # Set default for rewrite_mode if not present
+        # Set defaults if not present
         if 'rewrite_mode' not in data:
             data['rewrite_mode'] = False
+        if 'use_browser' not in data:
+            data['use_browser'] = False
+        if 'browser_type' not in data:
+            data['browser_type'] = 'playwright'
+        if 'browser_headless' not in data:
+            data['browser_headless'] = True
+        if 'browser_wait_time' not in data:
+            data['browser_wait_time'] = 3
             
         return cls(**data)
 
@@ -247,6 +274,10 @@ class Config:
             deepseek_api_key=deepseek_key,
             proxy=args.proxy or os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY'),
             rewrite_mode=args.rewrite,
+            use_browser=getattr(args, 'browser', False),
+            browser_type=getattr(args, 'browser_type', 'playwright'),
+            browser_headless=getattr(args, 'browser_headless', True),
+            browser_wait_time=getattr(args, 'browser_wait', 3),
             max_concurrency=args.concurrency,
             timeout=args.timeout,
             use_cache=args.cache
@@ -340,6 +371,44 @@ class EnhancedRetrySession:
 
     async def get(self, url: str, **kwargs) -> str:
         """Enhanced get with retry and anti-scraping"""
+        # 如果配置了使用浏览器自动化，直接使用浏览器
+        if getattr(self.config, 'use_browser', False) and HAS_BROWSER_FETCHER:
+            try:
+                logger.info(f"🌐 使用浏览器自动化抓取: {url}")
+                content = await fetch_with_browser(
+                    url,
+                    browser_type=getattr(self.config, 'browser_type', 'playwright'),
+                    headless=getattr(self.config, 'browser_headless', True),
+                    timeout=self.config.timeout,
+                    proxy=self.config.proxy,
+                    wait_time=getattr(self.config, 'browser_wait_time', 3)
+                )
+                logger.info(f"✓ 浏览器自动化成功获取内容 ({len(content)} 字符)")
+                return content
+            except RuntimeError as e:
+                # 浏览器初始化失败，提供详细错误信息
+                error_msg = str(e)
+                logger.error(f"❌ 浏览器自动化失败: {error_msg}")
+                
+                # 如果是SPA页面，提供替代方案
+                if 'ctrip.com' in url or 'mafengwo.cn' in url:
+                    logger.warning("")
+                    logger.warning("💡 替代方案：")
+                    logger.warning("  1. 尝试桌面版URL（更容易抓取）")
+                    if 'm.ctrip.com' in url:
+                        desktop_url = url.replace('m.ctrip.com', 'www.ctrip.com')
+                        logger.warning(f"     桌面版: {desktop_url}")
+                    logger.warning("  2. 手动安装ChromeDriver: bash mcp/install_chromedriver.sh")
+                    logger.warning("  3. 或暂时不使用浏览器自动化")
+                    logger.warning("")
+                
+                logger.warning("⚠️  回退到普通HTTP请求（可能无法获取SPA页面内容）...")
+                # 继续使用普通HTTP请求（虽然可能失败，但至少尝试）
+            except Exception as e:
+                logger.error(f"❌ 浏览器自动化失败: {e}")
+                logger.warning("⚠️  回退到普通HTTP请求...")
+                # 继续使用普通HTTP请求
+        
         headers = self._get_headers(url)
         headers.update(kwargs.pop('headers', {}))
         
@@ -549,6 +618,40 @@ class EnhancedRetrySession:
 class ArticleExtractor:
     def __init__(self, config: Config):
         self.config = config
+    
+    def _clean_html_keep_formatting(self, soup: BeautifulSoup, url: str, max_images: int = 2) -> BeautifulSoup:
+        """Clean HTML while preserving formatting and keeping up to max_images images"""
+        # Remove unwanted tags that don't affect content structure
+        for tag in soup(['script', 'style', 'noscript', 'iframe', 'nav', 'footer', 'header', 'aside']):
+            tag.decompose()
+        
+        # Handle images: keep up to max_images
+        images = soup.find_all('img')
+        if len(images) > max_images:
+            # Keep first max_images images, remove the rest
+            for img in images[max_images:]:
+                img.decompose()
+            logger.debug(f"保留 {max_images} 张图片，移除了 {len(images) - max_images} 张")
+        elif len(images) > 0:
+            logger.debug(f"保留 {len(images)} 张图片")
+        
+        # Ensure image URLs are absolute
+        base_url = urlparse(url)
+        for img in soup.find_all('img'):
+            src = img.get('src') or img.get('data-src') or img.get('data-original')
+            if src:
+                # Convert relative URLs to absolute
+                if src.startswith('//'):
+                    img['src'] = base_url.scheme + ':' + src
+                elif src.startswith('/'):
+                    img['src'] = f"{base_url.scheme}://{base_url.netloc}{src}"
+                elif not src.startswith('http'):
+                    img['src'] = urljoin(url, src)
+                # Add loading attribute for better performance
+                img['loading'] = 'lazy'
+                img['style'] = 'max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;'
+        
+        return soup
 
     def extract(self, html: str, url: str) -> Dict:
         """Try multiple extraction strategies in order of quality"""
@@ -584,13 +687,39 @@ class ArticleExtractor:
         
         soup = BeautifulSoup(html, 'html.parser')
         title = self._get_title(soup, url)
-        # Remove lead_image - we don't want images
+        
+        # Try to extract HTML content as well (for better formatting preservation)
+        # Use BeautifulSoup to find content, similar to _extract_bs4
+        # But we'll keep it simple - just try to find the main content area
+        content = None
+        for selector in ['article', 'main', '.article-content', '.post-content', '.entry-content', '.content', '.view-content']:
+            found = soup.select_one(selector)
+            if found:
+                text_len = len(found.get_text(strip=True))
+                if text_len > 200:
+                    content = found
+                    break
+        
+        # If no specific selector found, try to find the largest content area
+        if not content:
+            candidates = soup.find_all(['div', 'section'], recursive=True)
+            if candidates:
+                valid_candidates = [c for c in candidates if len(c.get_text(strip=True)) > 200]
+                if valid_candidates:
+                    content = max(valid_candidates, key=lambda x: len(x.get_text(strip=True)))
+        
+        html_content = None
+        if content:
+            # Clean and format the HTML content
+            content_soup = BeautifulSoup(str(content), 'html.parser')
+            cleaned_content = self._clean_html_keep_formatting(content_soup, url, max_images=2)
+            html_content = str(cleaned_content)
         
         return {
             'title': title,
             'text': text,
             'lead_image': None,  # Disabled
-            'html': None  # trafilatura gives plain text
+            'html': html_content  # Try to extract HTML if possible
         }
 
     def _extract_readability(self, html: str, url: str) -> Dict:
@@ -599,17 +728,17 @@ class ArticleExtractor:
         content_html = doc.summary()
         
         soup = BeautifulSoup(content_html, 'html.parser')
-        # Remove all images
-        for img in soup.find_all('img'):
-            img.decompose()
+        # 使用_clean_html_keep_formatting保留格式和最多2张图片
+        cleaned_soup = self._clean_html_keep_formatting(soup, url, max_images=2)
         
-        text = soup.get_text(separator='\n', strip=True)
+        text = cleaned_soup.get_text(separator='\n', strip=True)
+        cleaned_html = str(cleaned_soup)
         # lead_image removed
         
         return {
             'title': title,
             'text': text,
-            'html': content_html,
+            'html': cleaned_html,
             'lead_image': None  # Disabled
         }
 
@@ -631,13 +760,120 @@ class ArticleExtractor:
         # 保存原始body用于调试
         original_body = soup.body
         
-        for tag in soup(['script', 'style', 'noscript', 'iframe', 'nav', 'footer', 'header', 'img', 'aside']):
-            tag.decompose()
+        # 检测是否是SPA（单页应用）页面
+        # SPA页面的特征：包含React/Next.js/Vue等框架标记，但实际内容很少
+        is_spa = False
+        spa_indicators = [
+            '__next', '__NEXT_DATA__', 'react-root', 'vue-app', 
+            'ng-app', '精彩即将呈现', 'Loading...', 'loading'
+        ]
+        body_text_preview = soup.body.get_text(strip=True)[:200] if soup.body else ''
+        
+        if any(indicator in html.lower() or indicator in body_text_preview for indicator in spa_indicators):
+            # 检查是否内容很少但HTML很大（SPA的特征）
+            if len(html) > 10000 and len(body_text_preview) < 200:
+                is_spa = True
+                logger.warning(f"⚠️  检测到SPA（单页应用）页面，内容可能通过JavaScript动态加载")
         
         # Try site-specific selectors
         domain = urlparse(url).netloc
         content = None
         selector_used = None
+        
+        # 携程网站特殊处理
+        if 'ctrip.com' in domain:
+            # 携程移动端是React/Next.js应用，尝试提取可能的JSON数据
+            logger.debug("尝试从携程页面提取内容...")
+            
+            # 尝试查找__NEXT_DATA__（Next.js的数据）
+            next_data_script = soup.find('script', id='__NEXT_DATA__')
+            if next_data_script and next_data_script.string:
+                try:
+                    next_data = json.loads(next_data_script.string)
+                    # 尝试从数据中提取内容
+                    logger.debug("找到__NEXT_DATA__，尝试提取内容...")
+                    # 递归查找可能的文章内容
+                    def find_text_in_dict(d, depth=0):
+                        if depth > 5:  # 限制深度
+                            return None
+                        if isinstance(d, dict):
+                            for k, v in d.items():
+                                if any(keyword in k.lower() for keyword in ['content', 'text', 'article', 'body', 'description']):
+                                    if isinstance(v, str) and len(v) > 200:
+                                        return v
+                                result = find_text_in_dict(v, depth+1)
+                                if result:
+                                    return result
+                        elif isinstance(d, list):
+                            for item in d:
+                                result = find_text_in_dict(item, depth+1)
+                                if result:
+                                    return result
+                        return None
+                    
+                    extracted_text = find_text_in_dict(next_data)
+                    if extracted_text and len(extracted_text) > 200:
+                        logger.info("✓ 从__NEXT_DATA__中提取到内容")
+                        return {
+                            'title': title,
+                            'text': extracted_text,
+                            'html': None,
+                            'lead_image': None
+                        }
+                except Exception as e:
+                    logger.debug(f"解析__NEXT_DATA__失败: {e}")
+            
+            # 尝试查找包含内容的script标签
+            scripts = soup.find_all('script', type='application/json')
+            for script in scripts:
+                try:
+                    data = json.loads(script.string)
+                    # 尝试提取文章内容
+                    if isinstance(data, dict):
+                        # 递归查找可能的文本内容
+                        def find_text_in_dict(d, depth=0):
+                            if depth > 5:  # 限制深度
+                                return None
+                            if isinstance(d, dict):
+                                for k, v in d.items():
+                                    if 'content' in k.lower() or 'text' in k.lower() or 'article' in k.lower():
+                                        if isinstance(v, str) and len(v) > 100:
+                                            return v
+                                    result = find_text_in_dict(v, depth+1)
+                                    if result:
+                                        return result
+                            elif isinstance(d, list):
+                                for item in d:
+                                    result = find_text_in_dict(item, depth+1)
+                                    if result:
+                                        return result
+                            return None
+                        
+                        extracted_text = find_text_in_dict(data)
+                        if extracted_text and len(extracted_text) > 200:
+                            logger.info("✓ 从JSON数据中提取到内容")
+                            return {
+                                'title': title,
+                                'text': extracted_text,
+                                'html': None,
+                                'lead_image': None
+                            }
+                except:
+                    continue
+            
+            # 如果无法从JSON提取，尝试查找可能的容器
+            selectors = [
+                '#app', '#root', '[class*="content"]', '[class*="article"]',
+                '[class*="detail"]', '[class*="main"]', 'main', 'article'
+            ]
+            for selector in selectors:
+                found = soup.select_one(selector)
+                if found:
+                    text = found.get_text(strip=True)
+                    if len(text) > 200:
+                        content = found
+                        selector_used = f"ctrip-selector: {selector}"
+                        break
         
         if 'mafengwo.cn' in domain:
             # 马蜂窝的多种可能选择器（按优先级）
@@ -720,12 +956,22 @@ class ArticleExtractor:
         if not content:
             raise ValueError(f"Could not find content in HTML for {url}")
         
-        text = content.get_text(separator='\n', strip=True)
-        html_fragment = str(content)
+        # 创建content的副本用于清理（保留原始格式和最多2张图片）
+        content_soup = BeautifulSoup(str(content), 'html.parser')
+        # 清理HTML但保留格式和最多2张图片
+        cleaned_content = self._clean_html_keep_formatting(content_soup, url, max_images=2)
+        
+        # 提取清理后的文本和HTML
+        text = cleaned_content.get_text(separator='\n', strip=True)
+        html_fragment = str(cleaned_content)
         
         # 记录提取信息
         if selector_used:
             logger.debug(f"Content extracted using: {selector_used}, text length: {len(text)}")
+            # 统计保留的图片数量
+            images_count = len(cleaned_content.find_all('img'))
+            if images_count > 0:
+                logger.debug(f"保留 {images_count} 张图片")
         
         # 如果提取的文本太短，记录更多调试信息
         if len(text) < 100:
@@ -733,6 +979,23 @@ class ArticleExtractor:
             logger.warning(f"   Selector used: {selector_used}")
             logger.warning(f"   Title: {title}")
             logger.warning(f"   Text preview: {text[:200]}")
+            
+            # 检查是否是SPA页面
+            if is_spa or 'ctrip.com' in domain:
+                logger.error(f"❌ 这是SPA（单页应用）页面，内容通过JavaScript动态加载")
+                logger.error(f"   直接抓取HTML无法获取实际内容，需要：")
+                logger.error(f"   1. 使用浏览器自动化工具（Selenium/Playwright）")
+                logger.error(f"   2. 使用API接口（如果有）")
+                logger.error(f"   3. 尝试桌面版URL（将m.ctrip.com改为www.ctrip.com）")
+                raise ValueError(
+                    f"无法从SPA页面提取内容。\n"
+                    f"携程移动端页面（m.ctrip.com）是单页应用，内容通过JavaScript动态加载。\n"
+                    f"解决方案：\n"
+                    f"  1. 尝试桌面版URL：将 m.ctrip.com 改为 www.ctrip.com\n"
+                    f"  2. 使用浏览器自动化工具（Selenium/Playwright）\n"
+                    f"  3. 使用API接口（如果有）"
+                )
+            
             # 检查是否是验证页面
             if original_body:
                 body_text = original_body.get_text(strip=True)
@@ -784,6 +1047,177 @@ class TranslatorBackend:
 
     async def translate(self, text: str) -> str:
         raise NotImplementedError
+
+    async def translate_html(self, html_content: str) -> str:
+        """
+        Translate HTML content while preserving structure, tags, and attributes (including styles).
+        Only translates text nodes containing Chinese characters, other characters are preserved as-is.
+        Uses batch translation with numbered placeholders to minimize API calls and ensure reliable splitting.
+        """
+        if not html_content or not html_content.strip():
+            return html_content
+        
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            from bs4 import NavigableString
+            
+            def contains_chinese(text: str) -> bool:
+                """Check if text contains Chinese characters (including single characters like 一、二、三)"""
+                # Don't strip here - we want to check the original text
+                for char in text:
+                    # Check for Chinese characters (CJK Unified Ideographs)
+                    if '\u4e00' <= char <= '\u9fff':
+                        return True
+                return False
+            
+            # Collect all text nodes that contain Chinese characters
+            # Important: keep original text (with whitespace) to preserve formatting
+            text_nodes_to_translate = []
+            for element in soup.descendants:
+                if isinstance(element, NavigableString):
+                    # Check if parent is script/style/noscript/img (skip these)
+                    parent = element.parent
+                    if parent and parent.name not in ['script', 'style', 'noscript', 'img']:
+                        original_text = str(element)  # Don't strip - preserve original
+                        # Only translate if text contains Chinese characters (even single chars)
+                        if original_text and contains_chinese(original_text):
+                            text_nodes_to_translate.append((element, original_text))
+            
+            if not text_nodes_to_translate:
+                # No Chinese text to translate
+                logger.info("📄 No Chinese text found in HTML, skipping translation")
+                return html_content
+            
+            logger.info(f"📄 Found {len(text_nodes_to_translate)} text nodes with Chinese characters")
+            
+            # Strategy: Use numbered placeholder-based batch translation
+            # 1. Replace Chinese text nodes with numbered placeholders (more reliable)
+            # 2. Extract all Chinese text
+            # 3. Translate all text in one batch with numbered markers
+            # 4. Replace placeholders with translated text
+            
+            placeholder_map = {}  # Maps placeholder to original text
+            placeholder_counter = 0
+            
+            # Step 1: Replace Chinese text nodes with numbered placeholders
+            for text_node, original_text in text_nodes_to_translate:
+                # Use a more unique placeholder format with counter
+                placeholder = f"___TPL{placeholder_counter:05d}___"
+                placeholder_counter += 1
+                placeholder_map[placeholder] = original_text
+                text_node.replace_with(placeholder)
+            
+            # Step 2: Extract all Chinese text for batch translation
+            texts_to_translate = list(placeholder_map.values())
+            
+            # Step 3: Translate all text in one batch
+            # Use numbered markers in the combined text for reliable splitting
+            # Format: [SEGMENT_0]...text...[SEGMENT_1]...text...
+            combined_parts = []
+            for i, text in enumerate(texts_to_translate):
+                combined_parts.append(f"[SEGMENT_{i}]")
+                combined_parts.append(text)
+                combined_parts.append(f"[/SEGMENT_{i}]")
+            
+            combined_text = "".join(combined_parts)
+            
+            logger.info(f"📄 Translating {len(texts_to_translate)} text segments in one batch ({len(combined_text)} chars total)")
+            
+            try:
+                # Translate the entire combined text directly without chunking
+                # Use a custom translation method that bypasses chunking for batch HTML translation
+                if hasattr(self, '_translate_batch'):
+                    translated_combined = await self._translate_batch(combined_text)
+                else:
+                    # Fallback to regular translate if _translate_batch is not available
+                    logger.info("📄 Using regular translate method (batch method not available)")
+                    translated_combined = await self.translate(combined_text)
+                
+                # Extract translated segments using regex to find [SEGMENT_N]...[/SEGMENT_N] markers
+                import re
+                segment_pattern = re.compile(r'\[SEGMENT_(\d+)\](.*?)\[/SEGMENT_\1\]', re.DOTALL)
+                matches = segment_pattern.findall(translated_combined)
+                
+                # Create a dictionary of segment index to translated text
+                translated_dict = {}
+                for segment_idx_str, translated_text in matches:
+                    segment_idx = int(segment_idx_str)
+                    # Don't strip - preserve whitespace to avoid losing brackets
+                    translated_dict[segment_idx] = translated_text
+                
+                # Build translated_texts list in order
+                translated_texts = []
+                for i in range(len(texts_to_translate)):
+                    if i in translated_dict:
+                        translated_texts.append(translated_dict[i])
+                    else:
+                        # Segment not found in translation, keep original
+                        logger.warning(f"Segment {i} not found in translated output, keeping original")
+                        translated_texts.append(texts_to_translate[i])
+                
+                if len(translated_texts) != len(texts_to_translate):
+                    raise ValueError(f"Translation segment count mismatch: {len(translated_texts)} != {len(texts_to_translate)}")
+                
+            except Exception as e:
+                logger.warning(f"Batch translation with markers failed: {e}, falling back to separator method")
+                # Fallback: use a more unique separator
+                separator = "|||TRANSLATION_SEPARATOR_XYZ|||"
+                combined_text = separator.join(texts_to_translate)
+                
+                try:
+                    # Try to use _translate_batch if available (for DeepSeek), otherwise use translate
+                    if hasattr(self, '_translate_batch'):
+                        # For batch method, we need to add markers back for consistent format
+                        marked_text = "".join([f"[SEGMENT_{i}]{text}[/SEGMENT_{i}]" for i, text in enumerate(texts_to_translate)])
+                        translated_combined = await self._translate_batch(marked_text)
+                        # Extract using markers
+                        import re
+                        segment_pattern = re.compile(r'\[SEGMENT_(\d+)\](.*?)\[/SEGMENT_\1\]', re.DOTALL)
+                        matches = segment_pattern.findall(translated_combined)
+                        translated_dict = {int(idx): text for idx, text in matches}
+                        translated_texts = [translated_dict.get(i, texts_to_translate[i]) for i in range(len(texts_to_translate))]
+                    else:
+                        translated_combined = await self.translate(combined_text)
+                        translated_texts = translated_combined.split(separator)
+                    
+                    if len(translated_texts) != len(texts_to_translate):
+                        raise ValueError(f"Separator split failed: {len(translated_texts)} != {len(texts_to_translate)}")
+                except Exception as e2:
+                    logger.error(f"All batch translation methods failed: {e2}, keeping original HTML")
+                    return html_content
+            
+            # Step 4: Replace placeholders with translated text
+            # NOTE: We do NOT clean Markdown symbols to ensure content integrity
+            # Markdown symbols (**, __, etc.) in the output are preserved to avoid accidental content loss
+            
+            result_html = str(soup)
+            for i, (placeholder, original_text) in enumerate(placeholder_map.items()):
+                if i < len(translated_texts):
+                    translated_text = translated_texts[i]
+                    # Do NOT clean Markdown - preserve all content to avoid accidental deletion
+                    # Preserve whitespace structure if original had leading/trailing whitespace
+                    # Check if original had leading/trailing whitespace
+                    if original_text != original_text.strip():
+                        # Preserve original whitespace structure
+                        leading_ws = len(original_text) - len(original_text.lstrip())
+                        trailing_ws = len(original_text) - len(original_text.rstrip())
+                        if leading_ws > 0:
+                            translated_text = ' ' * leading_ws + translated_text
+                        if trailing_ws > 0:
+                            translated_text = translated_text + ' ' * trailing_ws
+                else:
+                    translated_text = original_text  # Fallback to original
+                
+                result_html = result_html.replace(placeholder, translated_text)
+            
+            logger.info(f"✓ HTML translation completed ({len(texts_to_translate)} segments translated in 1 batch)")
+            return result_html
+            
+        except Exception as e:
+            logger.error(f"Error translating HTML: {e}, returning original HTML")
+            import traceback
+            logger.error(traceback.format_exc())
+            return html_content
 
     def _chunk_text(self, text: str) -> List[str]:
         """Smart chunking by paragraphs"""
@@ -893,6 +1327,120 @@ class DeepSeekBackend(TranslatorBackend):
         else:
             logger.info(f"✓ DeepSeek Translator ready: {self.source_name} → {self.target_name}")
 
+    async def _translate_batch(self, text: str) -> str:
+        """
+        Translate text in a single batch without chunking.
+        Used for HTML batch translation to minimize API calls.
+        """
+        if not self.api_key:
+            raise RuntimeError("DEEPSEEK_API_KEY not set")
+        
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        
+        # Create connector with proxy support
+        connector = None
+        if self.proxy:
+            connector = aiohttp.TCPConnector()
+        
+        rewrite_mode = self.config.rewrite_mode
+        if rewrite_mode:
+            if self.config.source_lang == 'auto':
+                system_content = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+7. CRITICAL: Preserve all [SEGMENT_N] and [/SEGMENT_N] markers exactly as they appear
+
+Output ONLY the rewritten content in {self.target_name} with markers preserved, using clear paragraph breaks (double newlines between paragraphs)."""
+                user_prompt = "Please rewrite and optimize the following content:\n\n{text}"
+            else:
+                system_content = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the {self.source_name} content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+7. CRITICAL: Preserve all [SEGMENT_N] and [/SEGMENT_N] markers exactly as they appear
+
+Output ONLY the rewritten content in {self.target_name} with markers preserved, using clear paragraph breaks (double newlines between paragraphs)."""
+                user_prompt = "Please rewrite and optimize the following content:\n\n{text}"
+        else:
+            if self.config.source_lang == 'auto':
+                system_content = f"""You are a professional translator. Your task is to:
+1. Translate the text into {self.target_name} accurately while preserving the original meaning and tone
+2. CRITICAL: Preserve all [SEGMENT_N] and [/SEGMENT_N] markers exactly as they appear
+3. Do NOT use Markdown formatting symbols (**, __, *, _)
+4. NUMBERING RULES - VERY IMPORTANT:
+   - If the original has Chinese numbers in parentheses like (一), (二), (三), translate them to (One), (Two), (Three)
+   - If the original has Chinese numbers like 一、二、三 (without parentheses), translate to One, Two, Three
+   - NEVER translate Chinese numbers (一、二、三) to Arabic digits (1, 2, 3)
+   - NEVER add lettered formats like (1 a), (2 b), (1 1.)
+   - NEVER duplicate numbering - if original is (一), output should be (One), NOT (1 1.) or (1 a)
+5. Do NOT add extra formatting, numbering, or duplicate existing numbering
+
+Output ONLY the plain translated text with markers preserved, nothing else."""
+                user_prompt = "Translate the following text:\n\n{text}"
+            else:
+                system_content = f"""You are a professional translator. Your task is to:
+1. Translate the {self.source_name} text into {self.target_name} accurately while preserving the original meaning and tone
+2. CRITICAL: Preserve all [SEGMENT_N] and [/SEGMENT_N] markers exactly as they appear
+3. Do NOT use Markdown formatting symbols (**, __, *, _)
+4. NUMBERING RULES - VERY IMPORTANT:
+   - If the original has Chinese numbers in parentheses like (一), (二), (三), translate them to (One), (Two), (Three)
+   - If the original has Chinese numbers like 一、二、三 (without parentheses), translate to One, Two, Three
+   - NEVER translate Chinese numbers (一、二、三) to Arabic digits (1, 2, 3)
+   - NEVER add lettered formats like (1 a), (2 b), (1 1.)
+   - NEVER duplicate numbering - if original is (一), output should be (One), NOT (1 1.) or (1 a)
+5. Do NOT add extra formatting, numbering, or duplicate existing numbering
+
+Output ONLY the plain translated text with markers preserved, nothing else."""
+                user_prompt = "Translate the following text:\n\n{text}"
+        
+        # Calculate timeout based on text size
+        base_timeout = 300 if rewrite_mode else 180
+        size_bonus = max(len(text) // 100, 0)
+        timeout = min(base_timeout + size_bonus, 600)  # Cap at 10 minutes for large batches
+        
+        # Adjust max_tokens
+        estimated_tokens = len(text) // 3
+        max_tokens = min(int(estimated_tokens * 2), 16000)  # Allow more tokens for batch translation
+        
+        payload = {
+            "model": "deepseek-chat",
+            "messages": [
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": user_prompt.format(text=text)}
+            ],
+            "temperature": 0.7 if rewrite_mode else 0.3,
+            "max_tokens": max_tokens
+        }
+        
+        proxy_url = self.proxy if self.proxy else None
+        
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.post(
+                self.url,
+                headers=headers,
+                json=payload,
+                proxy=proxy_url,
+                timeout=aiohttp.ClientTimeout(total=timeout)
+            ) as r:
+                r.raise_for_status()
+                js = await r.json()
+                
+                if 'choices' not in js or not js['choices']:
+                    raise RuntimeError(f"Unexpected API response: {js}")
+                
+                translated = js['choices'][0]['message']['content'].strip()
+                if not translated:
+                    raise RuntimeError("Empty response from API")
+                
+                return translated
+
     async def translate(self, text: str) -> str:
         if not self.api_key:
             raise RuntimeError("DEEPSEEK_API_KEY not set")
@@ -912,16 +1460,54 @@ class DeepSeekBackend(TranslatorBackend):
                 rewrite_mode = self.config.rewrite_mode
                 if rewrite_mode:
                     if self.config.source_lang == 'auto':
-                        instruction = f"Rewrite and optimize the following text into {self.target_name}. Make it more engaging, well-structured, and professional while preserving the core message."
+                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+
+Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
                     else:
-                        instruction = f"Rewrite and optimize the following {self.source_name} text into {self.target_name}. Make it more engaging, well-structured, and professional while preserving the core message."
-                    system_content = "You are a professional content writer and editor. Rewrite and optimize the content to make it more engaging and well-structured. Output ONLY the rewritten content."
+                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
+1. Translate the {self.source_name} content into {self.target_name}
+2. Rewrite and refine the content to make it more engaging and well-structured
+3. Organize content into clear paragraphs with logical flow
+4. Improve clarity, coherence, and readability
+5. Keep the core message and key information intact
+6. Use a professional yet accessible tone
+
+Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
+                    user_prompt = f"Please rewrite and optimize the following content:\n\n{chunk}"
                 else:
                     if self.config.source_lang == 'auto':
-                        instruction = f"Translate the following text into {self.target_name}. Preserve formatting and meaning."
+                        system_prompt = f"""You are a professional translator. Your task is to:
+1. Translate the text into {self.target_name} accurately while preserving the original meaning and tone
+2. Do NOT use Markdown formatting symbols (**, __, *, _)
+3. NUMBERING RULES - VERY IMPORTANT:
+   - If the original has Chinese numbers in parentheses like (一), (二), (三), translate them to (One), (Two), (Three)
+   - If the original has Chinese numbers like 一、二、三 (without parentheses), translate to One, Two, Three
+   - NEVER translate Chinese numbers (一、二、三) to Arabic digits (1, 2, 3)
+   - NEVER add lettered formats like (1 a), (2 b), (1 1.)
+   - NEVER duplicate numbering - if original is (一), output should be (One), NOT (1 1.) or (1 a)
+4. Do NOT add extra formatting, numbering, or duplicate existing numbering
+
+Output ONLY the plain translated text, nothing else."""
                     else:
-                        instruction = f"Translate the following {self.source_name} text into {self.target_name}. Preserve formatting and meaning."
-                    system_content = "You are a professional translator. Output ONLY the translated text, nothing else."
+                        system_prompt = f"""You are a professional translator. Your task is to:
+1. Translate the {self.source_name} text into {self.target_name} accurately while preserving the original meaning and tone
+2. Do NOT use Markdown formatting symbols (**, __, *, _)
+3. NUMBERING RULES - VERY IMPORTANT:
+   - If the original has Chinese numbers in parentheses like (一), (二), (三), translate them to (One), (Two), (Three)
+   - If the original has Chinese numbers like 一、二、三 (without parentheses), translate to One, Two, Three
+   - NEVER translate Chinese numbers (一、二、三) to Arabic digits (1, 2, 3)
+   - NEVER add lettered formats like (1 a), (2 b), (1 1.)
+   - NEVER duplicate numbering - if original is (一), output should be (One), NOT (1 1.) or (1 a)
+4. Do NOT add extra formatting, numbering, or duplicate existing numbering
+
+Output ONLY the plain translated text, nothing else."""
+                    user_prompt = f"Translate to {self.target_name}:\n\n{chunk}"
                 
                 # Calculate dynamic timeout based on chunk size and mode
                 # Base timeout: 60s for translation, 120s for rewrite
@@ -937,8 +1523,8 @@ class DeepSeekBackend(TranslatorBackend):
                 payload = {
                     "model": "deepseek-chat",
                     "messages": [
-                        {"role": "system", "content": system_content},
-                        {"role": "user", "content": f"{instruction}\n\n{chunk}"}
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
                     ],
                     "temperature": 0.7 if rewrite_mode else 0.3,
                     "max_tokens": max_tokens
@@ -1029,98 +1615,6 @@ class DeepSeekBackend(TranslatorBackend):
                     raise RuntimeError(f"Failed to translate chunk {idx} after {max_retries + 1} attempts: {last_error}")
         
         return '\n\n'.join(out)
-
-
-class OpenAIBackend(TranslatorBackend):
-    def __init__(self, config: Config):
-        super().__init__(config)
-        if not config.openai_api_key:
-            raise RuntimeError("OPENAI_API_KEY not set")
-        self.api_key = config.openai_api_key
-        self.url = 'https://api.openai.com/v1/chat/completions'
-        self.rewrite_mode = config.rewrite_mode
-        
-        # Auto-detect proxy
-        self.proxy = config.proxy or os.environ.get('HTTPS_PROXY') or os.environ.get('HTTP_PROXY')
-        
-        # Language names
-        lang_names = {
-            'zh': 'Chinese', 'zh-CN': 'Simplified Chinese',
-            'en': 'English', 'ja': 'Japanese', 'ko': 'Korean',
-            'es': 'Spanish', 'fr': 'French', 'de': 'German'
-        }
-        self.source_name = lang_names.get(config.source_lang, config.source_lang)
-        self.target_name = lang_names.get(config.target_lang, config.target_lang)
-        
-        mode_desc = "Rewrite & Optimize" if self.rewrite_mode else "Translate"
-        logger.info(f"✓ OpenAI {mode_desc} ready: {self.source_name} → {self.target_name}")
-
-    async def translate(self, text: str) -> str:
-        chunks = self._chunk_text(text)
-        results = []
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-        
-        connector = None
-        if self.proxy:
-            connector = aiohttp.TCPConnector()
-        
-        async with aiohttp.ClientSession(connector=connector) as session:
-            for chunk in chunks:
-                # Build instruction based on mode
-                if self.rewrite_mode:
-                    if self.config.source_lang == 'auto':
-                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
-1. Translate the content into {self.target_name}
-2. Rewrite and refine the content to make it more engaging and well-structured
-3. Organize content into clear paragraphs with logical flow
-4. Improve clarity, coherence, and readability
-5. Keep the core message and key information intact
-6. Use a professional yet accessible tone
-
-Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
-                    else:
-                        system_prompt = f"""You are a professional content writer and editor. Your task is to:
-1. Translate the {self.source_name} content into {self.target_name}
-2. Rewrite and refine the content to make it more engaging and well-structured
-3. Organize content into clear paragraphs with logical flow
-4. Improve clarity, coherence, and readability
-5. Keep the core message and key information intact
-6. Use a professional yet accessible tone
-
-Output ONLY the rewritten content in {self.target_name}, with clear paragraph breaks (use double newlines between paragraphs)."""
-                    
-                    user_prompt = f"Please rewrite and optimize the following content:\n\n{chunk}"
-                else:
-                    system_prompt = "You are a professional translator. Translate the text accurately while preserving the original meaning and tone. Output ONLY the translated text."
-                    user_prompt = f"Translate to {self.target_name}:\n\n{chunk}"
-                
-                payload = {
-                    "model": "gpt-4o-mini",
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt}
-                    ],
-                    "temperature": 0.7 if self.rewrite_mode else 0.3
-                }
-                
-                proxy_url = self.proxy if self.proxy else None
-                
-                async with session.post(
-                    self.url, 
-                    headers=headers, 
-                    json=payload, 
-                    proxy=proxy_url,
-                    timeout=60
-                ) as resp:
-                    resp.raise_for_status()
-                    js = await resp.json()
-                    translated = js['choices'][0]['message']['content'].strip()
-                    results.append(translated)
-        
-        return '\n\n'.join(results)
 
 
 def create_translator(config: Config) -> TranslatorBackend:
@@ -1333,46 +1827,53 @@ LANG_NAMES = {
     'auto': 'Auto-detected'
 }
 
-def build_html(article: Dict, translated_title: str, translated_text: str, config: Config) -> str:
+def build_html(article: Dict, translated_title: str, translated_text: str, config: Config, translated_html: Optional[str] = None) -> str:
     # No featured image - always use placeholder
     featured_image = '<div class="article-featured-placeholder">📰</div>'
     
-    # Convert plain text to HTML with proper paragraph handling
-    # Split by double newlines (paragraph breaks)
-    paragraphs = translated_text.split('\n\n')
-    content_parts = []
+    # If translated HTML is provided, add CSS to preserve original formatting
+    # We'll add inline styles to preserve formatting from the original HTML
     
-    for para in paragraphs:
-        para = para.strip()
-        if not para:
-            continue
+    # If translated HTML is provided, use it directly (preserves original formatting and images)
+    if translated_html and translated_html.strip():
+        content_html = translated_html
+    else:
+        # Convert plain text to HTML with proper paragraph handling
+        # Split by double newlines (paragraph breaks)
+        paragraphs = translated_text.split('\n\n')
+        content_parts = []
         
-        # Check if it's a heading (starts with # or is all caps)
-        if para.startswith('#'):
-            # Markdown-style heading
-            heading_text = para.lstrip('#').strip()
-            level = len(para) - len(para.lstrip('#'))
-            if level <= 1:
-                content_parts.append(f'<h2>{heading_text}</h2>')
+        for para in paragraphs:
+            para = para.strip()
+            if not para:
+                continue
+            
+            # Check if it's a heading (starts with # or is all caps)
+            if para.startswith('#'):
+                # Markdown-style heading
+                heading_text = para.lstrip('#').strip()
+                level = len(para) - len(para.lstrip('#'))
+                if level <= 1:
+                    content_parts.append(f'<h2>{heading_text}</h2>')
+                else:
+                    content_parts.append(f'<h3>{heading_text}</h3>')
+            elif para.isupper() and len(para) < 100:
+                # All caps short text = heading
+                content_parts.append(f'<h3>{para}</h3>')
+            elif para.startswith('- ') or para.startswith('* '):
+                # List item - collect consecutive list items
+                list_items = [para.lstrip('- ').lstrip('* ').strip()]
+                content_parts.append(f'<ul><li>{list_items[0]}</li></ul>')
+            elif para.startswith(tuple(f'{i}.' for i in range(1, 10))):
+                # Numbered list
+                list_item = para.split('.', 1)[1].strip()
+                content_parts.append(f'<ol><li>{list_item}</li></ol>')
             else:
-                content_parts.append(f'<h3>{heading_text}</h3>')
-        elif para.isupper() and len(para) < 100:
-            # All caps short text = heading
-            content_parts.append(f'<h3>{para}</h3>')
-        elif para.startswith('- ') or para.startswith('* '):
-            # List item - collect consecutive list items
-            list_items = [para.lstrip('- ').lstrip('* ').strip()]
-            content_parts.append(f'<ul><li>{list_items[0]}</li></ul>')
-        elif para.startswith(tuple(f'{i}.' for i in range(1, 10))):
-            # Numbered list
-            list_item = para.split('.', 1)[1].strip()
-            content_parts.append(f'<ol><li>{list_item}</li></ol>')
-        else:
-            # Regular paragraph - handle single line breaks within paragraph
-            para_html = para.replace('\n', '<br>')
-            content_parts.append(f'<p>{para_html}</p>')
-    
-    content_html = '\n'.join(content_parts)
+                # Regular paragraph - handle single line breaks within paragraph
+                para_html = para.replace('\n', '<br>')
+                content_parts.append(f'<p>{para_html}</p>')
+        
+        content_html = '\n'.join(content_parts)
     
     # Get language display names
     source_lang_display = LANG_NAMES.get(config.source_lang, config.source_lang)
@@ -1428,9 +1929,15 @@ async def process_url(
         # 检查提取的内容
         extracted_text = article.get('text', '')
         extracted_title = article.get('title', '')
+        extracted_html = article.get('html')
         
         logger.info(f"📝 Extracted title: {extracted_title[:100]}")
         logger.info(f"📝 Extracted text length: {len(extracted_text)} chars")
+        logger.info(f"📝 Extracted HTML length: {len(extracted_html) if extracted_html else 0} chars")
+        if extracted_html:
+            logger.debug(f"📝 Extracted HTML preview: {extracted_html[:200]}")
+        else:
+            logger.warning(f"⚠ No HTML content extracted, only plain text available")
         
         if not extracted_text or len(extracted_text) < 100:
             logger.warning(f"⚠ Insufficient content extracted from {url}")
@@ -1464,10 +1971,35 @@ async def process_url(
         
         # Translate/rewrite content
         logger.info(f"🌐 {mode_text} content: {url}")
-        translated_content = await translator.translate(article['text'])
+        translated_content = None
+        translated_html = None
+        
+        # Check if we have HTML content to preserve formatting
+        original_html = article.get('html')
+        logger.debug(f"Extracted HTML length: {len(original_html) if original_html else 0}")
+        if original_html and original_html.strip():
+            # Use HTML translation to preserve structure and images
+            logger.info(f"📄 Translating HTML content (preserving structure and images, {len(original_html)} chars)")
+            try:
+                translated_html = await translator.translate_html(original_html)
+                logger.info(f"✓ HTML translation completed ({len(translated_html) if translated_html else 0} chars)")
+                # Also translate text for fallback
+                translated_content = await translator.translate(article['text'])
+            except Exception as e:
+                logger.warning(f"HTML translation failed: {e}, falling back to text translation")
+                logger.warning(f"Exception details: {type(e).__name__}: {str(e)}")
+                import traceback
+                logger.debug(traceback.format_exc())
+                translated_content = await translator.translate(article['text'])
+                translated_html = None
+        else:
+            # Fallback to plain text translation
+            logger.info(f"⚠ No HTML content found, using plain text translation")
+            translated_content = await translator.translate(article['text'])
+            translated_html = None
         
         # Build HTML with translated title
-        html_content = build_html(article, translated_title, translated_content, config)
+        html_content = build_html(article, translated_title, translated_content or article['text'], config, translated_html)
         
         # Save with translated title in filename
         slug = safe_filename(translated_title)
@@ -1552,6 +2084,14 @@ if __name__ == '__main__':
     parser.add_argument('--rewrite', '-r', action='store_true', 
                        help='Enable content rewriting and optimization (only works with deepseek/openai)')
     parser.add_argument('--proxy', '-p', help='Proxy URL (e.g., http://127.0.0.1:7890 or socks5://127.0.0.1:1080)')
+    parser.add_argument('--browser', action='store_true',
+                       help='Use browser automation (Playwright/Selenium) for SPA pages')
+    parser.add_argument('--browser-type', choices=['playwright', 'selenium'], default='playwright',
+                       help='Browser automation type (default: playwright)')
+    parser.add_argument('--browser-headless', action='store_true', default=True,
+                       help='Run browser in headless mode (default: True)')
+    parser.add_argument('--browser-wait', type=int, default=3,
+                       help='Wait time for JavaScript rendering (seconds, default: 3)')
     parser.add_argument('--concurrency', type=int, default=6, help='Max concurrent requests')
     parser.add_argument('--timeout', type=int, default=30, help='Request timeout (seconds)')
     parser.add_argument('--no-cache', dest='cache', action='store_false', help='Disable caching')
