@@ -1053,13 +1053,14 @@ class TranslatorBackend:
         Translate HTML content while preserving structure, tags, and attributes (including styles).
         Only translates text nodes containing Chinese characters, other characters are preserved as-is.
         Uses batch translation with numbered placeholders to minimize API calls and ensure reliable splitting.
+        Improved: Groups text nodes by their parent element to avoid splitting related content.
         """
         if not html_content or not html_content.strip():
             return html_content
         
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
-            from bs4 import NavigableString
+            from bs4 import NavigableString, Tag
             
             def contains_chinese(text: str) -> bool:
                 """Check if text contains Chinese characters (including single characters like 一、二、三)"""
@@ -1070,9 +1071,10 @@ class TranslatorBackend:
                         return True
                 return False
             
-            # Collect all text nodes that contain Chinese characters
-            # Important: keep original text (with whitespace) to preserve formatting
-            text_nodes_to_translate = []
+            # Strategy: Group text nodes by their parent element to avoid splitting related content
+            # This handles cases where HTML structure splits content (e.g., <li>序号<p>内容</p></li>)
+            parent_text_groups = {}  # Maps parent element to list of (text_node, text) tuples
+            
             for element in soup.descendants:
                 if isinstance(element, NavigableString):
                     # Check if parent is script/style/noscript/img (skip these)
@@ -1081,14 +1083,33 @@ class TranslatorBackend:
                         original_text = str(element)  # Don't strip - preserve original
                         # Only translate if text contains Chinese characters (even single chars)
                         if original_text and contains_chinese(original_text):
-                            text_nodes_to_translate.append((element, original_text))
+                            # Group by parent element
+                            parent_id = id(parent)
+                            if parent_id not in parent_text_groups:
+                                parent_text_groups[parent_id] = []
+                            parent_text_groups[parent_id].append((element, original_text))
             
-            if not text_nodes_to_translate:
+            if not parent_text_groups:
                 # No Chinese text to translate
                 logger.info("📄 No Chinese text found in HTML, skipping translation")
                 return html_content
             
-            logger.info(f"📄 Found {len(text_nodes_to_translate)} text nodes with Chinese characters")
+            # Collect text nodes to translate, grouped by parent
+            text_nodes_to_translate = []
+            for parent_id, text_nodes in parent_text_groups.items():
+                # If parent has multiple text nodes, we'll merge them
+                # Otherwise, translate individually
+                if len(text_nodes) > 1:
+                    # Merge all text nodes from the same parent
+                    merged_text = ''.join(text for _, text in text_nodes)
+                    # Use the first node as the representative (we'll replace it with merged translation)
+                    text_nodes_to_translate.append((text_nodes[0][0], merged_text, text_nodes))
+                else:
+                    # Single text node, translate individually
+                    text_node, text = text_nodes[0]
+                    text_nodes_to_translate.append((text_node, text, [text_nodes[0]]))
+            
+            logger.info(f"📄 Found {len(text_nodes_to_translate)} text node groups with Chinese characters")
             
             # Strategy: Use numbered placeholder-based batch translation
             # 1. Replace Chinese text nodes with numbered placeholders (more reliable)
@@ -1096,19 +1117,25 @@ class TranslatorBackend:
             # 3. Translate all text in one batch with numbered markers
             # 4. Replace placeholders with translated text
             
-            placeholder_map = {}  # Maps placeholder to original text
+            placeholder_map = {}  # Maps placeholder to (original_text, text_nodes_list)
             placeholder_counter = 0
             
             # Step 1: Replace Chinese text nodes with numbered placeholders
-            for text_node, original_text in text_nodes_to_translate:
+            for text_node, original_text, text_nodes_list in text_nodes_to_translate:
                 # Use a more unique placeholder format with counter
                 placeholder = f"___TPL{placeholder_counter:05d}___"
                 placeholder_counter += 1
-                placeholder_map[placeholder] = original_text
+                placeholder_map[placeholder] = (original_text, text_nodes_list)
                 text_node.replace_with(placeholder)
+                
+                # Remove other text nodes from the same parent (if merged)
+                if len(text_nodes_list) > 1:
+                    for other_node, _ in text_nodes_list[1:]:
+                        if other_node.parent:  # Check if node still exists
+                            other_node.extract()
             
             # Step 2: Extract all Chinese text for batch translation
-            texts_to_translate = list(placeholder_map.values())
+            texts_to_translate = [text_info[0] for text_info in placeholder_map.values()]
             
             # Step 3: Translate all text in one batch
             # Use numbered markers in the combined text for reliable splitting
@@ -1191,7 +1218,7 @@ class TranslatorBackend:
             # Markdown symbols (**, __, etc.) in the output are preserved to avoid accidental content loss
             
             result_html = str(soup)
-            for i, (placeholder, original_text) in enumerate(placeholder_map.items()):
+            for i, (placeholder, (original_text, text_nodes_list)) in enumerate(placeholder_map.items()):
                 if i < len(translated_texts):
                     translated_text = translated_texts[i]
                     # Do NOT clean Markdown - preserve all content to avoid accidental deletion
@@ -1768,12 +1795,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="article-content">
                     {content}
                 </div>
-
-                <div class="source-info">
-                    <strong>📌 Original Source:</strong><br>
-                    This article was automatically translated from: <a href="{source_url}" target="_blank" style="color: #c41e3a;">{source_url}</a><br>
-                    <small style="color: #666;">Translation provided by Travel-China.Help for informational purposes. Please refer to the original source for the most accurate information.</small>
-                </div>
             </article>
 
             <aside class="sidebar">
@@ -1785,20 +1806,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                         <li><a href="index.html#culture">Chinese Culture</a></li>
                         <li><a href="index.html#blog">Travel Stories</a></li>
                     </ul>
-                </div>
-                <div class="widget">
-                    <h3>ℹ️ About This Translation</h3>
-                    <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                        This article has been automatically translated to help you access Chinese content. 
-                        Some nuances may be lost in translation.
-                    </p>
-                </div>
-                <div class="widget">
-                    <h3>🌐 Language</h3>
-                    <p style="font-size: 0.9rem; color: #666;">
-                        Source: {source_lang_display}<br>
-                        Target: {lang_display}
-                    </p>
                 </div>
             </aside>
         </div>
