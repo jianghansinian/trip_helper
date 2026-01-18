@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Travel China Help - Your Complete Guide to Exploring China</title>
-<meta content="Your trusted companion for exploring China. Real travel stories, practical guides, and insider tips updated regularly." name="description"/>
+<title data-i18n="meta.title">Travel China Help - Your Complete Guide to Exploring China</title>
+<meta content="Your trusted companion for exploring China. Real travel stories, practical guides, and insider tips updated regularly." name="description" data-i18n="meta.description"/>
 <style>
         * {
             margin: 0;
@@ -61,6 +61,76 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: 2px solid #c41e3a;
+            color: #c41e3a;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            background: #c41e3a;
+            color: white;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .language-dropdown.show {
+            display: block;
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+
+        .language-option.active {
+            background: #fff3e0;
+            color: #c41e3a;
+            font-weight: 600;
+        }
+
+        body[dir="rtl"] .language-dropdown {
+            right: auto;
+            left: 0;
         }
         
         .nav-menu a {
@@ -405,34 +475,50 @@
 <body>
 <div id="app">
 <header>
-<div class="header-top">
+        <div class="header-top" data-i18n="header.topMessage">
                 🌍 Your trusted companion for exploring China - Updated regularly with fresh stories and tips
             </div>
-<nav class="container">
-<div class="logo" onclick="window.location.hash=''">Travel-China.Help</div>
-<ul class="nav-menu">
-<li><a href="#guides">Travel Guides</a></li>
-<li><a href="#stories">Travel Stories</a></li>
-<li><a href="#visa">Visa &amp; Entry</a></li>
-<li><a href="#practical">Practical Info</a></li>
-</ul>
-</nav>
+        <nav class="container">
+            <div class="logo" onclick="window.location.hash=''" data-i18n="header.logo">Travel-China.Help</div>
+            <ul class="nav-menu">
+                <li><a href="#guides" data-i18n="nav.travelGuides">Travel Guides</a></li>
+                <li><a href="#stories" data-i18n="nav.travelStories">Travel Stories</a></li>
+                <li><a href="#visa" data-i18n="nav.visaEntry">Visa &amp; Entry</a></li>
+                <li><a href="#practical" data-i18n="nav.practicalInfo">Practical Info</a></li>
+                <li class="language-selector">
+                    <button class="language-btn" onclick="toggleLanguageDropdown()">
+                        🌐 <span id="current-lang-name">English</span> ▼
+                    </button>
+                    <div class="language-dropdown" id="language-dropdown">
+                        <div class="language-option active" onclick="changeLanguage('en')">🇬🇧 English</div>
+                        <div class="language-option" onclick="changeLanguage('ko')">🇰🇷 한국어</div>
+                        <div class="language-option" onclick="changeLanguage('ja')">🇯🇵 日本語</div>
+                        <div class="language-option" onclick="changeLanguage('ru')">🇷🇺 Русский</div>
+                        <div class="language-option" onclick="changeLanguage('de')">🇩🇪 Deutsch</div>
+                        <div class="language-option" onclick="changeLanguage('fr')">🇫🇷 Français</div>
+                        <div class="language-option" onclick="changeLanguage('es')">🇪🇸 Español</div>
+                        <div class="language-option" onclick="changeLanguage('it')">🇮🇹 Italiano</div>
+                        <div class="language-option" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
 </header>
-<div class="hero-banner">
-<div class="container">
-<h1>Your Complete Guide to Traveling in China</h1>
-<p>Real experiences, practical advice, and insider tips from fellow travelers</p>
-</div>
-</div>
+        <div class="hero-banner">
+            <div class="container">
+                <h1 data-i18n="hero.title">Your Complete Guide to Traveling in China</h1>
+                <p data-i18n="hero.subtitle">Real experiences, practical advice, and insider tips from fellow travelers</p>
+            </div>
+        </div>
 <div class="container">
 <!-- Welcome Banner -->
-<div class="welcome-banner">
-<h2>🎉 Welcome to Travel-China.Help!</h2>
-<p>We're a brand new community-driven travel guide dedicated to helping international travelers navigate the wonders of China. Whether you're planning your first trip or you're a seasoned explorer, we're here to share real experiences, practical tips, and cultural insights.</p>
-<div class="highlight">
-<strong>📅 Fresh Content Weekly:</strong> We're constantly adding new travel stories, updated guides, and helpful tips based on real traveler experiences. Check back often to discover the latest adventures and advice from our growing community!
+        <div class="welcome-banner">
+            <h2 data-i18n="welcome.title">🎉 Welcome to Travel-China.Help!</h2>
+            <p data-i18n="welcome.description">We're a brand new community-driven travel guide dedicated to helping international travelers navigate the wonders of China. Whether you're planning your first trip or you're a seasoned explorer, we're here to share real experiences, practical tips, and cultural insights.</p>
+            <div class="highlight" data-i18n="welcome.highlight" data-i18n-html="true">
+                <strong>📅 Fresh Content Weekly:</strong> We're constantly adding new travel stories, updated guides, and helpful tips based on real traveler experiences. Check back often to discover the latest adventures and advice from our growing community!
                 </div>
-</div>
+        </div>
 </div>
 <!-- Top Banner Ad -->
 <div class="container">
@@ -447,11 +533,11 @@
 <!-- Main Content -->
 <div class="main-content">
 <!-- Travel Stories Section -->
-<section id="stories">
-<div class="section-header">
-<h2 class="section-title">📖 Traveler Stories &amp; Experiences</h2>
-<a class="view-all-link" href="blog/index.html">View All Stories →</a>
-</div>
+        <section id="stories">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="section.stories.title">📖 Traveler Stories &amp; Experiences</h2>
+                <a class="view-all-link" href="blog/index.html" data-i18n="section.stories.viewAll">View All Stories →</a>
+            </div>
 <div class="article-list"> <div class="article-list-item" onclick="window.location.href='blog/sichuan_hotpot.html'">
 <div class="article-icon">🍜</div>
 <div class="article-info">
@@ -483,11 +569,11 @@
                         </div>
 </div>
 <!-- Travel Guides Section -->
-<section id="guides">
-<div class="section-header">
-<h2 class="section-title">📚 Essential Travel Guides</h2>
-<a class="view-all-link" href="guides/index.html">View All Guides →</a>
-</div>
+        <section id="guides">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="section.guides.title">📚 Essential Travel Guides</h2>
+                <a class="view-all-link" href="guides/index.html" data-i18n="section.guides.viewAll">View All Guides →</a>
+            </div>
 <div class="article-list"> <div class="article-list-item" onclick="window.location.href='guides/Latest_Requirements_for_Foreign_Nationals_Applying_for_Chinese_Visas_(Updated_October_2025)_Cons.html'">
 <div class="article-icon">🛂</div>
 <div class="article-info">
@@ -556,18 +642,18 @@ Cons</p>
                             Google AdSense<br/>Rectangle Ad<br/>(300x250)
                         </div>
 </div>
-<div class="widget">
-<h3>📚 Popular Categories</h3>
-<ul class="widget-list">
-<li><a href="blog/index.html"><span>Travel Stories</span> <span class="post-count">28</span></a></li>
-<li><a href="guides/index.html#visa"><span>Visa &amp; Entry</span> <span class="post-count">12</span></a></li>
-<li><a href="guides/index.html#transport"><span>Transportation</span> <span class="post-count">18</span></a></li>
-<li><a href="guides/index.html#cities"><span>City Guides</span> <span class="post-count">25</span></a></li>
-<li><a href="guides/index.html#food"><span>Food &amp; Dining</span> <span class="post-count">15</span></a></li>
-</ul>
-</div>
-<div class="widget">
-<h3>🔥 Most Read This Week</h3>
+        <div class="widget">
+            <h3 data-i18n="sidebar.popularCategories">📚 Popular Categories</h3>
+            <ul class="widget-list">
+                <li><a href="blog/index.html"><span data-i18n="sidebar.categories.travelStories">Travel Stories</span> <span class="post-count">28</span></a></li>
+                <li><a href="guides/index.html#visa"><span data-i18n="sidebar.categories.visaEntry">Visa &amp; Entry</span> <span class="post-count">12</span></a></li>
+                <li><a href="guides/index.html#transport"><span data-i18n="sidebar.categories.transportation">Transportation</span> <span class="post-count">18</span></a></li>
+                <li><a href="guides/index.html#cities"><span data-i18n="sidebar.categories.cityGuides">City Guides</span> <span class="post-count">25</span></a></li>
+                <li><a href="guides/index.html#food"><span data-i18n="sidebar.categories.foodDining">Food &amp; Dining</span> <span class="post-count">15</span></a></li>
+            </ul>
+        </div>
+        <div class="widget">
+            <h3 data-i18n="sidebar.mostRead">🔥 Most Read This Week</h3>
 <ul class="widget-list">
 <li><a href="guides/visa-guide.html">How to Get a Chinese Tourist Visa</a></li>
 <li><a href="#">WeChat Setup Guide for Foreigners</a></li>
@@ -581,8 +667,8 @@ Cons</p>
                             Google AdSense<br/>Rectangle Ad<br/>(300x250)
                         </div>
 </div>
-<div class="widget">
-<h3>💡 Quick Tips</h3>
+        <div class="widget">
+            <h3 data-i18n="sidebar.quickTips">💡 Quick Tips</h3>
 <ul class="widget-list">
 <li><a href="#">Download VPN before arriving</a></li>
 <li><a href="#">Set up WeChat Pay in advance</a></li>
@@ -597,8 +683,8 @@ Cons</p>
 <section id="feedback" style="padding: 4rem 0; background: linear-gradient(180deg, #f8f9fa 0%, white 100%);">
 <div class="container">
 <div style="text-align: center; margin-bottom: 3rem;">
-<h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback &amp; Experiences</h2>
-<p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+            <h2 style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;" data-i18n="feedback.title">💬 Share Your Feedback &amp; Experiences</h2>
+            <p style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;" data-i18n="feedback.description">
                         Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
                     </p>
 </div>
@@ -609,24 +695,24 @@ Cons</p>
 <div style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); margin-bottom: 3rem;">
 <form id="comment-form">
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-<input name="name" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Name *" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="text"/>
-<input name="email" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Email * (private)" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="email"/>
+                <input name="name" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Name *" data-i18n="feedback.form.name" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="text"/>
+                <input name="email" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Email * (private)" data-i18n="feedback.form.email" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="email"/>
 </div>
-<select name="category" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;">
-<option value="General Feedback">💭 General Feedback</option>
-<option value="Question About China Travel">❓ Question About China Travel</option>
-<option value="Share My Travel Story">📖 Share My Travel Story</option>
-<option value="Suggestion for New Content">💡 Suggestion for New Content</option>
-<option value="Report a Problem">🐛 Report a Problem</option>
-<option value="Just Want to Say Thanks!">❤️ Just Want to Say Thanks!</option>
-</select>
-<textarea name="message" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your message... What would you like to share or ask? *" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;"></textarea>
+                <select name="category" id="feedback-category" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;">
+                    <option value="General Feedback" data-i18n="feedback.form.category.general">💭 General Feedback</option>
+                    <option value="Question About China Travel" data-i18n="feedback.form.category.question">❓ Question About China Travel</option>
+                    <option value="Share My Travel Story" data-i18n="feedback.form.category.story">📖 Share My Travel Story</option>
+                    <option value="Suggestion for New Content" data-i18n="feedback.form.category.suggestion">💡 Suggestion for New Content</option>
+                    <option value="Report a Problem" data-i18n="feedback.form.category.problem">🐛 Report a Problem</option>
+                    <option value="Just Want to Say Thanks!" data-i18n="feedback.form.category.thanks">❤️ Just Want to Say Thanks!</option>
+                </select>
+                <textarea name="message" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your message... What would you like to share or ask? *" data-i18n="feedback.form.message" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;"></textarea>
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-<label style="color: #666; font-size: 0.95rem;">
-<input name="notify" style="margin-right: 8px;" type="checkbox"/>
-                                        I'd like to receive helpful China travel tips via email
+                <label style="color: #666; font-size: 0.95rem;">
+                    <input name="notify" style="margin-right: 8px;" type="checkbox"/>
+                                        <span data-i18n="feedback.form.notify">I'd like to receive helpful China travel tips via email</span>
                                     </label>
-<button onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" type="submit">
+                <button onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(196,30,58,0.3)'" style="background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 45px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s, box-shadow 0.3s;" type="submit" data-i18n="feedback.form.submit">
                                         Submit Feedback 🚀
                                     </button>
 </div>
@@ -634,13 +720,13 @@ Cons</p>
 </div>
 <!-- 评论列表显示区域 -->
 <div style="background: #f8f9fa; padding: 2rem; border-radius: 15px;">
-<h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
-<span>🌟</span> Recent Community Feedback
+            <h3 style="color: #333; margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🌟</span> <span data-i18n="feedback.recent">Recent Community Feedback</span>
                             </h3>
-<div class="comments-list">
-<!-- 评论会动态加载到这里 -->
-<div style="text-align: center; padding: 2rem; color: #999;">
-<p>Loading comments...</p>
+                <div class="comments-list">
+                <!-- 评论会动态加载到这里 -->
+                <div style="text-align: center; padding: 2rem; color: #999;">
+                    <p data-i18n="feedback.loading">Loading comments...</p>
 </div>
 </div>
 </div>
@@ -651,52 +737,147 @@ Cons</p>
 <!-- ========== 评论区域结束 ========== -->
 <footer>
 <div class="container">
-<div class="footer-grid">
-<div class="footer-section">
-<h4>Travel Guides</h4>
-<a href="guides/index.html#beijing">Beijing Guide</a>
-<a href="guides/index.html#shanghai">Shanghai Guide</a>
-<a href="guides/index.html#chengdu">Chengdu &amp; Pandas</a>
-<a href="guides/index.html#guilin">Guilin &amp; Yangshuo</a>
-</div>
-<div class="footer-section">
-<h4>Essential Info</h4>
-<a href="guides/visa-guide.html">Visa Requirements</a>
-<a href="guides/index.html#transport">Transportation Guide</a>
-<a href="guides/index.html#money">Money &amp; Banking</a>
-<a href="guides/index.html#safety">Health &amp; Safety</a>
-</div>
-<div class="footer-section">
-<h4>Community</h4>
-<a href="blog/index.html">Travel Stories</a>
-<a href="#feedback">Share Feedback</a>
-<a href="#submit">Submit Your Story</a>
-<a href="about.html">About Us</a>
-</div>
-<div class="footer-section">
-<h4>Resources</h4>
-<a href="guides/index.html#first-time">First Timer's Guide</a>
-<a href="guides/index.html#packing">Packing List</a>
-<a href="guides/index.html#apps">Useful Apps</a>
-<a href="guides/index.html#emergency">Emergency Contacts</a>
-<a href="contact.html">Contact Us</a>
-<a href="privacy.html">Privacy Policy</a>
-</div>
-</div>
-<div class="footer-bottom">
-<p>© 2025 Travel-China.Help - Your trusted guide to exploring China</p>
-<p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
-<p style="margin-top: 1rem; font-size: 0.9rem;"><a href="about.html" style="color: #ffd700; margin: 0 0.5rem;">About Us</a> | <a href="contact.html" style="color: #ffd700; margin: 0 0.5rem;">Contact</a> | <a href="privacy.html" style="color: #ffd700; margin: 0 0.5rem;">Privacy Policy</a></p>
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4 data-i18n="footer.travelGuides">Travel Guides</h4>
+                    <a href="guides/index.html#beijing" data-i18n="footer.beijingGuide">Beijing Guide</a>
+                    <a href="guides/index.html#shanghai" data-i18n="footer.shanghaiGuide">Shanghai Guide</a>
+                    <a href="guides/index.html#chengdu" data-i18n="footer.chengduGuide">Chengdu &amp; Pandas</a>
+                    <a href="guides/index.html#guilin" data-i18n="footer.guilinGuide">Guilin &amp; Yangshuo</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.essentialInfo">Essential Info</h4>
+                    <a href="guides/visa-guide.html" data-i18n="footer.visaRequirements">Visa Requirements</a>
+                    <a href="guides/index.html#transport" data-i18n="footer.transportationGuide">Transportation Guide</a>
+                    <a href="guides/index.html#money" data-i18n="footer.moneyBanking">Money &amp; Banking</a>
+                    <a href="guides/index.html#safety" data-i18n="footer.healthSafety">Health &amp; Safety</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.community">Community</h4>
+                    <a href="blog/index.html" data-i18n="nav.travelStories">Travel Stories</a>
+                    <a href="#feedback" data-i18n="footer.shareFeedback">Share Feedback</a>
+                    <a href="#submit" data-i18n="footer.submitStory">Submit Your Story</a>
+                    <a href="about.html" data-i18n="footer.aboutUs">About Us</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footer.resources">Resources</h4>
+                    <a href="guides/index.html#first-time" data-i18n="footer.firstTimer">First Timer's Guide</a>
+                    <a href="guides/index.html#packing" data-i18n="footer.packingList">Packing List</a>
+                    <a href="guides/index.html#apps" data-i18n="footer.usefulApps">Useful Apps</a>
+                    <a href="guides/index.html#emergency" data-i18n="footer.emergencyContacts">Emergency Contacts</a>
+                    <a href="contact.html" data-i18n="footer.contactUs">Contact Us</a>
+                    <a href="privacy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n="footer.copyright">© 2025 Travel-China.Help - Your trusted guide to exploring China</p>
+                <p data-i18n="footer.disclaimer">Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem;"><a href="about.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.aboutUs">About Us</a> | <a href="contact.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.contactUs">Contact</a> | <a href="privacy.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.privacyPolicy">Privacy Policy</a></p>
 </div>
 </div>
 </footer>
-</div>
-<!-- ========== JavaScript 部分放在最后 ========== -->
-<script src="js/comments.js"></script>
-<script>
-        // 等待页面加载完成后初始化评论系统
+    </div>
+    <!-- ========== JavaScript 部分放在最后 ========== -->
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
+    <script>
+        // 语言选择器功能
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // 点击外部关闭下拉菜单
+        document.addEventListener('click', function(event) {
+            const selector = document.querySelector('.language-selector');
+            const dropdown = document.getElementById('language-dropdown');
+            if (!selector.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // 切换语言
+        function changeLanguage(lang) {
+            i18n.setLanguage(lang);
+            
+            // 更新当前语言显示
+            const langNames = {
+                'en': 'English',
+                'ko': '한국어',
+                'ja': '日本語',
+                'ru': 'Русский',
+                'de': 'Deutsch',
+                'fr': 'Français',
+                'es': 'Español',
+                'it': 'Italiano',
+                'ar': 'العربية'
+            };
+            document.getElementById('current-lang-name').textContent = langNames[lang] || 'English';
+            
+            // 更新活动选项
+            document.querySelectorAll('.language-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.getAttribute('onclick') === `changeLanguage('${lang}')`) {
+                    opt.classList.add('active');
+                }
+            });
+            
+            // 关闭下拉菜单
+            document.getElementById('language-dropdown').classList.remove('show');
+
+            // 更新select选项的翻译
+            updateSelectOptions();
+        }
+
+        // 更新select选项的翻译
+        function updateSelectOptions() {
+            const select = document.getElementById('feedback-category');
+            if (select) {
+                Array.from(select.options).forEach(option => {
+                    const key = option.getAttribute('data-i18n');
+                    if (key) {
+                        option.textContent = i18n.t(key);
+                    }
+                });
+            }
+        }
+
+        // 监听语言切换事件
+        document.addEventListener('languageChanged', function() {
+            updateSelectOptions();
+        });
+
+        // 初始化当前语言显示
         document.addEventListener('DOMContentLoaded', function() {
-            const comments = new CommentSystem('comments-container', 'homepage');
+            const langNames = {
+                'en': 'English',
+                'ko': '한국어',
+                'ja': '日本語',
+                'ru': 'Русский',
+                'de': 'Deutsch',
+                'fr': 'Français',
+                'es': 'Español',
+                'it': 'Italiano',
+                'ar': 'العربية'
+            };
+            const currentLang = i18n.getCurrentLanguage();
+            const langNameEl = document.getElementById('current-lang-name');
+            if (langNameEl) {
+                langNameEl.textContent = langNames[currentLang] || 'English';
+            }
+
+            // 设置活动语言选项
+            document.querySelectorAll('.language-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.getAttribute('onclick') === `changeLanguage('${currentLang}')`) {
+                    opt.classList.add('active');
+                }
+            });
+
+            // 初始化评论系统
+            if (typeof CommentSystem !== 'undefined') {
+                const comments = new CommentSystem('comments-container', 'homepage');
+            }
         });
     </script>
 </body>
