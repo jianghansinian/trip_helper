@@ -66,6 +66,33 @@ function changeLanguage(lang) {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
+    // 绑定语言按钮点击（避免依赖 inline onclick，兼容严格 CSP）
+    const langButton = document.querySelector('.language-btn');
+    if (langButton) {
+        langButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            toggleLanguageDropdown();
+        });
+    }
+
+    // 绑定语言选项点击（优先 data-lang，其次从 onclick 文本解析）
+    document.querySelectorAll('.language-option').forEach(opt => {
+        opt.addEventListener('click', function(event) {
+            event.preventDefault();
+            let lang = this.getAttribute('data-lang');
+            if (!lang) {
+                const onclickValue = this.getAttribute('onclick') || '';
+                const match = onclickValue.match(/changeLanguage\('([^']+)'\)/);
+                if (match) {
+                    lang = match[1];
+                }
+            }
+            if (lang) {
+                changeLanguage(lang);
+            }
+        });
+    });
+
     if (typeof i18n !== 'undefined') {
         const langNames = {
             'en': 'English',
