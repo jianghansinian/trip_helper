@@ -13,9 +13,78 @@
         .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; align-items: center; }
         .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         .nav-menu a:hover { color: #c41e3a; }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: 2px solid #c41e3a;
+            color: #c41e3a;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            background: #c41e3a;
+            color: white;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .language-dropdown.show {
+            display: block;
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+
+        .language-option.active {
+            background: #fff3e0;
+            color: #c41e3a;
+            font-weight: 600;
+        }
+
+        body[dir="rtl"] .language-dropdown {
+            right: auto;
+            left: 0;
+        }
         .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
         .breadcrumb a { color: #666; text-decoration: none; }
         .breadcrumb a:hover { color: #c41e3a; }
@@ -62,22 +131,38 @@
 </head>
 <body>
     <header>
-        <div class="header-top">🌍 Your trusted companion for exploring China</div>
+        <div class="header-top" data-i18n="header.topMessage">🌍 Your trusted companion for exploring China - Updated regularly with fresh stories and tips</div>
         <nav class="container">
-            <a href="../index.html" class="logo">Travel-China.Help</a>
+            <a href="../index.html" class="logo" data-i18n="header.logo">Travel-China.Help</a>
             <ul class="nav-menu">
-                <li><a href="../index.html#guides">Travel Guides</a></li>
-                <li><a href="../blog/index.html">Travel Stories</a></li>
-                <li><a href="index.html#visa">Visa & Entry</a></li>
-                <li><a href="index.html">Practical Info</a></li>
+                <li><a href="../index.html#guides" data-i18n="nav.travelGuides">Travel Guides</a></li>
+                <li><a href="../blog/index.html" data-i18n="nav.travelStories">Travel Stories</a></li>
+                <li><a href="index.html#visa" data-i18n="nav.visaEntry">Visa & Entry</a></li>
+                <li><a href="index.html" data-i18n="nav.practicalInfo">Practical Info</a></li>
+                <li class="language-selector">
+                    <button class="language-btn" onclick="toggleLanguageDropdown()">
+                        🌐 <span id="current-lang-name">English</span> ▼
+                    </button>
+                    <div class="language-dropdown" id="language-dropdown">
+                        <div class="language-option active" onclick="changeLanguage('en')">🇬🇧 English</div>
+                        <div class="language-option" onclick="changeLanguage('ko')">🇰🇷 한국어</div>
+                        <div class="language-option" onclick="changeLanguage('ja')">🇯🇵 日本語</div>
+                        <div class="language-option" onclick="changeLanguage('ru')">🇷🇺 Русский</div>
+                        <div class="language-option" onclick="changeLanguage('de')">🇩🇪 Deutsch</div>
+                        <div class="language-option" onclick="changeLanguage('fr')">🇫🇷 Français</div>
+                        <div class="language-option" onclick="changeLanguage('es')">🇪🇸 Español</div>
+                        <div class="language-option" onclick="changeLanguage('it')">🇮🇹 Italiano</div>
+                        <div class="language-option" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
         <div class="breadcrumb">
-            <a href="../index.html">Home</a><span>›</span>
-            <a href="index.html">Travel Guides</a><span>›</span>
+            <a href="../index.html" data-i18n="common.breadcrumb.home">Home</a><span>›</span>
+            <a href="index.html" data-i18n="nav.travelGuides">Travel Guides</a><span>›</span>
             <span style="color: #333;">Essential Apps for China</span>
         </div>
     </div>
@@ -369,8 +454,11 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Travel-China.Help - <a href="../index.html">Back to Home</a></p>
+            <p>&copy; 2025 Travel-China.Help - <a href="../index.html" data-i18n="common.backHome">Back to Home</a></p>
         </div>
     </footer>
+    <script src="../js/translations.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/common-i18n-scripts.js"></script>
 </body>
 </html>

@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Travel Guides - Complete China Travel Information | Travel-China.Help</title>
-<meta content="Comprehensive travel guides for visiting China. Visa information, transportation tips, city guides, and practical advice for international travelers." name="description"/>
+<title data-i18n="meta.guidesTitle">Travel Guides - Complete China Travel Information | Travel-China.Help</title>
+<meta content="Comprehensive travel guides for visiting China. Visa information, transportation tips, city guides, and practical advice for international travelers." name="description" data-i18n="meta.guidesDescription"/>
 <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #f5f5f5; }
@@ -15,9 +15,78 @@
         .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; cursor: pointer; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; align-items: center; }
         .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         .nav-menu a:hover { color: #c41e3a; }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: 2px solid #c41e3a;
+            color: #c41e3a;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            background: #c41e3a;
+            color: white;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .language-dropdown.show {
+            display: block;
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+
+        .language-option.active {
+            background: #fff3e0;
+            color: #c41e3a;
+            font-weight: 600;
+        }
+
+        body[dir="rtl"] .language-dropdown {
+            right: auto;
+            left: 0;
+        }
         
         .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
         .breadcrumb a { color: #666; text-decoration: none; }
@@ -60,27 +129,43 @@
 </head>
 <body>
 <header>
-<div class="header-top">🌍 Your trusted companion for exploring China</div>
+<div class="header-top" data-i18n="header.topMessage">🌍 Your trusted companion for exploring China - Updated regularly with fresh stories and tips</div>
 <nav class="container">
-<a class="logo" href="../index.html">Travel-China.Help</a>
+<a class="logo" href="../index.html" data-i18n="header.logo">Travel-China.Help</a>
 <ul class="nav-menu">
-<li><a href="../index.html#guides">Travel Guides</a></li>
-<li><a href="../blog/index.html">Travel Stories</a></li>
-<li><a href="#visa">Visa &amp; Entry</a></li>
-<li><a href="#practical">Practical Info</a></li>
+<li><a href="../index.html#guides" data-i18n="nav.travelGuides">Travel Guides</a></li>
+<li><a href="../blog/index.html" data-i18n="nav.travelStories">Travel Stories</a></li>
+<li><a href="#visa" data-i18n="nav.visaEntry">Visa &amp; Entry</a></li>
+<li><a href="#practical" data-i18n="nav.practicalInfo">Practical Info</a></li>
+<li class="language-selector">
+    <button class="language-btn" onclick="toggleLanguageDropdown()">
+        🌐 <span id="current-lang-name">English</span> ▼
+    </button>
+    <div class="language-dropdown" id="language-dropdown">
+        <div class="language-option active" onclick="changeLanguage('en')">🇬🇧 English</div>
+        <div class="language-option" onclick="changeLanguage('ko')">🇰🇷 한국어</div>
+        <div class="language-option" onclick="changeLanguage('ja')">🇯🇵 日本語</div>
+        <div class="language-option" onclick="changeLanguage('ru')">🇷🇺 Русский</div>
+        <div class="language-option" onclick="changeLanguage('de')">🇩🇪 Deutsch</div>
+        <div class="language-option" onclick="changeLanguage('fr')">🇫🇷 Français</div>
+        <div class="language-option" onclick="changeLanguage('es')">🇪🇸 Español</div>
+        <div class="language-option" onclick="changeLanguage('it')">🇮🇹 Italiano</div>
+        <div class="language-option" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
+    </div>
+</li>
 </ul>
 </nav>
 </header>
 <div class="container">
 <div class="breadcrumb">
-<a href="../index.html">Home</a><span>›</span>
-<span style="color: #333;">Travel Guides</span>
+<a href="../index.html" data-i18n="common.breadcrumb.home">Home</a><span>›</span>
+<span style="color: #333;" data-i18n="nav.travelGuides">Travel Guides</span>
 </div>
 </div>
 <div class="page-header">
 <div class="container">
-<h1>📚 Complete Travel Guides for China</h1>
-<p>Everything you need to know for an amazing trip to China</p>
+<h1 data-i18n="guides.pageTitle">📚 Complete Travel Guides for China</h1>
+<p data-i18n="guides.pageSubtitle">Everything you need to know for an amazing trip to China</p>
 </div>
 </div>
 <div class="container">
@@ -91,7 +176,7 @@
 <!-- Visa & Entry Section -->
 <section id="visa">
 <div class="section-header">
-<h2 class="section-title">🛂 Visa &amp; Entry Requirements</h2>
+<h2 class="section-title" data-i18n="guides.section.visa">🛂 Visa &amp; Entry Requirements</h2>
 </div>
 <div class="article-list"> <div class="article-list-item" onclick="window.location.href='Latest_Requirements_for_Foreign_Nationals_Applying_for_Chinese_Visas_(Updated_October_2025)_Cons.html'">
 <div class="article-icon">🛂</div>
@@ -144,7 +229,7 @@ Cons</p>
 <!-- Transportation Section -->
 <section id="transport">
 <div class="section-header">
-<h2 class="section-title">🚄 Transportation Guides</h2>
+<h2 class="section-title" data-i18n="guides.section.transport">🚄 Transportation Guides</h2>
 </div>
 <div class="article-list">
 <div class="article-list-item" onclick="window.location.href='high-speed-rail.html'">
@@ -192,7 +277,7 @@ Cons</p>
 <!-- Technology & Apps Section -->
 <section id="tech">
 <div class="section-header">
-<h2 class="section-title">📱 Technology &amp; Essential Apps</h2>
+<h2 class="section-title" data-i18n="guides.section.tech">📱 Technology &amp; Essential Apps</h2>
 </div>
 <div class="article-list">
 <div class="article-list-item" onclick="window.location.href='essential-apps.html'">
@@ -236,7 +321,7 @@ Cons</p>
 <!-- Food & Dining Section -->
 <section id="food">
 <div class="section-header">
-<h2 class="section-title">🍜 Food &amp; Dining Guides</h2>
+<h2 class="section-title" data-i18n="guides.section.food">🍜 Food &amp; Dining Guides</h2>
 </div>
 <div class="article-list">
 <div class="article-list-item" onclick="window.location.href='ordering-food.html'">
@@ -280,7 +365,7 @@ Cons</p>
 <!-- City Guides Section -->
 <section id="cities">
 <div class="section-header">
-<h2 class="section-title">🏛️ City Guides</h2>
+<h2 class="section-title" data-i18n="guides.section.cities">🏛️ City Guides</h2>
 </div>
 <div class="article-list">
 <div class="article-list-item">
@@ -329,11 +414,14 @@ Cons</p>
 <footer>
 <div class="container">
 <div class="footer-bottom">
-<p>© 2025 Travel-China.Help - <a href="../index.html">Back to Home</a></p>
-<p>Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
-<p style="margin-top: 1rem; font-size: 0.9rem;"><a href="../about.html" style="color: #ffd700; margin: 0 0.5rem;">About Us</a> | <a href="../contact.html" style="color: #ffd700; margin: 0 0.5rem;">Contact</a> | <a href="../privacy.html" style="color: #ffd700; margin: 0 0.5rem;">Privacy Policy</a></p>
+<p>© 2025 Travel-China.Help - <a href="../index.html" data-i18n="common.backHome">Back to Home</a></p>
+<p data-i18n="footer.disclaimer">Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
+<p style="margin-top: 1rem; font-size: 0.9rem;"><a href="../about.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.aboutUs">About Us</a> | <a href="../contact.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.contactUs">Contact</a> | <a href="../privacy.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.privacyPolicy">Privacy Policy</a></p>
 </div>
 </div>
 </footer>
+<script src="../js/translations.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/common-i18n-scripts.js"></script>
 </body>
 </html>

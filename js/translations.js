@@ -102,7 +102,69 @@ window.translations = {
         'meta.title': 'Travel China Help - Your Complete Guide to Exploring China',
         'meta.description': 'Your trusted companion for exploring China. Real travel stories, practical guides, and insider tips updated regularly.',
         'meta.blogTitle': 'Travel Stories - Real Experiences from China Travelers | Travel-China.Help',
-        'meta.blogDescription': 'Read real travel stories, funny moments, cultural discoveries, and unexpected adventures from travelers exploring China.'
+        'meta.blogDescription': 'Read real travel stories, funny moments, cultural discoveries, and unexpected adventures from travelers exploring China.',
+        'meta.aboutTitle': 'About Us - Travel-China.Help',
+        'meta.aboutDescription': 'Learn about Travel-China.Help, a community-driven travel guide dedicated to helping international travelers navigate the wonders of China.',
+        'meta.contactTitle': 'Contact Us - Travel-China.Help',
+        'meta.contactDescription': 'Get in touch with Travel-China.Help. Contact us for questions, feedback, or travel story submissions.',
+        'meta.privacyTitle': 'Privacy Policy - Travel-China.Help',
+        'meta.privacyDescription': 'Privacy Policy for Travel-China.Help. Learn how we collect, use, and protect your personal information.',
+        
+        // About Page
+        'about.title': '📖 About Travel-China.Help',
+        'about.mission': 'Our Mission',
+        'about.missionText': 'We\'re a brand new community-driven travel guide dedicated to helping international travelers navigate the wonders of China. Whether you\'re planning your first trip or you\'re a seasoned explorer, we\'re here to share real experiences, practical tips, and cultural insights.',
+        'about.goal': '🎯 Our Goal:',
+        'about.goalText': 'To make traveling in China accessible, enjoyable, and stress-free for travelers from around the world. We believe that the best travel advice comes from real experiences, not just guidebooks.',
+        'about.whatWeOffer': 'What We Offer',
+        'about.values': 'Our Values',
+        'about.valuesText': 'We are committed to providing accurate, up-to-date information based on real traveler experiences. Our content is written by people who have actually been there, done that, and want to share what they learned.',
+        'about.freshContent': 'Fresh Content Weekly',
+        'about.freshContentText': 'We\'re constantly adding new travel stories, updated guides, and helpful tips based on real traveler experiences. Check back often to discover the latest adventures and advice from our growing community!',
+        
+        // Contact Page
+        'contact.title': '📧 Contact Us',
+        'contact.subtitle': 'We\'d love to hear from you!',
+        'contact.getInTouch': 'Get in Touch',
+        'contact.getInTouchText': 'Have questions, feedback, or a travel story to share? We\'re here to help! Reach out to us through any of the following ways:',
+        'contact.emailUs': '📮 Email Us',
+        'contact.emailUsText': 'For general inquiries, travel story submissions, feedback, or questions about traveling in China, please send us an email:',
+        'contact.whatWeCanHelp': 'What We Can Help With',
+        'contact.responseTime': 'Response Time',
+        'contact.responseTimeText': 'We typically respond to emails within 2-3 business days. For urgent travel-related questions, we\'ll do our best to respond as quickly as possible.',
+        'contact.alternativeWays': 'Alternative Ways to Connect',
+        'contact.alternativeWaysText': 'You can also use the feedback form on our homepage to share your thoughts, ask questions, or submit your travel story directly.',
+        
+        // Privacy Page
+        'privacy.title': '🔒 Privacy Policy',
+        'privacy.subtitle': 'How we collect and protect your information',
+        'privacy.lastUpdated': 'Last Updated: January 2025',
+        'privacy.introduction': 'Introduction',
+        'privacy.important': '⚠️ Important: Third-Party Services',
+        'privacy.infoWeCollect': 'Information We Collect',
+        'privacy.howWeUse': 'How We Use Your Information',
+        'privacy.thirdPartyServices': 'Third-Party Services',
+        'privacy.dataSharing': 'Data Sharing',
+        'privacy.yourRights': 'Your Rights',
+        'privacy.cookies': 'Cookies',
+        'privacy.dataSecurity': 'Data Security',
+        'privacy.childrensPrivacy': 'Children\'s Privacy',
+        'privacy.changesToPolicy': 'Changes to This Privacy Policy',
+        
+        // Guides Page
+        'guides.pageTitle': '📚 Complete Travel Guides for China',
+        'guides.pageSubtitle': 'Everything you need to know for an amazing trip to China',
+        'guides.section.visa': '🛂 Visa & Entry Requirements',
+        'guides.section.transport': '🚄 Transportation Guides',
+        'guides.section.tech': '📱 Technology & Essential Apps',
+        'guides.section.food': '🍜 Food & Dining Guides',
+        'guides.section.cities': '🏛️ City Guides',
+        'meta.guidesTitle': 'Travel Guides - Complete China Travel Information | Travel-China.Help',
+        'meta.guidesDescription': 'Comprehensive travel guides for visiting China. Visa information, transportation tips, city guides, and practical advice for international travelers.',
+        
+        // Common
+        'common.backHome': 'Back to Home',
+        'common.breadcrumb.home': 'Home'
     },
     ko: {
         'nav.travelGuides': '여행 가이드',
@@ -167,7 +229,18 @@ window.translations = {
         'feedback.recent': '🌟 최근 커뮤니티 피드백',
         'feedback.loading': '댓글 로딩 중...',
         'meta.title': 'Travel China Help - 중국 탐험 완전 가이드',
-        'meta.description': '중국 탐험을 위한 신뢰할 수 있는 동반자. 실제 여행 이야기, 실용적인 가이드 및 내부 팁을 정기적으로 업데이트합니다.'
+        'meta.description': '중국 탐험을 위한 신뢰할 수 있는 동반자. 실제 여행 이야기, 실용적인 가이드 및 내부 팁을 정기적으로 업데이트합니다.',
+        'guides.pageTitle': '📚 중국 완전 여행 가이드',
+        'guides.pageSubtitle': '중국 여행에 필요한 모든 것',
+        'guides.section.visa': '🛂 비자 및 입국 요구사항',
+        'guides.section.transport': '🚄 교통 가이드',
+        'guides.section.tech': '📱 기술 및 필수 앱',
+        'guides.section.food': '🍜 음식 및 식사 가이드',
+        'guides.section.cities': '🏛️ 도시 가이드',
+        'meta.guidesTitle': '여행 가이드 - 중국 여행 완전 정보 | Travel-China.Help',
+        'meta.guidesDescription': '중국 방문을 위한 포괄적인 여행 가이드. 비자 정보, 교통 팁, 도시 가이드 및 국제 여행자를 위한 실용적인 조언.',
+        'common.backHome': '홈으로 돌아가기',
+        'common.breadcrumb.home': '홈'
     },
     ja: {
         'nav.travelGuides': '旅行ガイド',
@@ -232,7 +305,18 @@ window.translations = {
         'feedback.recent': '🌟 最近のコミュニティフィードバック',
         'feedback.loading': 'コメントを読み込んでいます...',
         'meta.title': 'Travel China Help - 中国探索完全ガイド',
-        'meta.description': '中国探索の信頼できるパートナー。実際の旅行ストーリー、実用的なガイド、内部ヒントを定期的に更新します。'
+        'meta.description': '中国探索の信頼できるパートナー。実際の旅行ストーリー、実用的なガイド、内部ヒントを定期的に更新します。',
+        'guides.pageTitle': '📚 中国完全旅行ガイド',
+        'guides.pageSubtitle': '素晴らしい中国旅行に必要なすべて',
+        'guides.section.visa': '🛂 ビザと入国要件',
+        'guides.section.transport': '🚄 交通ガイド',
+        'guides.section.tech': '📱 技術と必須アプリ',
+        'guides.section.food': '🍜 食事とダイニングガイド',
+        'guides.section.cities': '🏛️ 都市ガイド',
+        'meta.guidesTitle': '旅行ガイド - 中国旅行完全情報 | Travel-China.Help',
+        'meta.guidesDescription': '中国訪問のための包括的な旅行ガイド。ビザ情報、交通のヒント、都市ガイド、国際旅行者のための実用的なアドバイス。',
+        'common.backHome': 'ホームに戻る',
+        'common.breadcrumb.home': 'ホーム'
     },
     ru: {
         'nav.travelGuides': 'Путеводители',
@@ -297,7 +381,18 @@ window.translations = {
         'feedback.recent': '🌟 Недавние отзывы сообщества',
         'feedback.loading': 'Загрузка комментариев...',
         'meta.title': 'Travel China Help - Полное руководство по изучению Китая',
-        'meta.description': 'Ваш надежный спутник для изучения Китая. Реальные истории путешествий, практические путеводители и инсайдерские советы, регулярно обновляемые.'
+        'meta.description': 'Ваш надежный спутник для изучения Китая. Реальные истории путешествий, практические путеводители и инсайдерские советы, регулярно обновляемые.',
+        'guides.pageTitle': '📚 Полные путеводители по Китаю',
+        'guides.pageSubtitle': 'Все, что вам нужно знать для удивительной поездки в Китай',
+        'guides.section.visa': '🛂 Требования к визе и въезду',
+        'guides.section.transport': '🚄 Путеводители по транспорту',
+        'guides.section.tech': '📱 Технологии и основные приложения',
+        'guides.section.food': '🍜 Путеводители по еде и ресторанам',
+        'guides.section.cities': '🏛️ Городские путеводители',
+        'meta.guidesTitle': 'Путеводители - Полная информация о путешествии по Китаю | Travel-China.Help',
+        'meta.guidesDescription': 'Подробные путеводители для посещения Китая. Информация о визах, советы по транспорту, городские путеводители и практические советы для международных путешественников.',
+        'common.backHome': 'Вернуться на главную',
+        'common.breadcrumb.home': 'Главная'
     },
     de: {
         'nav.travelGuides': 'Reiseführer',
@@ -362,7 +457,18 @@ window.translations = {
         'feedback.recent': '🌟 Kürzliches Community-Feedback',
         'feedback.loading': 'Kommentare werden geladen...',
         'meta.title': 'Travel China Help - Ihr vollständiger Führer zur Erkundung Chinas',
-        'meta.description': 'Ihr vertrauenswürdiger Begleiter für die Erkundung Chinas. Echte Reisegeschichten, praktische Führer und Insider-Tipps, die regelmäßig aktualisiert werden.'
+        'meta.description': 'Ihr vertrauenswürdiger Begleiter für die Erkundung Chinas. Echte Reisegeschichten, praktische Führer und Insider-Tipps, die regelmäßig aktualisiert werden.',
+        'guides.pageTitle': '📚 Vollständige Reiseführer für China',
+        'guides.pageSubtitle': 'Alles, was Sie für eine erstaunliche Reise nach China wissen müssen',
+        'guides.section.visa': '🛂 Visum- und Einreiseanforderungen',
+        'guides.section.transport': '🚄 Transportführer',
+        'guides.section.tech': '📱 Technologie und wichtige Apps',
+        'guides.section.food': '🍜 Essens- und Restaurantführer',
+        'guides.section.cities': '🏛️ Stadtführer',
+        'meta.guidesTitle': 'Reiseführer - Vollständige China-Reiseinformationen | Travel-China.Help',
+        'meta.guidesDescription': 'Umfassende Reiseführer für China-Besuche. Visuminformationen, Transporttipps, Stadtführer und praktische Ratschläge für internationale Reisende.',
+        'common.backHome': 'Zurück zur Startseite',
+        'common.breadcrumb.home': 'Startseite'
     },
     fr: {
         'nav.travelGuides': 'Guides de voyage',
@@ -427,7 +533,18 @@ window.translations = {
         'feedback.recent': '🌟 Commentaires récents de la communauté',
         'feedback.loading': 'Chargement des commentaires...',
         'meta.title': 'Travel China Help - Votre guide complet pour explorer la Chine',
-        'meta.description': 'Votre compagnon de confiance pour explorer la Chine. Récits de voyage réels, guides pratiques et astuces d\'initiés régulièrement mis à jour.'
+        'meta.description': 'Votre compagnon de confiance pour explorer la Chine. Récits de voyage réels, guides pratiques et astuces d\'initiés régulièrement mis à jour.',
+        'guides.pageTitle': '📚 Guides de voyage complets pour la Chine',
+        'guides.pageSubtitle': 'Tout ce que vous devez savoir pour un voyage incroyable en Chine',
+        'guides.section.visa': '🛂 Exigences de visa et d\'entrée',
+        'guides.section.transport': '🚄 Guides de transport',
+        'guides.section.tech': '📱 Technologie et applications essentielles',
+        'guides.section.food': '🍜 Guides de nourriture et de restaurants',
+        'guides.section.cities': '🏛️ Guides de ville',
+        'meta.guidesTitle': 'Guides de voyage - Informations complètes sur les voyages en Chine | Travel-China.Help',
+        'meta.guidesDescription': 'Guides de voyage complets pour visiter la Chine. Informations sur les visas, conseils de transport, guides de ville et conseils pratiques pour les voyageurs internationaux.',
+        'common.backHome': 'Retour à l\'accueil',
+        'common.breadcrumb.home': 'Accueil'
     },
     es: {
         'nav.travelGuides': 'Guías de viaje',
@@ -492,7 +609,18 @@ window.translations = {
         'feedback.recent': '🌟 Comentarios recientes de la comunidad',
         'feedback.loading': 'Cargando comentarios...',
         'meta.title': 'Travel China Help - Tu guía completa para explorar China',
-        'meta.description': 'Tu compañero de confianza para explorar China. Historias de viaje reales, guías prácticas e información privilegiada actualizadas regularmente.'
+        'meta.description': 'Tu compañero de confianza para explorar China. Historias de viaje reales, guías prácticas e información privilegiada actualizadas regularmente.',
+        'guides.pageTitle': '📚 Guías de viaje completas para China',
+        'guides.pageSubtitle': 'Todo lo que necesitas saber para un viaje increíble a China',
+        'guides.section.visa': '🛂 Requisitos de visa y entrada',
+        'guides.section.transport': '🚄 Guías de transporte',
+        'guides.section.tech': '📱 Tecnología y aplicaciones esenciales',
+        'guides.section.food': '🍜 Guías de comida y restaurantes',
+        'guides.section.cities': '🏛️ Guías de ciudades',
+        'meta.guidesTitle': 'Guías de viaje - Información completa sobre viajes a China | Travel-China.Help',
+        'meta.guidesDescription': 'Guías de viaje completas para visitar China. Información sobre visas, consejos de transporte, guías de ciudades y consejos prácticos para viajeros internacionales.',
+        'common.backHome': 'Volver al inicio',
+        'common.breadcrumb.home': 'Inicio'
     },
     it: {
         'nav.travelGuides': 'Guide di viaggio',
@@ -557,7 +685,18 @@ window.translations = {
         'feedback.recent': '🌟 Feedback recenti della comunità',
         'feedback.loading': 'Caricamento commenti...',
         'meta.title': 'Travel China Help - La tua guida completa per esplorare la Cina',
-        'meta.description': 'Il tuo compagno affidabile per esplorare la Cina. Storie di viaggio reali, guide pratiche e suggerimenti aggiornati regolarmente.'
+        'meta.description': 'Il tuo compagno affidabile per esplorare la Cina. Storie di viaggio reali, guide pratiche e suggerimenti aggiornati regolarmente.',
+        'guides.pageTitle': '📚 Guide di viaggio complete per la Cina',
+        'guides.pageSubtitle': 'Tutto ciò che devi sapere per un viaggio incredibile in Cina',
+        'guides.section.visa': '🛂 Requisiti per visto e ingresso',
+        'guides.section.transport': '🚄 Guide di trasporto',
+        'guides.section.tech': '📱 Tecnologia e app essenziali',
+        'guides.section.food': '🍜 Guide di cibo e ristoranti',
+        'guides.section.cities': '🏛️ Guide della città',
+        'meta.guidesTitle': 'Guide di viaggio - Informazioni complete sui viaggi in Cina | Travel-China.Help',
+        'meta.guidesDescription': 'Guide di viaggio complete per visitare la Cina. Informazioni sui visti, consigli sui trasporti, guide della città e consigli pratici per i viaggiatori internazionali.',
+        'common.backHome': 'Torna alla home',
+        'common.breadcrumb.home': 'Home'
     },
     ar: {
         'nav.travelGuides': 'دلائل السفر',
@@ -622,7 +761,18 @@ window.translations = {
         'feedback.recent': '🌟 تعليقات المجتمع الأخيرة',
         'feedback.loading': 'جاري تحميل التعليقات...',
         'meta.title': 'Travel China Help - دليلك الكامل لاستكشاف الصين',
-        'meta.description': 'رفيقك الموثوق لاستكشاف الصين. قصص سفر حقيقية وأدلة عملية ونصائح داخلية محدثة بانتظام.'
+        'meta.description': 'رفيقك الموثوق لاستكشاف الصين. قصص سفر حقيقية وأدلة عملية ونصائح داخلية محدثة بانتظام.',
+        'guides.pageTitle': '📚 أدلة السفر الكاملة للصين',
+        'guides.pageSubtitle': 'كل ما تحتاج معرفته لرحلة مذهلة إلى الصين',
+        'guides.section.visa': '🛂 متطلبات التأشيرة والدخول',
+        'guides.section.transport': '🚄 أدلة المواصلات',
+        'guides.section.tech': '📱 التكنولوجيا والتطبيقات الأساسية',
+        'guides.section.food': '🍜 أدلة الطعام والمطاعم',
+        'guides.section.cities': '🏛️ أدلة المدن',
+        'meta.guidesTitle': 'أدلة السفر - معلومات السفر الكاملة إلى الصين | Travel-China.Help',
+        'meta.guidesDescription': 'أدلة سفر شاملة لزيارة الصين. معلومات التأشيرة ونصائح المواصلات وأدلة المدن ونصائح عملية للمسافرين الدوليين.',
+        'common.backHome': 'العودة إلى الصفحة الرئيسية',
+        'common.breadcrumb.home': 'الصفحة الرئيسية'
     }
 };
 

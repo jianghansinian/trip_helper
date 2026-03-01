@@ -4,8 +4,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Travel Stories - Real Experiences from China Travelers | Travel-China.Help</title>
-<meta content="Read real travel stories, funny moments, cultural discoveries, and unexpected adventures from travelers exploring China." name="description"/>
+<title data-i18n="meta.blogTitle">Travel Stories - Real Experiences from China Travelers | Travel-China.Help</title>
+<meta content="Read real travel stories, funny moments, cultural discoveries, and unexpected adventures from travelers exploring China." name="description" data-i18n="meta.blogDescription"/>
 <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #333; background: #f5f5f5; }
@@ -15,9 +15,78 @@
         .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
         .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; cursor: pointer; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 2rem; }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; align-items: center; }
         .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         .nav-menu a:hover { color: #c41e3a; }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            margin-left: 1rem;
+        }
+
+        .language-btn {
+            background: transparent;
+            border: 2px solid #c41e3a;
+            color: #c41e3a;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            background: #c41e3a;
+            color: white;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .language-dropdown.show {
+            display: block;
+        }
+
+        .language-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-option:hover {
+            background: #f5f5f5;
+        }
+
+        .language-option.active {
+            background: #fff3e0;
+            color: #c41e3a;
+            font-weight: 600;
+        }
+
+        body[dir="rtl"] .language-dropdown {
+            right: auto;
+            left: 0;
+        }
         
         .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
         .breadcrumb a { color: #666; text-decoration: none; }
@@ -75,38 +144,54 @@
 </head>
 <body>
 <header>
-<div class="header-top">🌍 Your trusted companion for exploring China</div>
+<div class="header-top" data-i18n="header.topMessage">🌍 Your trusted companion for exploring China</div>
 <nav class="container">
-<a class="logo" href="../index.html">Travel-China.Help</a>
+<a class="logo" href="../index.html" data-i18n="header.logo">Travel-China.Help</a>
 <ul class="nav-menu">
-<li><a href="../index.html#guides">Travel Guides</a></li>
-<li><a href="index.html">Travel Stories</a></li>
-<li><a href="../guides/index.html#visa">Visa &amp; Entry</a></li>
-<li><a href="../guides/index.html">Practical Info</a></li>
+<li><a href="../index.html#guides" data-i18n="nav.travelGuides">Travel Guides</a></li>
+<li><a href="index.html" data-i18n="nav.travelStories">Travel Stories</a></li>
+<li><a href="../guides/index.html#visa" data-i18n="nav.visaEntry">Visa &amp; Entry</a></li>
+<li><a href="../guides/index.html" data-i18n="nav.practicalInfo">Practical Info</a></li>
+<li class="language-selector">
+    <button class="language-btn" onclick="toggleLanguageDropdown()">
+        🌐 <span id="current-lang-name">English</span> ▼
+    </button>
+    <div class="language-dropdown" id="language-dropdown">
+        <div class="language-option active" onclick="changeLanguage('en')">🇬🇧 English</div>
+        <div class="language-option" onclick="changeLanguage('ko')">🇰🇷 한국어</div>
+        <div class="language-option" onclick="changeLanguage('ja')">🇯🇵 日本語</div>
+        <div class="language-option" onclick="changeLanguage('ru')">🇷🇺 Русский</div>
+        <div class="language-option" onclick="changeLanguage('de')">🇩🇪 Deutsch</div>
+        <div class="language-option" onclick="changeLanguage('fr')">🇫🇷 Français</div>
+        <div class="language-option" onclick="changeLanguage('es')">🇪🇸 Español</div>
+        <div class="language-option" onclick="changeLanguage('it')">🇮🇹 Italiano</div>
+        <div class="language-option" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
+    </div>
+</li>
 </ul>
 </nav>
 </header>
 <div class="container">
 <div class="breadcrumb">
-<a href="../index.html">Home</a><span>›</span>
-<span style="color: #333;">Travel Stories</span>
+<a href="../index.html" data-i18n="blog.breadcrumb.home">Home</a><span>›</span>
+<span style="color: #333;" data-i18n="blog.breadcrumb.stories">Travel Stories</span>
 </div>
 </div>
 <div class="page-header">
 <div class="container">
-<h1>📖 Real Travel Stories from China</h1>
-<p>Funny moments, cultural discoveries, and unexpected adventures</p>
+<h1 data-i18n="blog.pageTitle">📖 Real Travel Stories from China</h1>
+<p data-i18n="blog.pageSubtitle">Funny moments, cultural discoveries, and unexpected adventures</p>
 </div>
 </div>
 <div class="container">
 <!-- Filter Tabs -->
 <div class="filter-tabs">
-<div class="filter-tab active" data-category="all">All Stories</div>
-<div class="filter-tab" data-category="funny">😂 Funny Moments</div>
-<div class="filter-tab" data-category="food">🌶️ Food Adventures</div>
-<div class="filter-tab" data-category="cultural">🎭 Cultural Experiences</div>
-<div class="filter-tab" data-category="heartwarming">❤️ Heartwarming</div>
-<div class="filter-tab" data-category="adventure">🥾 Adventures</div>
+<div class="filter-tab active" data-category="all" data-i18n="blog.filter.all">All Stories</div>
+<div class="filter-tab" data-category="funny" data-i18n="blog.filter.funny">😂 Funny Moments</div>
+<div class="filter-tab" data-category="food" data-i18n="blog.filter.food">🌶️ Food Adventures</div>
+<div class="filter-tab" data-category="cultural" data-i18n="blog.filter.cultural">🎭 Cultural Experiences</div>
+<div class="filter-tab" data-category="heartwarming" data-i18n="blog.filter.heartwarming">❤️ Heartwarming</div>
+<div class="filter-tab" data-category="adventure" data-i18n="blog.filter.adventure">🥾 Adventures</div>
 </div>
 <!-- Ad -->
 <div class="ad-container">
@@ -142,17 +227,17 @@
 </div>
 <!-- Submit Story CTA -->
 <div class="submit-cta">
-<h2>📝 Have a China Travel Story to Share?</h2>
-<p>Whether it's funny, inspiring, heartwarming, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!</p>
-<button onclick="window.location.href='../index.html#feedback'">Submit Your Story</button>
+<h2 data-i18n="blog.submit.title">📝 Have a China Travel Story to Share?</h2>
+<p data-i18n="blog.submit.description">Whether it's funny, inspiring, heartwarming, or just plain weird, we'd love to hear about your adventures in China. Share your experience with fellow travelers!</p>
+<button onclick="window.location.href='../index.html#feedback'" data-i18n="blog.submit.button">Submit Your Story</button>
 </div>
 </div>
 <footer>
 <div class="container">
 <div class="footer-bottom">
-<p>© 2025 Travel-China.Help - <a href="../index.html">Back to Home</a></p>
-<p>Sharing real experiences from travelers exploring China</p>
-<p style="margin-top: 1rem; font-size: 0.9rem;"><a href="../about.html" style="color: #ffd700; margin: 0 0.5rem;">About Us</a> | <a href="../contact.html" style="color: #ffd700; margin: 0 0.5rem;">Contact</a> | <a href="../privacy.html" style="color: #ffd700; margin: 0 0.5rem;">Privacy Policy</a></p>
+<p>© 2025 Travel-China.Help - <a href="../index.html" data-i18n="blog.footer.backHome">Back to Home</a></p>
+<p data-i18n="blog.footer.tagline">Sharing real experiences from travelers exploring China</p>
+<p style="margin-top: 1rem; font-size: 0.9rem;"><a href="../about.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.aboutUs">About Us</a> | <a href="../contact.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.contactUs">Contact</a> | <a href="../privacy.html" style="color: #ffd700; margin: 0 0.5rem;" data-i18n="footer.privacyPolicy">Privacy Policy</a></p>
 </div>
 </div>
 </footer>
@@ -178,6 +263,70 @@
                     }
                 });
             });
+        });
+    </script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/article-i18n.js"></script>
+    <script>
+        // 语言选择器功能
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            if (dropdown) dropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const selector = document.querySelector('.language-selector');
+            const dropdown = document.getElementById('language-dropdown');
+            if (dropdown && selector && !selector.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function changeLanguage(lang) {
+            if (typeof i18n !== 'undefined') {
+                i18n.setLanguage(lang);
+            }
+            
+            const langNames = {
+                'en': 'English', 'ko': '한국어', 'ja': '日本語', 'ru': 'Русский',
+                'de': 'Deutsch', 'fr': 'Français', 'es': 'Español', 'it': 'Italiano', 'ar': 'العربية'
+            };
+            const langNameEl = document.getElementById('current-lang-name');
+            if (langNameEl) langNameEl.textContent = langNames[lang] || 'English';
+            
+            document.querySelectorAll('.language-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.getAttribute('onclick') === `changeLanguage('${lang}')`) {
+                    opt.classList.add('active');
+                }
+            });
+            
+            const dropdown = document.getElementById('language-dropdown');
+            if (dropdown) dropdown.classList.remove('show');
+
+            if (typeof articleTranslator !== 'undefined') {
+                articleTranslator.translatePage(lang);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof i18n !== 'undefined') {
+                const langNames = {
+                    'en': 'English', 'ko': '한국어', 'ja': '日本語', 'ru': 'Русский',
+                    'de': 'Deutsch', 'fr': 'Français', 'es': 'Español', 'it': 'Italiano', 'ar': 'العربية'
+                };
+                const currentLang = i18n.getCurrentLanguage();
+                const langNameEl = document.getElementById('current-lang-name');
+                if (langNameEl) langNameEl.textContent = langNames[currentLang] || 'English';
+
+                document.querySelectorAll('.language-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    if (opt.getAttribute('onclick') === `changeLanguage('${currentLang}')`) {
+                        opt.classList.add('active');
+                    }
+                });
+            }
         });
     </script>
 </body>
