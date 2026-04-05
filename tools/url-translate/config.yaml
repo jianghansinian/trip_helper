@@ -1,0 +1,20 @@
+# cat > config.yaml << EOF
+urls_file: urls.txt
+output_dir: translated_articles
+source_lang: zh      # 源语言：中文
+target_lang: en
+rewrite_mode: true
+backend: deepseek # openai | simple | google | mymemory
+# Prefer environment variable DEEPSEEK_API_KEY; or set below for local use only (do not commit secrets).
+deepseek_api_key: ""
+max_concurrency: 2
+chunk_size: 4000          # 增大块大小，减少块数量
+use_cache: false
+timeout: 180              # 增加全局超时（虽然现在单个请求已经动态处理）
+
+# 启用浏览器自动化
+use_browser: true
+browser_type: selenium
+browser_headless: true
+browser_wait_time: 3
+# EOF

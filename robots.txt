@@ -7,7 +7,7 @@ Allow: /
 # Disallow admin and private areas (if needed)
 Disallow: /admin.html
 Disallow: /functions/
-Disallow: /mcp/
+Disallow: /tools/
 
 # Sitemap location
 Sitemap: https://travel-china.help/sitemap.xml

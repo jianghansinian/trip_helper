@@ -1,0 +1,5 @@
+# Tool runtime output
+tools/url-translate/translator.log
+tools/url-translate/translated_articles/.cache/
+tools/url-translate/translated_articles/.debug/
+**/__pycache__/

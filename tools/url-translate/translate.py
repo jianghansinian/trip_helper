@@ -182,6 +182,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Repo-relative hint (translate.py lives in tools/url-translate/)
+_CHROMEDRIVER_INSTALL_HINT = "tools/browser/install_chromedriver.sh"
+
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -223,8 +226,18 @@ class Config:
     def from_yaml(cls, path: str):
         if not yaml:
             raise RuntimeError("PyYAML not installed")
-        with open(path) as f:
+        config_path = Path(path).resolve()
+        base = config_path.parent
+        with open(config_path) as f:
             data = yaml.safe_load(f)
+        if 'urls_file' in data and data['urls_file']:
+            uf = Path(data['urls_file'])
+            if not uf.is_absolute():
+                data['urls_file'] = str((base / uf).resolve())
+        if 'output_dir' in data and data['output_dir']:
+            od = Path(data['output_dir'])
+            if not od.is_absolute():
+                data['output_dir'] = str((base / od).resolve())
         
         # Ensure API keys are strings, not tuples or None
         if 'deepseek_api_key' in data and data['deepseek_api_key']:
@@ -245,6 +258,19 @@ class Config:
             data['browser_headless'] = True
         if 'browser_wait_time' not in data:
             data['browser_wait_time'] = 3
+
+        if not data.get('deepseek_api_key'):
+            sk = os.environ.get('DEEPSEEK_API_KEY')
+            if sk:
+                data['deepseek_api_key'] = str(sk).strip()
+        if not data.get('openai_api_key'):
+            ok = os.environ.get('OPENAI_API_KEY')
+            if ok:
+                data['openai_api_key'] = str(ok).strip()
+        if not data.get('deepl_api_key'):
+            dk = os.environ.get('DEEPL_API_KEY')
+            if dk:
+                data['deepl_api_key'] = str(dk).strip()
             
         return cls(**data)
 
@@ -398,7 +424,7 @@ class EnhancedRetrySession:
                     if 'm.ctrip.com' in url:
                         desktop_url = url.replace('m.ctrip.com', 'www.ctrip.com')
                         logger.warning(f"     桌面版: {desktop_url}")
-                    logger.warning("  2. 手动安装ChromeDriver: bash mcp/install_chromedriver.sh")
+                    logger.warning(f"  2. 手动安装ChromeDriver: bash {_CHROMEDRIVER_INSTALL_HINT}")
                     logger.warning("  3. 或暂时不使用浏览器自动化")
                     logger.warning("")
                 

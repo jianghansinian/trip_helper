@@ -13,24 +13,24 @@
 
 用法：
     # 方式1：自动判断blog或guides（推荐）
-    python3 mcp/deploy.py --auto
+    python3 tools/deploy/deploy.py --auto
 
     # 方式2：指定部署到blog目录
-    python3 mcp/deploy.py --target blog
+    python3 tools/deploy/deploy.py --target blog
 
     # 方式3：指定部署到guides目录
-    python3 mcp/deploy.py --target guides
+    python3 tools/deploy/deploy.py --target guides
 
     # 方式4：部署单个文件
-    python3 mcp/deploy.py --file translated_articles/article.html --target blog
+    python3 tools/deploy/deploy.py --file tools/url-translate/translated_articles/article.html --target blog
 
     # 方式5：指定源目录
-    python3 mcp/deploy.py --source-dir mcp/translated_articles --auto
+    python3 tools/deploy/deploy.py --source-dir tools/url-translate/translated_articles --auto
 
     # 方式6：删除文章
-    python3 mcp/deploy.py --delete blog/article.html
-    python3 mcp/deploy.py --delete guides/article.html
-    python3 mcp/deploy.py --delete article.html --target blog
+    python3 tools/deploy/deploy.py --delete blog/article.html
+    python3 tools/deploy/deploy.py --delete guides/article.html
+    python3 tools/deploy/deploy.py --delete article.html --target blog
 """
 
 import os
@@ -45,12 +45,13 @@ from typing import Dict, List, Optional, Tuple
 import json
 
 # 配置
-BLOG_DIR = Path(__file__).parent.parent / 'blog'
-GUIDES_DIR = Path(__file__).parent.parent / 'guides'
-INDEX_HTML = Path(__file__).parent.parent / 'index.html'
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+BLOG_DIR = _REPO_ROOT / 'blog'
+GUIDES_DIR = _REPO_ROOT / 'guides'
+INDEX_HTML = _REPO_ROOT / 'index.html'
 BLOG_INDEX = BLOG_DIR / 'index.html'
 GUIDES_INDEX = GUIDES_DIR / 'index.html'
-TRANSLATED_DIR = Path(__file__).parent / 'translated_articles'
+TRANSLATED_DIR = _REPO_ROOT / 'tools' / 'url-translate' / 'translated_articles'
 
 # Blog和Guides的关键词（用于自动分类）
 BLOG_KEYWORDS = ['story', 'experience', 'adventure', 'journey', 'trip', 'travel', 'personal', 
