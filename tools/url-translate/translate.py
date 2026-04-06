@@ -80,12 +80,9 @@ try:
 except:
     GoogleTranslator = None
 
-try:
-    import argostranslate.package
-    import argostranslate.translate
-    HAS_ARGOS = True
-except:
-    HAS_ARGOS = False
+# 勿在模块导入时加载 argostranslate：它会拉取 spaCy 并尝试下载 xx_sent_ud_sm，
+# 在自签证书/代理环境下可能长时间卡住或反复失败。需要 argos 后端时再懒加载。
+HAS_ARGOS = False
 
 try:
     from deep_translator import GoogleTranslator as DeepGoogleTranslator
@@ -211,6 +208,7 @@ class Config:
     deepseek_api_key: Optional[str] = None  # NEW: DeepSeek API key
     proxy: Optional[str] = None  # NEW: Proxy URL (e.g., http://127.0.0.1:7890)
     rewrite_mode: bool = False  # NEW: Enable content rewriting and optimization
+    rewrite_extra_instructions: str = ""  # Appended to LLM system prompt when rewrite_mode (e.g. audience/tone)
     use_browser: bool = False  # NEW: 使用浏览器自动化（用于SPA页面）
     browser_type: str = 'playwright'  # NEW: 浏览器类型 'playwright' 或 'selenium'
     browser_headless: bool = True  # NEW: 浏览器无头模式
@@ -250,6 +248,8 @@ class Config:
         # Set defaults if not present
         if 'rewrite_mode' not in data:
             data['rewrite_mode'] = False
+        if 'rewrite_extra_instructions' not in data:
+            data['rewrite_extra_instructions'] = ""
         if 'use_browser' not in data:
             data['use_browser'] = False
         if 'browser_type' not in data:
@@ -1380,6 +1380,15 @@ class DeepSeekBackend(TranslatorBackend):
         else:
             logger.info(f"✓ DeepSeek Translator ready: {self.source_name} → {self.target_name}")
 
+    def _merge_rewrite_extras(self, system_text: str) -> str:
+        """Append rewrite_extra_instructions when rewrite_mode (used by article_to_target_page, etc.)."""
+        if not self.config.rewrite_mode:
+            return system_text
+        extra = (getattr(self.config, "rewrite_extra_instructions", None) or "").strip()
+        if not extra:
+            return system_text
+        return f"{system_text}\n\nAdditional style requirements:\n{extra}"
+
     async def _translate_batch(self, text: str) -> str:
         """
         Translate text in a single batch without chunking.
@@ -1453,6 +1462,8 @@ Output ONLY the plain translated text with markers preserved, nothing else."""
 Output ONLY the plain translated text with markers preserved, nothing else."""
                 user_prompt = "Translate the following text:\n\n{text}"
         
+        system_content = self._merge_rewrite_extras(system_content)
+
         # Calculate timeout based on text size
         base_timeout = 300 if rewrite_mode else 180
         size_bonus = max(len(text) // 100, 0)
@@ -1562,6 +1573,8 @@ Output ONLY the plain translated text, nothing else."""
 Output ONLY the plain translated text, nothing else."""
                     user_prompt = f"Translate to {self.target_name}:\n\n{chunk}"
                 
+                system_prompt = self._merge_rewrite_extras(system_prompt)
+
                 # Calculate dynamic timeout based on chunk size and mode
                 # Base timeout: 60s for translation, 120s for rewrite
                 # Add extra time based on chunk size (roughly 1s per 100 chars)
@@ -1679,7 +1692,10 @@ def create_translator(config: Config) -> TranslatorBackend:
     elif backend == 'google':
         return DeepTranslatorBackend(config, service='google')
     elif backend == 'argos':
-        return ArgosBackend(config)
+        raise ValueError(
+            "backend 'argos' is not implemented in this checkout (and eager argostranslate import "
+            "was removed to avoid spaCy model downloads blocking import). Use deepseek, openai, or simple."
+        )
     elif backend == 'googletrans':
         return GoogletransBackend(config)
     elif backend == 'deepl':

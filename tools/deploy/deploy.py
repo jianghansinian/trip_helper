@@ -44,8 +44,8 @@ from bs4 import BeautifulSoup
 from typing import Dict, List, Optional, Tuple
 import json
 
-# 配置
-_REPO_ROOT = Path(__file__).resolve().parent.parent
+# 配置（本脚本在 tools/deploy/ 下，需再上溯一级才是仓库根）
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 BLOG_DIR = _REPO_ROOT / 'blog'
 GUIDES_DIR = _REPO_ROOT / 'guides'
 INDEX_HTML = _REPO_ROOT / 'index.html'

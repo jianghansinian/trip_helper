@@ -34,6 +34,18 @@ python3 tools/i18n/multi_lang_translator.py --dir blog --langs ko,ja,ru,de,fr,es
 python3 tools/i18n/multi_lang_translator.py --article blog/sichuan_hotpot.html --meta-only
 ```
 
+使用 **`article_to_target_page.py`** 可将**中文或英文**的整篇站点文章 HTML 译为**一种**目标语言（复用 `tools/url-translate` 的 DeepSeek / OpenAI / `simple` 等后端与 `config.yaml`）：
+
+```bash
+# 英文文章 → 日语页面（默认只译正文区与 <title>/描述，不动导航）
+python3 tools/i18n/article_to_target_page.py -i blog/sichuan_hotpot.html --target ja --source en
+
+# 中文文章 → 英文页面
+python3 tools/i18n/article_to_target_page.py -i guides/visa-guide.html --target en --source zh
+
+# 输出路径可省略，默认为同目录 sichuan_hotpot.ja.html
+```
+
 2. **生成的文件结构**
 
 ```
