@@ -10,7 +10,7 @@
 | 翻译与重写 | 多后端（DeepSeek / OpenAI / 等），可切块、缓存、重试 |
 | 内容进站 | 将产物归类到 `blog/` 或 `guides/` 并维护索引页 |
 | 站点 i18n 辅助 | 为现有 HTML 批量加选择器、`data-i18n`、`data-translate` 等 |
-| 本地文章译稿 | 将已有中英文文章 HTML 整页译为指定语言（见 `article_to_target_page.py`） |
+| 本地文章译稿 | 将 Markdown / 站内 HTML 译为目标语言页面（见 `tools/pagegen/doc_to_html.py`） |
 
 **边界**：工具 **不** 在访客浏览器内执行；**不** 替代 Cloudflare Functions；密钥与代理属于运维机密，默认不进仓库。
 
@@ -22,7 +22,7 @@ tools/
 │   ├── add-i18n-support.py
 │   ├── add-translate-attributes.py
 │   ├── multi_lang_translator.py
-│   └── article_to_target_page.py  # 中/英文章 → 目标语 HTML 页面
+│   └── (legacy removed)          # 旧的 article_to_target_page 入口已迁移到 tools/pagegen/
 ├── url-translate/           # URL → 翻译/重写 → HTML 产物
 │   ├── translate.py         # 主程序（配置、抓取、翻译、写盘）
 │   ├── browser_fetcher.py   # Selenium/Playwright 等浏览器抓取
@@ -80,7 +80,7 @@ tools/
 | `add-i18n-support.py` | 扫描 HTML，注入语言选择器、公共脚本引用、`data-i18n` 等 |
 | `add-translate-attributes.py` | 为标题、正文等添加 `data-translate` |
 | `multi_lang_translator.py` | 基于现有文章生成多语言文件（如 `article.ja.html`） |
-| `article_to_target_page.py` | 读取 **站内文章 HTML**（中文或英文），用与 `translate.py` 相同的后端（DeepSeek / OpenAI / simple 等）批量翻译，写出 `{原名}.{目标语言}.html`；默认只处理 `.article-header`、`.article-content` 及 `<title>` / `meta description`，避免动到导航 |
+| `tools/pagegen/doc_to_html.py` | 读取 **Markdown / 站内文章 HTML**（中文或英文），用与 `translate.py` 相同的后端（DeepSeek / OpenAI / simple 等）翻译/改写并写出 `{原名}.{目标语言}.html`；默认只处理文章区与 `<title>`/描述，避免动到导航 |
 
 **设计要点**：扫描时 **排除** `tools/url-translate/translated_articles`，避免把抓取中间产物当站点页面处理。
 

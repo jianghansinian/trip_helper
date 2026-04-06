@@ -14,7 +14,7 @@
     - **.html**：整页翻译。
 
 用法: ``python3 tools/pagegen/doc_to_html.py``；默认任务 YAML：``tools/pagegen/doc_to_html.yaml``。
-兼容: ``python3 tools/i18n/article_to_target_page.py``（转发到本脚本）。
+旧入口 ``tools/i18n/article_to_target_page.py`` 已废弃；请直接使用本脚本。
 
 环境变量: DEEPSEEK_API_KEY / OPENAI_API_KEY 等（与 translate.py 一致）。
 """
@@ -98,18 +98,32 @@ def strip_llm_hand_emoji(text: str) -> str:
     return s.strip()
 
 
+def strip_markdown_emphasis_artifacts(text: str) -> str:
+    """
+    去掉 LLM 偶尔输出的 Markdown 强调符号（*, **, _, __）。
+    目标是把 “**Reddit**” 这种残留变成 “Reddit”，而不是保留星号进入最终 HTML。
+    """
+    if not text:
+        return text
+    s = text
+    # **bold** / __bold__
+    s = re.sub(r"\*\*([^*]+)\*\*", r"\1", s)
+    s = re.sub(r"__([^_]+)__", r"\1", s)
+    # *italic* / _italic_（尽量避免吃掉列表符号“* ”）
+    s = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"\1", s)
+    s = re.sub(r"(?<!_)_([^_\n]+)_(?!_)", r"\1", s)
+    return s
+
+
 _PAGEGEN_DIR = Path(__file__).resolve().parent
 _URL_TRANSLATE = _PAGEGEN_DIR.parent / "url-translate"
 _REPO_ROOT = _PAGEGEN_DIR.parent.parent
 _DEPLOY_SCRIPT = _REPO_ROOT / "tools" / "deploy" / "deploy.py"
 _DEFAULT_JOB_YAML = _PAGEGEN_DIR / "doc_to_html.yaml"
-_LEGACY_JOB_YAML = _REPO_ROOT / "tools" / "i18n" / "article_to_target_page.yaml"
-
-
 def _default_article_config_path() -> Path:
     if _DEFAULT_JOB_YAML.is_file():
         return _DEFAULT_JOB_YAML
-    return _LEGACY_JOB_YAML
+    return _DEFAULT_JOB_YAML
 
 if str(_URL_TRANSLATE) not in sys.path:
     sys.path.insert(0, str(_URL_TRANSLATE))
@@ -645,7 +659,7 @@ async def translate_html_file(
         return html
 
     translated = await translate_marked_segments(translator, segments)
-    translated = [strip_llm_hand_emoji(t) for t in translated]
+    translated = [strip_markdown_emphasis_artifacts(strip_llm_hand_emoji(t)) for t in translated]
 
     hi = 0
     for fn in head_setters:
