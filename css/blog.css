@@ -1,30 +1,454 @@
-/* Blog-specific styles */
-.breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
-.breadcrumb a { color: #666; text-decoration: none; }
-.breadcrumb a:hover { color: #c41e3a; }
-.breadcrumb span { color: #999; margin: 0 0.5rem; }
+/* Blog index — overrides main .page-header */
+body.page-blog-index .page-header {
+    background: linear-gradient(135deg, #e91e63, #ffd700);
+}
 
-.page-header { background: linear-gradient(135deg, #e91e63, #ffd700); color: white; padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
-.page-header h1 { font-size: 2.5rem; margin-bottom: 0.8rem; }
-.page-header p { font-size: 1.2rem; opacity: 0.95; }
+body.page-blog-index .filter-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
 
-.filter-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-.filter-tab { background: white; color: #666; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; font-weight: 500; }
-.filter-tab:hover { border-color: #c41e3a; color: #c41e3a; }
-.filter-tab.active { background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; border-color: #c41e3a; }
+body.page-blog-index .filter-tab {
+    background: white;
+    color: #666;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    font-weight: 500;
+}
 
-.article-icon { background: linear-gradient(135deg, #e91e63, #ffd700) !important; }
-.article-tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.5rem; }
-.tag-story { background: #e3f2fd; color: #1976d2; }
-.tag-food { background: #fff3e0; color: #e65100; }
-.tag-cultural { background: #f3e5f5; color: #7b1fa2; }
-.tag-adventure { background: #e8f5e9; color: #2e7d32; }
-.tag-heartwarming { background: #fce4ec; color: #c2185b; }
-.tag-funny { background: #fff9c4; color: #f57f17; }
+body.page-blog-index .filter-tab:hover {
+    border-color: #c41e3a;
+    color: #c41e3a;
+}
 
-.submit-cta { background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 3rem 2rem; border-radius: 15px; text-align: center; margin: 3rem 0; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3); }
-.submit-cta h2 { color: #333; font-size: 1.8rem; margin-bottom: 1rem; }
-.submit-cta p { color: #555; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-.submit-cta button { background: linear-gradient(135deg, #c41e3a, #8b1538); color: white; padding: 14px 40px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: transform 0.3s; }
-.submit-cta button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(196,30,58,0.3); }
+body.page-blog-index .filter-tab.active {
+    background: linear-gradient(135deg, #c41e3a, #8b1538);
+    color: white;
+    border-color: #c41e3a;
+}
 
+body.page-blog-index .article-list {
+    margin-bottom: 2rem;
+}
+
+body.page-blog-index .article-icon {
+    background: linear-gradient(135deg, #e91e63, #ffd700) !important;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-story,
+body.page-blog-index .tag-story {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-food,
+body.page-blog-index .tag-food {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-cultural,
+body.page-blog-index .tag-cultural {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-adventure,
+body.page-blog-index .tag-adventure {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-heartwarming,
+body.page-blog-index .tag-heartwarming {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+body.page-blog-index .article-list-item .article-tag.tag-funny,
+body.page-blog-index .tag-funny {
+    background: #fff9c4;
+    color: #f57f17;
+}
+
+body.page-blog-index .article-list-item p {
+    color: #666;
+}
+
+body.page-blog-index .article-meta-compact {
+    color: #999;
+}
+
+body.page-blog-index .ad-container {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+body.page-blog-index .ad-slot {
+    border: 2px dashed #ddd;
+    color: #888;
+    min-height: 100px;
+}
+
+body.page-blog-index .submit-cta {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    margin: 3rem 0;
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+body.page-blog-index .submit-cta h2 {
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+body.page-blog-index .submit-cta p {
+    color: #555;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.page-blog-index .submit-cta button {
+    background: linear-gradient(135deg, #c41e3a, #8b1538);
+    color: white;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: transform 0.3s;
+}
+
+body.page-blog-index .submit-cta button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(196,30,58,0.3);
+}
+
+body.page-blog-index .footer-bottom {
+    color: #888;
+}
+
+body.page-blog-index footer {
+    padding: 3rem 0 1rem;
+    margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    body.page-blog-index .article-list-item {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    body.page-blog-index .article-icon {
+        width: 100%;
+        height: 80px;
+    }
+}
+
+/* Blog story article pages (long-form) */
+body.page-blog-story .article-category {
+    background: linear-gradient(135deg, #ff5722, #ff9800);
+}
+
+body.page-blog-story .article-subtitle {
+    font-style: italic;
+}
+
+body.page-blog-story .article-featured-image {
+    background: linear-gradient(135deg, #ff5722, #ffc107);
+}
+
+body.page-blog-story .article-content h2 {
+    color: #ff5722;
+    border-top: 1px solid #f0f0f0;
+}
+
+body.page-blog-story .article-content h2:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+body.page-blog-story .article-content h3 {
+    color: #333;
+}
+
+body.page-blog-story .article-content blockquote {
+    border-left: 4px solid #ff9800;
+    background: #fff3e0;
+}
+
+body.page-blog-story .spice-meter {
+    background: linear-gradient(90deg, #4caf50 0%, #ffeb3b 33%, #ff9800 66%, #f44336 100%);
+    height: 30px;
+    border-radius: 15px;
+    position: relative;
+    margin: 2rem 0;
+}
+
+body.page-blog-story .spice-indicator {
+    position: absolute;
+    top: -5px;
+    width: 8px;
+    height: 40px;
+    background: #333;
+    border-radius: 4px;
+    transition: left 0.3s;
+}
+
+body.page-blog-story .food-rating {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 2rem 0;
+    border-left: 4px solid #ff5722;
+}
+
+body.page-blog-story .rating-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+body.page-blog-story .rating-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+body.page-blog-story .stars {
+    color: #ffc107;
+}
+
+body.page-blog-story .warning-box {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+body.page-blog-story .warning-box strong {
+    color: #856404;
+}
+
+body.page-blog-story .author-box {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 3rem 0;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+body.page-blog-story .author-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff5722, #ffc107);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+/* WeChat Pay story — red/gold accent layout */
+body.page-blog-wechat .article-category {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+}
+
+body.page-blog-wechat .article-featured-image {
+    background: linear-gradient(135deg, #c41e3a, #ffd700);
+}
+
+body.page-blog-wechat .article-content {
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+body.page-blog-wechat .article-content h2 {
+    color: #c41e3a;
+    border-top: 1px solid #f0f0f0;
+}
+
+body.page-blog-wechat .article-content h2:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+body.page-blog-wechat .article-content blockquote {
+    border-left: 4px solid #ffd700;
+    background: #fffef0;
+}
+
+body.page-blog-wechat .article-content .highlight-box {
+    background: linear-gradient(135deg, rgba(196, 30, 58, 0.05), rgba(255, 215, 0, 0.05));
+    border-left: 4px solid #c41e3a;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+body.page-blog-wechat .article-content .highlight-box h4 {
+    color: #c41e3a;
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+}
+
+body.page-blog-wechat .pro-tip {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+}
+
+body.page-blog-wechat .pro-tip strong {
+    color: #2e7d32;
+}
+
+body.page-blog-wechat .author-avatar {
+    background: linear-gradient(135deg, #c41e3a, #ffd700);
+}
+
+body.page-blog-wechat .author-info h4 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+body.page-blog-wechat .author-info p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+body.page-blog-wechat .author-info .social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+body.page-blog-wechat .social-link {
+    color: #c41e3a;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+body.page-blog-wechat .related-articles {
+    padding: 2rem 3rem 3rem;
+    background: #f8f9fa;
+}
+
+body.page-blog-wechat .related-articles h3 {
+    color: #c41e3a;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+body.page-blog-wechat .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+body.page-blog-wechat .related-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+body.page-blog-wechat .related-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+body.page-blog-wechat .related-image {
+    height: 150px;
+    background: linear-gradient(135deg, #c41e3a, #ffd700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+}
+
+body.page-blog-wechat .related-content {
+    padding: 1rem;
+}
+
+body.page-blog-wechat .related-content h4 {
+    color: #333;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+body.page-blog-wechat .related-content .date {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+body.page-blog-wechat .widget.toc {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #c41e3a;
+}
+
+body.page-blog-wechat .widget.toc h4 {
+    color: #c41e3a;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+body.page-blog-wechat .widget.toc ul {
+    list-style: none;
+}
+
+body.page-blog-wechat .widget.toc li {
+    margin-bottom: 0.6rem;
+}
+
+body.page-blog-wechat .widget.toc a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+body.page-blog-wechat .widget.toc a:hover {
+    color: #c41e3a;
+}
+
+@media (max-width: 968px) {
+    body.page-blog-wechat .article-title {
+        font-size: 2rem;
+    }
+
+    body.page-blog-wechat .article-content {
+        padding: 2rem 1.5rem;
+    }
+
+    body.page-blog-wechat .article-header {
+        padding: 2rem 1.5rem 1rem;
+    }
+}

@@ -5,64 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Guide to China's High-Speed Rail 2025 | Travel-China.Help</title>
     <meta name="description" content="Master China's bullet train network. Learn how to book tickets, navigate stations, find your seat, and travel efficiently across China by high-speed rail.">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.8; color: #333; background: #f5f5f5; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .header-top { background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
-        .logo { font-size: 1.5rem; font-weight: bold; color: #c41e3a; text-decoration: none; }
-        .nav-menu { display: flex; list-style: none; gap: 2rem; }
-        .nav-menu a { color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }
-        .nav-menu a:hover { color: #c41e3a; }
-        .breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
-        .breadcrumb a { color: #666; text-decoration: none; }
-        .breadcrumb a:hover { color: #c41e3a; }
-        .breadcrumb span { color: #999; margin: 0 0.5rem; }
-        .article-layout { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; margin-bottom: 3rem; }
-        .article-main { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }
-        .article-header { padding: 3rem 3rem 2rem; background: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(255, 193, 7, 0.05)); }
-        .article-category { display: inline-block; background: linear-gradient(135deg, #2196f3, #1976d2); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 1rem; }
-        .article-title { font-size: 2.5rem; color: #333; margin-bottom: 1rem; line-height: 1.3; }
-        .article-subtitle { font-size: 1.2rem; color: #666; margin-bottom: 2rem; }
-        .article-meta { display: flex; gap: 2rem; color: #999; font-size: 0.95rem; padding-top: 1.5rem; }
-        .meta-item { display: flex; align-items: center; gap: 0.5rem; }
-        .article-content { padding: 3rem; font-size: 1.05rem; line-height: 1.8; }
-        .article-content h2 { color: #2196f3; font-size: 1.8rem; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid #f0f0f0; }
-        .article-content h2:first-child { border-top: none; padding-top: 0; }
-        .article-content h3 { color: #1976d2; font-size: 1.4rem; margin: 2rem 0 1rem; }
-        .article-content p { margin-bottom: 1.5rem; color: #444; }
-        .article-content ul, .article-content ol { margin: 1.5rem 0; padding-left: 2rem; }
-        .article-content li { margin-bottom: 0.8rem; color: #444; }
-        .article-content strong { color: #1976d2; }
-        .info-box { background: #e3f2fd; border-left: 4px solid #2196f3; padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
-        .info-box h4 { color: #1565c0; margin-bottom: 0.8rem; }
-        .warning-box { background: #fff3cd; border-left: 4px solid #ff9800; padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
-        .warning-box h4 { color: #e65100; margin-bottom: 0.8rem; }
-        .tip-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
-        .tip-box h4 { color: #2e7d32; margin-bottom: 0.8rem; }
-        .train-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
-        .train-type { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #2196f3; }
-        .train-type h4 { color: #1976d2; margin-bottom: 0.5rem; }
-        .train-type .speed { color: #4caf50; font-weight: bold; font-size: 1.1rem; }
-        .step-box { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #2196f3; }
-        .step-box h4 { color: #1976d2; margin-bottom: 0.8rem; }
-        .ad-slot { background: #f9f9f9; border: 2px dashed #ddd; padding: 20px; margin: 2rem 0; text-align: center; color: #888; border-radius: 8px; min-height: 100px; display: flex; align-items: center; justify-content: center; }
-        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-        .widget { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .widget h3 { color: #c41e3a; margin-bottom: 1rem; font-size: 1.2rem; padding-bottom: 0.8rem; border-bottom: 2px solid #ffd700; }
-        .widget-list { list-style: none; }
-        .widget-list li { padding: 0.8rem 0; border-bottom: 1px solid #f0f0f0; }
-        .widget-list li:last-child { border-bottom: none; }
-        .widget-list a { color: #333; text-decoration: none; transition: color 0.3s; font-size: 0.95rem; display: block; }
-        .widget-list a:hover { color: #c41e3a; }
-        footer { background: #2c2c2c; color: #ccc; padding: 2rem 0 1rem; text-align: center; margin-top: 3rem; }
-        footer a { color: #ffd700; text-decoration: none; }
-        @media (max-width: 968px) { .article-layout { grid-template-columns: 1fr; } .nav-menu { display: none; } .train-types { grid-template-columns: 1fr; } }
-    </style>
+    <link rel="stylesheet" href="../css/main.css"/>
+<link rel="stylesheet" href="../css/guides.css"/>
 </head>
-<body>
+<body class="page-article">
     <header>
         <div class="header-top">🌍 Your trusted companion for exploring China</div>
         <nav class="container">
@@ -86,7 +32,7 @@
 
     <div class="container">
         <div class="article-layout">
-            <article class="article-main">
+            <article class="article-main theme-transport">
                 <div class="article-header">
                     <span class="article-category">TRANSPORTATION</span>
                     <h1 class="article-title">Complete Guide to China's High-Speed Rail</h1>

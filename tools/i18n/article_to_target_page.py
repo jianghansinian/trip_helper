@@ -16,7 +16,8 @@
     少套话、避免典型「AI 腔」，不编造事实；需与 ``--rewrite`` 或配置里的改写一并使用（仅传
     ``--visitor-voice`` 时会自动打开 ``rewrite_mode``）。
 
-Markdown：支持可选 YAML front matter（title / description / date / source_url / featured_emoji 等）；
+Markdown：支持可选 YAML front matter（title / description / date / source_url / featured_emoji / theme / blog_variant 等）；
+theme：guides 下文章配色（green|visa|transport|orange，默认 orange）。blog_variant：wechat 时生成 page-blog-wechat。
 正文为 CommonMark 子集；若已安装 ``markdown`` 包则使用其解析，否则使用内置轻量转换（适合标题、段落、列表、链接）。
 
 复用 tools/url-translate/translate.py 中的翻译后端（如 deepseek、openai、simple 等）与 config.yaml。
@@ -125,6 +126,10 @@ _DEFAULT_ARTICLE_JOB_YAML = _I18N_DIR / "article_to_target_page.yaml"
 
 if str(_URL_TRANSLATE) not in sys.path:
     sys.path.insert(0, str(_URL_TRANSLATE))
+_TOOLS_DIR = _I18N_DIR.parent
+if str(_TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(_TOOLS_DIR))
+import site_css_links  # noqa: E402
 
 VISITOR_VOICE_INSTRUCTIONS = """\
 - Audience: international travelers to China who need practical, trustworthy information.
@@ -444,7 +449,9 @@ def effective_source_lang(source_lang: str, title: str, body: str) -> str:
     return "en"
 
 
-def build_html_from_markdown(meta: Dict[str, str], body: str, source_lang: str) -> str:
+def build_html_from_markdown(
+    meta: Dict[str, str], body: str, source_lang: str, output_path: Path
+) -> str:
     tr = _translate_mod()
     fragment = markdown_body_to_html_fragment(body)
     title = meta["title"]
@@ -460,6 +467,18 @@ def build_html_from_markdown(meta: Dict[str, str], body: str, source_lang: str) 
     if not tpl:
         raise RuntimeError("translate 模块缺少 HTML_TEMPLATE，无法从 Markdown 生成页面")
 
+    _theme_raw = meta.get("theme")
+    _guides_theme = (
+        str(_theme_raw).strip() if _theme_raw is not None and str(_theme_raw).strip() else None
+    )
+    ctx = site_css_links.page_template_fields(
+        output_path.resolve(),
+        _REPO_ROOT,
+        guides_theme=_guides_theme,
+        blog_variant=meta.get("blog_variant"),
+    )
+    ctx_fmt = {k: _fmt_safe(v) for k, v in ctx.items()}
+
     # 正文 HTML 中可能含花括号，不能交给 str.format，用占位符再替换
     _slot = "__ATP_MD_BODY_SLOT__"
     html_page = tpl.format(
@@ -470,6 +489,7 @@ def build_html_from_markdown(meta: Dict[str, str], body: str, source_lang: str) 
         lang_display=_fmt_safe(str(lang_display)),
         featured_image=featured_image,
         content=_slot,
+        **ctx_fmt,
     )
     html_page = html_page.replace(_slot, fragment, 1)
     soup = BeautifulSoup(html_page, "html.parser")
@@ -810,10 +830,19 @@ def main() -> None:
 
     translator = tr.create_translator(cfg)
     suffix = in_path.suffix.lower()
+
+    out_raw = args.output or recipe.get("output")
+    if out_raw:
+        out_path = _resolve_job_path(job_dir, str(out_raw)).resolve()
+    else:
+        out_path = in_path.parent / f"{in_path.stem}.{target}.html"
+    out_path = out_path.resolve()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
     try:
         if suffix == ".md":
             meta, md_body = parse_local_markdown(in_path.read_text(encoding="utf-8"))
-            html = build_html_from_markdown(meta, md_body, source)
+            html = build_html_from_markdown(meta, md_body, source, out_path)
         else:
             html = in_path.read_text(encoding="utf-8")
     except ValueError as e:
@@ -825,13 +854,6 @@ def main() -> None:
     except RuntimeError as e:
         logger.error("%s", e)
         sys.exit(1)
-
-    out_raw = args.output or recipe.get("output")
-    if out_raw:
-        out_path = _resolve_job_path(job_dir, str(out_raw)).resolve()
-    else:
-        out_path = in_path.parent / f"{in_path.stem}.{target}.html"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(out_html, encoding="utf-8")
     logger.info("已写入: %s", out_path)
 

@@ -18,6 +18,11 @@ body {
     padding: 0 20px;
 }
 
+.container--narrow,
+body.page-narrow .container {
+    max-width: 900px;
+}
+
 /* Header */
 header {
     background: white;
@@ -53,6 +58,11 @@ nav {
     display: flex;
     list-style: none;
     gap: 2rem;
+    align-items: center;
+}
+
+a.logo {
+    text-decoration: none;
 }
 
 .nav-menu a {
@@ -399,6 +409,199 @@ footer {
     color: #424242;
 }
 
+/* Language selector (i18n pages) */
+.language-selector {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.language-btn {
+    background: transparent;
+    border: 2px solid #c41e3a;
+    color: #c41e3a;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.language-btn:hover {
+    background: #c41e3a;
+    color: white;
+}
+
+.language-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 180px;
+    display: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.language-dropdown.show {
+    display: block;
+}
+
+.language-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.language-option:hover {
+    background: #f5f5f5;
+}
+
+.language-option.active {
+    background: #fff3e0;
+    color: #c41e3a;
+    font-weight: 600;
+}
+
+body[dir="rtl"] .language-dropdown {
+    right: auto;
+    left: 0;
+}
+
+/* Breadcrumb, static inner pages */
+.breadcrumb {
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: #666;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: #c41e3a;
+}
+
+.breadcrumb span {
+    color: #999;
+    margin: 0 0.5rem;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #c41e3a, #ffd700);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.page-header p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+.content-section {
+    background: white;
+    border-radius: 10px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.content-section h2 {
+    color: #c41e3a;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #ffd700;
+}
+
+.content-section h3 {
+    color: #e64a19;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+}
+
+.content-section p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+.content-section ul {
+    margin: 1.5rem 0 1.5rem 2rem;
+}
+
+.content-section li {
+    margin-bottom: 1rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+.highlight-box {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-left: 5px solid #ff9800;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+
+.highlight-box p {
+    margin-bottom: 0;
+}
+
+.important-notice {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-left: 5px solid #ff9800;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+
+.important-notice h3 {
+    color: #e65100;
+    margin-top: 0;
+}
+
+.content-section .info-box {
+    background: #e3f2fd;
+    border-left: 5px solid #1976d2;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+
+.content-section .info-box h3 {
+    color: #1976d2;
+    margin-top: 0;
+}
+
+.last-updated {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .content-wrapper {
@@ -427,6 +630,14 @@ footer {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .content-section {
+        padding: 2rem 1.5rem;
     }
 }
 

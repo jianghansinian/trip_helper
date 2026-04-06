@@ -21,6 +21,12 @@ from pathlib import Path
 from bs4 import BeautifulSoup, Comment
 from typing import List, Optional
 
+_TOOLS = Path(__file__).resolve().parent.parent
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(_TOOLS) not in sys.path:
+    sys.path.insert(0, str(_TOOLS))
+import site_css_links  # noqa: E402
+
 # 语言选择器HTML（插入到导航菜单）
 LANGUAGE_SELECTOR_HTML = '''<li class="language-selector">
                     <button class="language-btn" onclick="toggleLanguageDropdown()">
@@ -38,77 +44,6 @@ LANGUAGE_SELECTOR_HTML = '''<li class="language-selector">
                         <div class="language-option" onclick="changeLanguage('ar')">🇸🇦 العربية</div>
                     </div>
                 </li>'''
-
-# 语言选择器CSS（插入到style标签）
-LANGUAGE_SELECTOR_CSS = '''
-        /* Language Selector */
-        .language-selector {
-            position: relative;
-            margin-left: 1rem;
-        }
-
-        .language-btn {
-            background: transparent;
-            border: 2px solid #c41e3a;
-            color: #c41e3a;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-
-        .language-btn:hover {
-            background: #c41e3a;
-            color: white;
-        }
-
-        .language-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 0.5rem;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: 180px;
-            display: none;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .language-dropdown.show {
-            display: block;
-        }
-
-        .language-option {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .language-option:hover {
-            background: #f5f5f5;
-        }
-
-        .language-option.active {
-            background: #fff3e0;
-            color: #c41e3a;
-            font-weight: 600;
-        }
-
-        body[dir="rtl"] .language-dropdown {
-            right: auto;
-            left: 0;
-        }'''
 
 # JavaScript代码（插入到script标签前）
 I18N_SCRIPT_HTML = '''    <script src="js/translations.js" defer></script>
@@ -225,25 +160,9 @@ def add_language_selector(soup: BeautifulSoup) -> bool:
     return True
 
 
-def add_language_css(soup: BeautifulSoup) -> bool:
-    """添加语言选择器的CSS"""
-    # 查找style标签
-    style_tag = soup.find('style')
-    if not style_tag:
-        # 创建style标签
-        style_tag = soup.new_tag('style')
-        soup.head.insert(0, style_tag)
-    
-    # 检查是否已经有语言选择器CSS
-    if 'language-selector' in style_tag.string:
-        return False
-    
-    # 添加CSS
-    if style_tag.string:
-        style_tag.string += LANGUAGE_SELECTOR_CSS
-    else:
-        style_tag.string = LANGUAGE_SELECTOR_CSS
-    return True
+def add_language_css(soup: BeautifulSoup, file_path: Path) -> bool:
+    """若缺少外链 main.css，则按页面路径插入与生成工具一致的 stylesheet 集合。"""
+    return site_css_links.ensure_site_css_links(soup, file_path.resolve(), _REPO_ROOT)
 
 
 def add_i18n_scripts(soup: BeautifulSoup) -> bool:
@@ -314,8 +233,8 @@ def process_html_file(file_path: Path) -> dict:
             changes.append('Added language selector')
         
         # 添加CSS
-        if add_language_css(soup):
-            changes.append('Added language selector CSS')
+        if add_language_css(soup, file_path):
+            changes.append('Added site CSS links')
         
         # 更新导航菜单样式
         if update_nav_menu_alignment(soup):

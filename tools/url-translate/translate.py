@@ -47,6 +47,12 @@ from typing import Optional, Dict, List
 from dataclasses import dataclass
 from urllib.robotparser import RobotFileParser
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_TOOLS_DIR = Path(__file__).resolve().parents[1]
+if str(_TOOLS_DIR) not in sys.path:
+    sys.path.insert(0, str(_TOOLS_DIR))
+import site_css_links  # noqa: E402
+
 # Suppress SSL warnings (common with self-signed certificates in corporate environments)
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -1746,81 +1752,33 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} - Travel-China.Help</title>
     <meta name="description" content="{title}">
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.8; color: #333; background: #f5f5f5; }}
-        .container {{ max-width: 1200px; margin: 0 auto; padding: 0 20px; }}
-        header {{ background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }}
-        .header-top {{ background: linear-gradient(135deg, #c41e3a 0%, #8b1538 100%); color: white; padding: 8px 0; font-size: 0.85rem; text-align: center; }}
-        nav {{ display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }}
-        .logo {{ font-size: 1.5rem; font-weight: bold; color: #c41e3a; text-decoration: none; }}
-        .nav-menu {{ display: flex; list-style: none; gap: 2rem; }}
-        .nav-menu a {{ color: #333; text-decoration: none; font-weight: 500; transition: color 0.3s; }}
-        .nav-menu a:hover {{ color: #c41e3a; }}
-        .breadcrumb {{ padding: 1.5rem 0; font-size: 0.9rem; }}
-        .breadcrumb a {{ color: #666; text-decoration: none; }}
-        .breadcrumb a:hover {{ color: #c41e3a; }}
-        .breadcrumb span {{ color: #999; margin: 0 0.5rem; }}
-        .article-layout {{ display: grid; grid-template-columns: 1fr 300px; gap: 2rem; margin-bottom: 3rem; }}
-        .article-main {{ background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.08); }}
-        .article-header {{ padding: 3rem 3rem 2rem; }}
-        .article-category {{ display: inline-block; background: linear-gradient(135deg, #ff5722, #ff9800); color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 1rem; }}
-        .article-title {{ font-size: 2.5rem; color: #333; margin-bottom: 1rem; line-height: 1.3; }}
-        .article-meta {{ display: flex; gap: 2rem; color: #999; font-size: 0.95rem; padding-bottom: 2rem; border-bottom: 2px solid #f0f0f0; flex-wrap: wrap; }}
-        .meta-item {{ display: flex; align-items: center; gap: 0.5rem; }}
-        .article-featured-image {{ width: 100%; height: 400px; object-fit: cover; }}
-        .article-featured-placeholder {{ width: 100%; height: 400px; background: linear-gradient(135deg, #c41e3a, #ff9800); display: flex; align-items: center; justify-content: center; font-size: 6rem; }}
-        .article-content {{ padding: 3rem; font-size: 1.1rem; line-height: 1.9; }}
-        .article-content h2 {{ color: #ff5722; font-size: 1.8rem; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 2px solid #f0f0f0; }}
-        .article-content h2:first-of-type {{ border-top: none; padding-top: 0; }}
-        .article-content h3 {{ color: #333; font-size: 1.4rem; margin: 2rem 0 1rem; }}
-        .article-content p {{ margin-bottom: 1.5rem; color: #444; text-align: justify; }}
-        .article-content ul, .article-content ol {{ margin: 1.5rem 0; padding-left: 2rem; }}
-        .article-content li {{ margin-bottom: 0.8rem; color: #444; line-height: 1.7; }}
-        .article-content ul {{ list-style-type: disc; }}
-        .article-content ol {{ list-style-type: decimal; }}
-        .article-content blockquote {{ border-left: 4px solid #ff9800; padding: 1.5rem 2rem; margin: 2rem 0; background: #fff3e0; border-radius: 0 8px 8px 0; font-style: italic; color: #555; }}
-        .article-content img {{ max-width: 100%; height: auto; border-radius: 8px; margin: 2rem 0; }}
-        .source-info {{ background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; border-left: 4px solid #c41e3a; }}
-        .source-info strong {{ color: #c41e3a; }}
-        .sidebar {{ display: flex; flex-direction: column; gap: 1.5rem; }}
-        .widget {{ background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }}
-        .widget h3 {{ color: #c41e3a; margin-bottom: 1rem; font-size: 1.2rem; padding-bottom: 0.8rem; border-bottom: 2px solid #ffd700; }}
-        .widget-list {{ list-style: none; }}
-        .widget-list li {{ padding: 0.8rem 0; border-bottom: 1px solid #f0f0f0; }}
-        .widget-list li:last-child {{ border-bottom: none; }}
-        .widget-list a {{ color: #333; text-decoration: none; transition: color 0.3s; font-size: 0.95rem; }}
-        .widget-list a:hover {{ color: #c41e3a; }}
-        footer {{ background: #2c2c2c; color: #ccc; padding: 2rem 0 1rem; text-align: center; }}
-        footer a {{ color: #ffd700; text-decoration: none; }}
-        @media (max-width: 968px) {{ .article-layout {{ grid-template-columns: 1fr; }} .nav-menu {{ display: none; }} }}
-    </style>
+{css_links}
 </head>
-<body>
+<body class="{body_class}">
     <header>
         <div class="header-top">🌍 Your trusted source for China travel information since 2024</div>
         <nav class="container">
-            <a href="index.html" class="logo">Travel-China.Help</a>
+            <a href="{href_home}" class="logo">Travel-China.Help</a>
             <ul class="nav-menu">
-                <li><a href="index.html#guides">Travel Guides</a></li>
-                <li><a href="index.html#blog">Travel Stories</a></li>
-                <li><a href="index.html#visa">Visa & Entry</a></li>
-                <li><a href="index.html#culture">Culture</a></li>
+                <li><a href="{href_nav_guides}">Travel Guides</a></li>
+                <li><a href="{href_nav_stories}">Travel Stories</a></li>
+                <li><a href="{href_nav_visa}">Visa &amp; Entry</a></li>
+                <li><a href="{href_nav_practical}">Practical Info</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
         <div class="breadcrumb">
-            <a href="index.html">Home</a><span>›</span>
-            <a href="blog.html">Articles</a><span>›</span>
+            <a href="{href_bc_home}">Home</a><span>›</span>
+            <a href="{href_bc_section}">{bc_section_label}</a><span>›</span>
             <span style="color: #333;">{title}</span>
         </div>
     </div>
 
     <div class="container">
         <div class="article-layout">
-            <article class="article-main">
+            <article class="{article_class}">
                 {featured_image}
                 
                 <div class="article-header">
@@ -1843,10 +1801,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <div class="widget">
                     <h3>🔥 Popular Articles</h3>
                     <ul class="widget-list">
-                        <li><a href="index.html#guides">China Travel Guides</a></li>
-                        <li><a href="index.html#visa">Visa Information</a></li>
-                        <li><a href="index.html#culture">Chinese Culture</a></li>
-                        <li><a href="index.html#blog">Travel Stories</a></li>
+                        <li><a href="{href_widget_guides}">China Travel Guides</a></li>
+                        <li><a href="{href_widget_visa}">Visa Information</a></li>
+                        <li><a href="{href_widget_culture}">Chinese Culture</a></li>
+                        <li><a href="{href_widget_blog}">Travel Stories</a></li>
                     </ul>
                 </div>
             </aside>
@@ -1855,7 +1813,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Travel-China.Help | <a href="index.html">Home</a> | <a href="{source_url}" target="_blank">Original Article</a></p>
+            <p>&copy; 2024 Travel-China.Help | <a href="{href_footer_home}">Home</a> | <a href="{source_url}" target="_blank">Original Article</a></p>
             <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #999;">Automated translation service for China travel content</p>
         </div>
     </footer>
@@ -1876,7 +1834,14 @@ LANG_NAMES = {
     'auto': 'Auto-detected'
 }
 
-def build_html(article: Dict, translated_title: str, translated_text: str, config: Config, translated_html: Optional[str] = None) -> str:
+def build_html(
+    article: Dict,
+    translated_title: str,
+    translated_text: str,
+    config: Config,
+    translated_html: Optional[str] = None,
+    output_path: Optional[Path] = None,
+) -> str:
     # No featured image - always use placeholder
     featured_image = '<div class="article-featured-placeholder">📰</div>'
     
@@ -1924,19 +1889,19 @@ def build_html(article: Dict, translated_title: str, translated_text: str, confi
         
         content_html = '\n'.join(content_parts)
     
-    # Get language display names
-    source_lang_display = LANG_NAMES.get(config.source_lang, config.source_lang)
     target_lang_display = LANG_NAMES.get(config.target_lang, config.target_lang)
-    
+    out = output_path if output_path is not None else _REPO_ROOT / "_translate_output_placeholder.html"
+    ctx = site_css_links.page_template_fields(out.resolve(), _REPO_ROOT)
+
     return HTML_TEMPLATE.format(
-        title=translated_title,  # Use translated title
+        title=translated_title,
         source_url=article['url'],
         fetched=time.strftime('%B %d, %Y', time.localtime()),
         lang=config.target_lang,
         lang_display=target_lang_display,
-        source_lang_display=source_lang_display,
         featured_image=featured_image,
-        content=content_html
+        content=content_html,
+        **ctx,
     )
 
 
@@ -2047,13 +2012,17 @@ async def process_url(
             translated_content = await translator.translate(article['text'])
             translated_html = None
         
-        # Build HTML with translated title
-        html_content = build_html(article, translated_title, translated_content or article['text'], config, translated_html)
-        
-        # Save with translated title in filename
         slug = safe_filename(translated_title)
         output_file = Path(config.output_dir) / f"{slug}.html"
         output_file.parent.mkdir(parents=True, exist_ok=True)
+        html_content = build_html(
+            article,
+            translated_title,
+            translated_content or article['text'],
+            config,
+            translated_html,
+            output_path=output_file,
+        )
         output_file.write_text(html_content, encoding='utf-8')
         
         # Cache
