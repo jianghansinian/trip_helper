@@ -1,35 +1,20 @@
-/**
- * 多语言翻译数据
- * 支持: 英语(en), 韩语(ko), 日语(ja), 俄语(ru), 德语(de), 法语(fr), 西班牙语(es), 意大利语(it), 阿拉伯语(ar)
- */
 window.translations = {
     en: {
-        // 通用导航
         'nav.travelGuides': 'Travel Guides',
         'nav.travelStories': 'Travel Stories',
         'nav.visaEntry': 'Visa & Entry',
         'nav.practicalInfo': 'Practical Info',
-        
-        // Header
         'header.topMessage': '🌍 Your trusted companion for exploring China - Updated regularly with fresh stories and tips',
         'header.logo': 'Travel-China.Help',
-        
-        // Hero
         'hero.title': 'Your Complete Guide to Traveling in China',
         'hero.subtitle': 'Real experiences, practical advice, and insider tips from fellow travelers',
-        
-        // Welcome Banner
         'welcome.title': '🎉 Welcome to Travel-China.Help!',
         'welcome.description': 'We\'re a brand new community-driven travel guide dedicated to helping international travelers navigate the wonders of China. Whether you\'re planning your first trip or you\'re a seasoned explorer, we\'re here to share real experiences, practical tips, and cultural insights.',
         'welcome.highlight': '📅 Fresh Content Weekly: We\'re constantly adding new travel stories, updated guides, and helpful tips based on real traveler experiences. Check back often to discover the latest adventures and advice from our growing community!',
-        
-        // Sections
         'section.stories.title': '📖 Traveler Stories & Experiences',
         'section.stories.viewAll': 'View All Stories →',
         'section.guides.title': '📚 Essential Travel Guides',
         'section.guides.viewAll': 'View All Guides →',
-        
-        // Sidebar
         'sidebar.popularCategories': '📚 Popular Categories',
         'sidebar.mostRead': '🔥 Most Read This Week',
         'sidebar.quickTips': '💡 Quick Tips',
@@ -38,8 +23,6 @@ window.translations = {
         'sidebar.categories.transportation': 'Transportation',
         'sidebar.categories.cityGuides': 'City Guides',
         'sidebar.categories.foodDining': 'Food & Dining',
-        
-        // Footer
         'footer.travelGuides': 'Travel Guides',
         'footer.essentialInfo': 'Essential Info',
         'footer.community': 'Community',
@@ -63,12 +46,11 @@ window.translations = {
         'footer.privacyPolicy': 'Privacy Policy',
         'footer.copyright': '© 2025 Travel-China.Help - Your trusted guide to exploring China',
         'footer.disclaimer': 'Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.',
-        
-        // Feedback Section
         'feedback.title': '💬 Share Your Feedback & Experiences',
         'feedback.description': 'Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.',
         'feedback.form.name': 'Your Name *',
         'feedback.form.email': 'Your Email * (private)',
+        'feedback.form.categoryLabel': 'Feedback category',
         'feedback.form.category.general': '💭 General Feedback',
         'feedback.form.category.question': '❓ Question About China Travel',
         'feedback.form.category.story': '📖 Share My Travel Story',
@@ -80,8 +62,6 @@ window.translations = {
         'feedback.form.submit': 'Submit Feedback 🚀',
         'feedback.recent': '🌟 Recent Community Feedback',
         'feedback.loading': 'Loading comments...',
-        
-        // Blog Page
         'blog.pageTitle': '📖 Real Travel Stories from China',
         'blog.pageSubtitle': 'Funny moments, cultural discoveries, and unexpected adventures',
         'blog.filter.all': 'All Stories',
@@ -97,8 +77,6 @@ window.translations = {
         'blog.breadcrumb.stories': 'Travel Stories',
         'blog.footer.backHome': 'Back to Home',
         'blog.footer.tagline': 'Sharing real experiences from travelers exploring China',
-        
-        // Meta
         'meta.title': 'Travel China Help - Your Complete Guide to Exploring China',
         'meta.description': 'Your trusted companion for exploring China. Real travel stories, practical guides, and insider tips updated regularly.',
         'meta.blogTitle': 'Travel Stories - Real Experiences from China Travelers | Travel-China.Help',
@@ -109,8 +87,6 @@ window.translations = {
         'meta.contactDescription': 'Get in touch with Travel-China.Help. Contact us for questions, feedback, or travel story submissions.',
         'meta.privacyTitle': 'Privacy Policy - Travel-China.Help',
         'meta.privacyDescription': 'Privacy Policy for Travel-China.Help. Learn how we collect, use, and protect your personal information.',
-        
-        // About Page
         'about.title': '📖 About Travel-China.Help',
         'about.mission': 'Our Mission',
         'about.missionText': 'We\'re a brand new community-driven travel guide dedicated to helping international travelers navigate the wonders of China. Whether you\'re planning your first trip or you\'re a seasoned explorer, we\'re here to share real experiences, practical tips, and cultural insights.',
@@ -121,8 +97,6 @@ window.translations = {
         'about.valuesText': 'We are committed to providing accurate, up-to-date information based on real traveler experiences. Our content is written by people who have actually been there, done that, and want to share what they learned.',
         'about.freshContent': 'Fresh Content Weekly',
         'about.freshContentText': 'We\'re constantly adding new travel stories, updated guides, and helpful tips based on real traveler experiences. Check back often to discover the latest adventures and advice from our growing community!',
-        
-        // Contact Page
         'contact.title': '📧 Contact Us',
         'contact.subtitle': 'We\'d love to hear from you!',
         'contact.getInTouch': 'Get in Touch',
@@ -134,8 +108,6 @@ window.translations = {
         'contact.responseTimeText': 'We typically respond to emails within 2-3 business days. For urgent travel-related questions, we\'ll do our best to respond as quickly as possible.',
         'contact.alternativeWays': 'Alternative Ways to Connect',
         'contact.alternativeWaysText': 'You can also use the feedback form on our homepage to share your thoughts, ask questions, or submit your travel story directly.',
-        
-        // Privacy Page
         'privacy.title': '🔒 Privacy Policy',
         'privacy.subtitle': 'How we collect and protect your information',
         'privacy.lastUpdated': 'Last Updated: January 2025',
@@ -150,8 +122,6 @@ window.translations = {
         'privacy.dataSecurity': 'Data Security',
         'privacy.childrensPrivacy': 'Children\'s Privacy',
         'privacy.changesToPolicy': 'Changes to This Privacy Policy',
-        
-        // Guides Page
         'guides.pageTitle': '📚 Complete Travel Guides for China',
         'guides.pageSubtitle': 'Everything you need to know for an amazing trip to China',
         'guides.section.visa': '🛂 Visa & Entry Requirements',
@@ -161,8 +131,6 @@ window.translations = {
         'guides.section.cities': '🏛️ City Guides',
         'meta.guidesTitle': 'Travel Guides - Complete China Travel Information | Travel-China.Help',
         'meta.guidesDescription': 'Comprehensive travel guides for visiting China. Visa information, transportation tips, city guides, and practical advice for international travelers.',
-        
-        // Common
         'common.backHome': 'Back to Home',
         'common.breadcrumb.home': 'Home'
     },
@@ -217,6 +185,7 @@ window.translations = {
         'feedback.description': '개선에 도움을 주세요! 이 웹사이트에 대한 생각을 공유하거나 질문하거나 중국 여행 경험을 알려주세요.',
         'feedback.form.name': '이름 *',
         'feedback.form.email': '이메일 * (비공개)',
+        'feedback.form.categoryLabel': '피드백 유형',
         'feedback.form.category.general': '💭 일반 피드백',
         'feedback.form.category.question': '❓ 중국 여행에 대한 질문',
         'feedback.form.category.story': '📖 내 여행 이야기 공유',
@@ -293,6 +262,7 @@ window.translations = {
         'feedback.description': '改善にご協力ください！このウェブサイトについてのご意見を共有したり、質問したり、中国旅行の経験を教えてください。',
         'feedback.form.name': 'お名前 *',
         'feedback.form.email': 'メールアドレス * (非公開)',
+        'feedback.form.categoryLabel': 'お問い合わせの種類',
         'feedback.form.category.general': '💭 一般的なフィードバック',
         'feedback.form.category.question': '❓ 中国旅行に関する質問',
         'feedback.form.category.story': '📖 旅行ストーリーを共有',
@@ -369,6 +339,7 @@ window.translations = {
         'feedback.description': 'Помогите нам улучшиться! Поделитесь своими мыслями об этом веб-сайте, задайте вопросы или расскажите о своем опыте путешествий по Китаю.',
         'feedback.form.name': 'Ваше имя *',
         'feedback.form.email': 'Ваш email * (приватный)',
+        'feedback.form.categoryLabel': 'Категория обращения',
         'feedback.form.category.general': '💭 Общий отзыв',
         'feedback.form.category.question': '❓ Вопрос о путешествии по Китаю',
         'feedback.form.category.story': '📖 Поделиться историей путешествия',
@@ -445,6 +416,7 @@ window.translations = {
         'feedback.description': 'Helfen Sie uns zu verbessern! Teilen Sie Ihre Gedanken zu dieser Website, stellen Sie Fragen oder erzählen Sie uns von Ihren China-Reiseerfahrungen.',
         'feedback.form.name': 'Ihr Name *',
         'feedback.form.email': 'Ihre E-Mail * (privat)',
+        'feedback.form.categoryLabel': 'Thema Ihres Feedbacks',
         'feedback.form.category.general': '💭 Allgemeines Feedback',
         'feedback.form.category.question': '❓ Frage zur China-Reise',
         'feedback.form.category.story': '📖 Meine Reisegeschichte teilen',
@@ -521,6 +493,7 @@ window.translations = {
         'feedback.description': 'Aidez-nous à nous améliorer ! Partagez vos réflexions sur ce site Web, posez des questions ou racontez-nous vos expériences de voyage en Chine.',
         'feedback.form.name': 'Votre nom *',
         'feedback.form.email': 'Votre email * (privé)',
+        'feedback.form.categoryLabel': 'Type de message',
         'feedback.form.category.general': '💭 Commentaires généraux',
         'feedback.form.category.question': '❓ Question sur le voyage en Chine',
         'feedback.form.category.story': '📖 Partager mon récit de voyage',
@@ -597,6 +570,7 @@ window.translations = {
         'feedback.description': '¡Ayúdanos a mejorar! Comparte tus pensamientos sobre este sitio web, haz preguntas o cuéntanos sobre tus experiencias de viaje por China.',
         'feedback.form.name': 'Tu nombre *',
         'feedback.form.email': 'Tu email * (privado)',
+        'feedback.form.categoryLabel': 'Tipo de mensaje',
         'feedback.form.category.general': '💭 Comentarios generales',
         'feedback.form.category.question': '❓ Pregunta sobre viajes a China',
         'feedback.form.category.story': '📖 Compartir mi historia de viaje',
@@ -673,6 +647,7 @@ window.translations = {
         'feedback.description': 'Aiutaci a migliorare! Condividi i tuoi pensieri su questo sito web, fai domande o raccontaci delle tue esperienze di viaggio in Cina.',
         'feedback.form.name': 'Il tuo nome *',
         'feedback.form.email': 'La tua email * (privata)',
+        'feedback.form.categoryLabel': 'Tipo di messaggio',
         'feedback.form.category.general': '💭 Feedback generale',
         'feedback.form.category.question': '❓ Domanda sui viaggi in Cina',
         'feedback.form.category.story': '📖 Condividi la mia storia di viaggio',
@@ -749,6 +724,7 @@ window.translations = {
         'feedback.description': 'ساعدنا على التحسين! شارك أفكارك حول هذا الموقع أو اطرح أسئلة أو أخبرنا عن تجاربك في السفر إلى الصين.',
         'feedback.form.name': 'اسمك *',
         'feedback.form.email': 'بريدك الإلكتروني * (خاص)',
+        'feedback.form.categoryLabel': 'نوع الرسالة',
         'feedback.form.category.general': '💭 تعليقات عامة',
         'feedback.form.category.question': '❓ سؤال حول السفر إلى الصين',
         'feedback.form.category.story': '📖 مشاركة قصتي في السفر',

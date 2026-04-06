@@ -892,10 +892,10 @@
         </div>
     </footer>
 
-    <script src="../js/translations.js"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/common-i18n-scripts.js"></script>
-    <script src="../js/article-content-i18n.js"></script>
+    <script src="../js/translations.js" defer></script>
+    <script src="../js/i18n.js" defer></script>
+    <script src="../js/common-i18n-scripts.js" defer></script>
+    <script src="../js/article-content-i18n.js" defer></script>
     <script>
         // Smooth scroll for TOC links
         document.querySelectorAll('.toc a').forEach(anchor => {
@@ -912,7 +912,7 @@
         <!-- 评论表单和列表 -->
     </div>
 
-    <script src="/js/comments.js"></script>
+    <script src="/js/comments.js" defer></script>
     <script>
         // 为这篇文章初始化评论系统
         const articleComments = new CommentSystem('article-comments', 'wechat-pay-story');

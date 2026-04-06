@@ -164,7 +164,7 @@
         }
 
         .welcome-banner p {
-            color: #555;
+            color: #333;
             font-size: 1.1rem;
             line-height: 1.8;
             margin-bottom: 0.8rem;
@@ -302,8 +302,8 @@
 
         .article-list-item .article-tag {
             display: inline-block;
-            background: #e3f2fd;
-            color: #1976d2;
+            background: #e8ecf4;
+            color: #0d2d5c;
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.75rem;
@@ -319,7 +319,7 @@
         }
 
         .article-list-item p {
-            color: #666;
+            color: #4a4a4a;
             font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 0.5rem;
@@ -328,7 +328,7 @@
         .article-meta-compact {
             display: flex;
             gap: 1.5rem;
-            color: #999;
+            color: #5c5c5c;
             font-size: 0.85rem;
         }
 
@@ -349,9 +349,9 @@
         }
         
         .ad-slot {
-            border: 2px dashed #ddd;
+            border: 2px dashed #bdbdbd;
             padding: 20px;
-            color: #888;
+            color: #424242;
             min-height: 100px;
             display: flex;
             align-items: center;
@@ -458,7 +458,22 @@
             text-align: center;
             padding-top: 2rem;
             border-top: 1px solid #444;
-            color: #888;
+            color: #e0e0e0;
+        }
+
+        .footer-bottom-links a {
+            color: #ffe69c;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .footer-bottom-links a:hover {
+            color: #fff8e1;
+        }
+
+        .comments-loading,
+        .comments-loading p {
+            color: #424242;
         }
 
         /* Responsive */
@@ -525,6 +540,7 @@
 </ul>
 </nav>
 </header>
+<main id="main-content">
 <div class="hero-banner">
 <div class="container">
 <h1 data-i18n="hero.title">Your Complete Guide to Traveling in China</h1>
@@ -709,7 +725,7 @@ Cons</p>
 <div class="container">
 <div style="text-align: center; margin-bottom: 3rem;">
 <h2 data-i18n="feedback.title" style="color: #c41e3a; font-size: 2.5rem; margin-bottom: 1rem;">💬 Share Your Feedback &amp; Experiences</h2>
-<p data-i18n="feedback.description" style="color: #666; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
+<p data-i18n="feedback.description" style="color: #4a4a4a; font-size: 1.2rem; max-width: 700px; margin: 0 auto;">
                         Help us improve! Share your thoughts about this website, ask questions, or tell us about your China travel experiences.
                     </p>
 </div>
@@ -723,6 +739,7 @@ Cons</p>
 <input data-i18n="feedback.form.name" name="name" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Name *" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="text"/>
 <input data-i18n="feedback.form.email" name="email" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your Email * (private)" required="" style="padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s;" type="email"/>
 </div>
+<label for="feedback-category" data-i18n="feedback.form.categoryLabel" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a1a; font-size: 1rem;">Feedback category</label>
 <select id="feedback-category" name="category" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; background: white; cursor: pointer; transition: border-color 0.3s;">
 <option data-i18n="feedback.form.category.general" value="General Feedback">💭 General Feedback</option>
 <option data-i18n="feedback.form.category.question" value="Question About China Travel">❓ Question About China Travel</option>
@@ -733,7 +750,7 @@ Cons</p>
 </select>
 <textarea data-i18n="feedback.form.message" name="message" onblur="this.style.borderColor='#e0e0e0'" onfocus="this.style.borderColor='#c41e3a'" placeholder="Your message... What would you like to share or ask? *" required="" style="width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; min-height: 150px; margin-bottom: 1rem; font-family: inherit; resize: vertical; transition: border-color 0.3s;"></textarea>
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-<label style="color: #666; font-size: 0.95rem;">
+<label style="color: #4a4a4a; font-size: 0.95rem;">
 <input name="notify" style="margin-right: 8px;" type="checkbox"/>
 <span data-i18n="feedback.form.notify">I'd like to receive helpful China travel tips via email</span>
 </label>
@@ -750,7 +767,7 @@ Cons</p>
 </h3>
 <div class="comments-list">
 <!-- 评论会动态加载到这里 -->
-<div style="text-align: center; padding: 2rem; color: #999;">
+<div class="comments-loading" style="text-align: center; padding: 2rem;">
 <p data-i18n="feedback.loading">Loading comments...</p>
 </div>
 </div>
@@ -760,6 +777,7 @@ Cons</p>
 </div>
 </section>
 <!-- ========== 评论区域结束 ========== -->
+</main>
 <footer>
 <div class="container">
 <div class="footer-grid">
@@ -797,14 +815,14 @@ Cons</p>
 <div class="footer-bottom">
 <p data-i18n="footer.copyright">© 2025 Travel-China.Help - Your trusted guide to exploring China</p>
 <p data-i18n="footer.disclaimer">Disclaimer: Information is for general guidance only. Always verify current requirements with official sources.</p>
-<p style="margin-top: 1rem; font-size: 0.9rem;"><a data-i18n="footer.aboutUs" href="about.html" style="color: #ffd700; margin: 0 0.5rem;">About Us</a> | <a data-i18n="footer.contactUs" href="contact.html" style="color: #ffd700; margin: 0 0.5rem;">Contact</a> | <a data-i18n="footer.privacyPolicy" href="privacy.html" style="color: #ffd700; margin: 0 0.5rem;">Privacy Policy</a></p>
+<p class="footer-bottom-links" style="margin-top: 1rem; font-size: 0.9rem;"><a data-i18n="footer.aboutUs" href="about.html" style="margin: 0 0.5rem;">About Us</a> | <a data-i18n="footer.contactUs" href="contact.html" style="margin: 0 0.5rem;">Contact</a> | <a data-i18n="footer.privacyPolicy" href="privacy.html" style="margin: 0 0.5rem;">Privacy Policy</a></p>
 </div>
 </div>
 </footer>
 </div>
 <!-- ========== JavaScript 部分放在最后 ========== -->
-<script src="js/translations.js"></script>
-<script src="js/i18n.js"></script>
+<script src="js/translations.js" defer></script>
+<script src="js/i18n.js" defer></script>
 <script>
         // 语言选择器功能
         function toggleLanguageDropdown() {

@@ -1,0 +1,13 @@
+/* Guides-specific styles */
+.breadcrumb { padding: 1.5rem 0; font-size: 0.9rem; }
+.breadcrumb a { color: #666; text-decoration: none; }
+.breadcrumb a:hover { color: #c41e3a; }
+.breadcrumb span { color: #999; margin: 0 0.5rem; }
+
+.page-header { background: linear-gradient(135deg, #c41e3a, #ffd700); color: white; padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
+.page-header h1 { font-size: 2.5rem; margin-bottom: 0.8rem; }
+.page-header p { font-size: 1.2rem; opacity: 0.95; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin: 3rem 0 1.5rem; padding-bottom: 1rem; border-bottom: 3px solid #ffd700; }
+.section-title { font-size: 1.8rem; color: #c41e3a; display: flex; align-items: center; gap: 0.5rem; }
+

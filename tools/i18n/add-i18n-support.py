@@ -111,9 +111,9 @@ LANGUAGE_SELECTOR_CSS = '''
         }'''
 
 # JavaScript代码（插入到script标签前）
-I18N_SCRIPT_HTML = '''    <script src="js/translations.js"></script>
-    <script src="js/i18n.js"></script>
-    <script src="js/article-i18n.js"></script>
+I18N_SCRIPT_HTML = '''    <script src="js/translations.js" defer></script>
+    <script src="js/i18n.js" defer></script>
+    <script src="js/article-i18n.js" defer></script>
     <script>
         // 语言选择器功能
         function toggleLanguageDropdown() {

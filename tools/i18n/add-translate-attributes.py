@@ -165,7 +165,7 @@ class ArticleTranslatorMarker:
             
             if not has_translation_script:
                 # 添加翻译脚本
-                script_tag = soup.new_tag('script', src='../js/article-content-i18n.js')
+                script_tag = soup.new_tag('script', src='../js/article-content-i18n.js', defer='')
                 body.append(script_tag)
                 
                 # 保存文件
