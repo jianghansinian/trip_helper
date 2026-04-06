@@ -1,7 +1,9 @@
-# 兼容：本文件仍可作为 --article-config；主入口已迁至 tools/pagegen/doc_to_html.py
-# 默认任务 YAML 现为 tools/pagegen/doc_to_html.yaml（无该文件时会回退读本文件所在目录下的此文件）
+# 单篇文章：翻译 / 改写 → HTML（tools/pagegen/doc_to_html.py）
+# 默认路径：tools/pagegen/doc_to_html.yaml
+# 用法（在仓库根目录）:
 #   python3 tools/pagegen/doc_to_html.py
-#   python3 tools/i18n/article_to_target_page.py --article-config tools/i18n/article_to_target_page.yaml
+#   python3 tools/i18n/article_to_target_page.py   # 兼容，同上
+#   python3 tools/pagegen/doc_to_html.py --article-config path/to/job.yaml
 # 命令行参数会覆盖此处同名字段。
 
 # DeepSeek / OpenAI 等与 translate.py 共用的配置

@@ -10,8 +10,10 @@
 
 用法：
     python3 tools/i18n/add-i18n-support.py
-    python3 tools/i18n/add-i18n-support.py --dir blog  # 只处理blog目录
-    python3 tools/i18n/add-i18n-support.py --file index.html  # 只处理单个文件
+    python3 tools/i18n/add-i18n-support.py --dir blog      # 相对仓库根的 blog/
+    python3 tools/i18n/add-i18n-support.py --dir guides
+    python3 tools/i18n/add-i18n-support.py --file index.html
+    # --dir / --file 相对路径依次在「仓库根 → tools/ → 当前工作目录」下查找
 """
 
 import os
@@ -26,6 +28,19 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 import site_css_links  # noqa: E402
+
+
+def _resolve_cli_path(user_path: str) -> Path:
+    """相对路径优先相对仓库根，其次 tools/，再当前工作目录（与 --dir blog / guides 一致）。"""
+    p = Path(user_path)
+    if p.is_absolute():
+        return p.resolve()
+    for base in (_REPO_ROOT, _TOOLS, Path.cwd()):
+        cand = (base / p).resolve()
+        if cand.exists():
+            return cand
+    return (_REPO_ROOT / p).resolve()
+
 
 # 语言选择器HTML（插入到导航菜单）
 LANGUAGE_SELECTOR_HTML = '''<li class="language-selector">
@@ -139,8 +154,12 @@ I18N_SCRIPT_HTML = '''    <script src="js/translations.js" defer></script>
 
 
 def has_i18n_support(html_content: str) -> bool:
-    """检查HTML是否已经有i18n支持"""
-    return 'js/i18n.js' in html_content or 'language-selector' in html_content
+    """检查HTML是否已经有i18n支持（含新版生成页所用的 common-i18n-scripts）"""
+    return (
+        "common-i18n-scripts.js" in html_content
+        or "js/i18n.js" in html_content
+        or "language-selector" in html_content
+    )
 
 
 def add_language_selector(soup: BeautifulSoup) -> bool:
@@ -295,31 +314,27 @@ def main():
     
     args = parser.parse_args()
     
-    # 确定要处理的文件
-    base_dir = Path(__file__).parent.parent
+    # 确定要处理的文件（--dir blog 等相对路径相对仓库根，而非 tools/）
+    tools_dir = _TOOLS
     html_files = []
-    
+
     if args.file:
-        file_path = Path(args.file)
-        if not file_path.is_absolute():
-            file_path = base_dir / file_path
+        file_path = _resolve_cli_path(args.file)
         if file_path.exists():
             html_files = [file_path]
         else:
             print(f"❌ 文件不存在: {file_path}")
             sys.exit(1)
     elif args.dir:
-        dir_path = Path(args.dir)
-        if not dir_path.is_absolute():
-            dir_path = base_dir / dir_path
+        dir_path = _resolve_cli_path(args.dir)
         if dir_path.exists() and dir_path.is_dir():
             html_files = find_html_files(dir_path)
         else:
             print(f"❌ 目录不存在: {dir_path}")
             sys.exit(1)
     else:
-        # 默认处理根目录下的所有HTML文件
-        html_files = find_html_files(base_dir)
+        # 默认：扫描 tools/（与历史行为一致）；需要全站可改用 --dir . 在仓库根执行
+        html_files = find_html_files(tools_dir)
     
     if not html_files:
         print("❌ 没有找到HTML文件")

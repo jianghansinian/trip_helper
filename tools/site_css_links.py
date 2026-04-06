@@ -45,6 +45,7 @@ def page_template_fields(
     *,
     guides_theme: Optional[str] = None,
     blog_variant: Optional[str] = None,
+    include_i18n: bool = True,
 ) -> Dict[str, str]:
     """
     Values for translate.HTML_TEMPLATE str.format(...).
@@ -52,6 +53,7 @@ def page_template_fields(
     guides_theme: front matter theme for guides/* (green|visa|transport|orange).
         If None, uses _GUIDE_ARTICLE_THEMES by filename when applicable, else orange.
     blog_variant: optional \"wechat\" for blog/* body class page-blog-wechat.
+    include_i18n: 为 True 时附带语言选择器与底部 i18n 脚本（与站内已接入页一致）。
     """
     pt = path_prefix_to_site_root(output_path, site_root)
     try:
@@ -126,7 +128,13 @@ def page_template_fields(
     href_home = idx
     href_footer_home = idx
 
-    return {
+    bc_section_i18n_attr = (
+        ' data-i18n="nav.travelGuides"'
+        if bc_section_label == "Travel Guides"
+        else ' data-i18n="nav.travelStories"'
+    )
+
+    out: Dict[str, str] = {
         "css_links": css_links,
         "body_class": body_class,
         "article_class": article_class,
@@ -139,11 +147,21 @@ def page_template_fields(
         "href_bc_home": href_home,
         "href_bc_section": href_bc_section,
         "bc_section_label": bc_section_label,
+        "bc_section_i18n_attr": bc_section_i18n_attr,
         "href_widget_guides": f"{pt}index.html#guides",
         "href_widget_visa": f"{pt}index.html#visa",
         "href_widget_culture": f"{pt}index.html#culture",
         "href_widget_blog": f"{pt}blog/index.html",
     }
+    if include_i18n:
+        from pagegen.i18n_shell import body_scripts_html, language_selector_li_html
+
+        out["i18n_language_selector"] = language_selector_li_html()
+        out["i18n_scripts"] = body_scripts_html(pt)
+    else:
+        out["i18n_language_selector"] = ""
+        out["i18n_scripts"] = ""
+    return out
 
 
 def ensure_site_css_links(soup, file_path: Path, site_root: Path) -> bool:

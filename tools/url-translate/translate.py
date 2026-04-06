@@ -1756,22 +1756,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body class="{body_class}">
     <header>
-        <div class="header-top">🌍 Your trusted source for China travel information since 2024</div>
+        <div class="header-top" data-i18n="header.topMessage">🌍 Your trusted companion for exploring China - Updated regularly with fresh stories and tips</div>
         <nav class="container">
-            <a href="{href_home}" class="logo">Travel-China.Help</a>
+            <a href="{href_home}" class="logo" data-i18n="header.logo">Travel-China.Help</a>
             <ul class="nav-menu">
-                <li><a href="{href_nav_guides}">Travel Guides</a></li>
-                <li><a href="{href_nav_stories}">Travel Stories</a></li>
-                <li><a href="{href_nav_visa}">Visa &amp; Entry</a></li>
-                <li><a href="{href_nav_practical}">Practical Info</a></li>
+                <li><a href="{href_nav_guides}" data-i18n="nav.travelGuides">Travel Guides</a></li>
+                <li><a href="{href_nav_stories}" data-i18n="nav.travelStories">Travel Stories</a></li>
+                <li><a href="{href_nav_visa}" data-i18n="nav.visaEntry">Visa &amp; Entry</a></li>
+                <li><a href="{href_nav_practical}" data-i18n="nav.practicalInfo">Practical Info</a></li>
+                {i18n_language_selector}
             </ul>
         </nav>
     </header>
 
     <div class="container">
         <div class="breadcrumb">
-            <a href="{href_bc_home}">Home</a><span>›</span>
-            <a href="{href_bc_section}">{bc_section_label}</a><span>›</span>
+            <a href="{href_bc_home}" data-i18n="common.breadcrumb.home">Home</a><span>›</span>
+            <a href="{href_bc_section}"{bc_section_i18n_attr}>{bc_section_label}</a><span>›</span>
             <span style="color: #333;">{title}</span>
         </div>
     </div>
@@ -1813,10 +1814,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Travel-China.Help | <a href="{href_footer_home}">Home</a> | <a href="{source_url}" target="_blank">Original Article</a></p>
+            <p>&copy; 2024 Travel-China.Help | <a href="{href_footer_home}" data-i18n="common.breadcrumb.home">Home</a> | <a href="{source_url}" target="_blank">Original Article</a></p>
             <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #999;">Automated translation service for China travel content</p>
         </div>
     </footer>
+{i18n_scripts}
 </body>
 </html>
 """
