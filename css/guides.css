@@ -1,4 +1,16 @@
 /* Guides listing (guides/index.html) */
+body.page-guides-index .guides-intro {
+    margin-bottom: 1.5rem;
+    max-width: 52rem;
+}
+
+body.page-guides-index .guides-intro-text {
+    color: #4a4a4a;
+    line-height: 1.75;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
 body.page-guides-index .section-header {
     margin: 3rem 0 1.5rem;
 }
