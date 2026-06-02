@@ -14,8 +14,3 @@ Sitemap: https://travel-china.help/sitemap.xml
 
 # Crawl-delay (optional, can be removed if not needed)
 # Crawl-delay: 1
-
-# If Google Search Console reports "Unknown directive" for Content-Signal on a merged
-# robots.txt: that line is prepended by Cloudflare (Security > Bots > instruct AI bots
-# via robots.txt). Turn that off to serve only this file and clear the GSC warning, or
-# keep Cloudflare's block and treat the GSC note as a known parser limitation.
